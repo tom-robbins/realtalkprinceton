@@ -4,6 +4,7 @@ import { check } from 'meteor/check';
 import { Roles } from 'meteor/alanning:roles';
 
 export const Posts = new Mongo.Collection('posts');
+export const Found = new Mongo.Collection('found');
 
 if (Meteor.isServer) {
   // This code only runs on the server
@@ -19,6 +20,10 @@ if (Meteor.isServer) {
         ],
       });
     }
+  });
+
+  Meteor.publish('found', function foundPublication() {
+    return Found.find({})
   });
 }
 
@@ -51,6 +56,36 @@ Meteor.methods({
     */
 
     Posts.remove(postId);
+  },
+
+  'posts.search'(query) {
+    check(query, String);
+
+    // Make sure the user is logged in before inserting a post
+    if (! Meteor.userId()) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Found.remove({});
+
+    console.log(query);
+
+    const found = Posts.find({}).fetch();
+
+    if (found != undefined) {
+      for (i = 0; i < found.length; i++) {
+        if (found[i].question.includes(query)) {
+          question = found[i].question;
+          Found.insert({
+            question,
+            answer: '',
+            createdAt: new Date(),
+            owner: Meteor.userId(),
+            username: Meteor.user().username,
+          });
+        }
+      }
+    } 
   },
   /*
   'posts.setChecked'(postId, setChecked) {
