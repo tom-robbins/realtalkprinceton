@@ -18,6 +18,11 @@ export default class Post extends Component {
     Meteor.call('posts.setHidden', this.props.post._id, ! this.props.post.hidden);
   }
 
+  answerPost() {
+    var ans = prompt("Please enter your your answer", "Blank");
+    Meteor.call('posts.answer', this.props.post._id, ans)
+  }
+
   render() {
     // Give posts a different className when they are checked off,
     // so that we can style them nicely in CSS
@@ -51,10 +56,11 @@ export default class Post extends Component {
 
         <span className="question">
           {/*<strong>{this.props.post.username}</strong>:*/}<b>{this.props.post.question}</b>
+          {<button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>}
         </span>
         <br/>
         <span className="answer">
-          {/*<strong>{this.props.post.username}</strong>:*/} {this.props.post.answer}
+          {/*<strong>{this.props.post.username}</strong>:*/} <p>{this.props.post.answer}</p>
         </span>
       </li>
     );

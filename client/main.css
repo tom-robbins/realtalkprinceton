@@ -78,6 +78,9 @@ ul {
   position: relative;
 }
 
+.answerButton {
+  float: right;
+}
 li {
   position: relative;
   list-style: none;
