@@ -31,41 +31,50 @@ export default class Post extends Component {
       hidden: this.props.post.hidden,
     });
 
-    return (
-      <li className={postClassName}>
-        { this.props.isAdmin ? (
-          <button className="delete" onClick={this.deleteThisPost.bind(this)}>
-            &times;
-          </button>
-        ) : '' }
-
-        {/*}
-        <input
-          type="checkbox"
-          readOnly
-          checked={this.props.post.checked}
-          onClick={this.toggleChecked.bind(this)}
-        />
-        */}
-
-        { this.props.isAdmin ? (
-          <button className="toggle-hidden" onClick={this.toggleHidden.bind(this)}>
-            { this.props.post.hidden ? 'Hidden' : 'Public' }
-          </button>
-        ) : ''}
-
-        <span className="question">
-          {/*<strong>{this.props.post.username}</strong>:*/}<b>{this.props.post.question}</b>
+    if (this.props.isAdmin || this.props.answered) {
+      return (
+        <li className={postClassName}>
           { this.props.isAdmin ? (
-          <button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>
-        ) : ''}
-        </span>
-        <br/>
-        <span className="answer">
-          {/*<strong>{this.props.post.username}</strong>:*/} <p>{this.props.post.answer}</p>
-        </span>
-      </li>
-    );
+            <button className="delete" onClick={this.deleteThisPost.bind(this)}>
+              &times;
+            </button>
+          ) : '' }
+
+          {/*}
+          <input
+            type="checkbox"
+            readOnly
+            checked={this.props.post.checked}
+            onClick={this.toggleChecked.bind(this)}
+          />
+          */}
+
+          { this.props.isAdmin ? (
+            <button className="toggle-hidden" onClick={this.toggleHidden.bind(this)}>
+              { this.props.post.hidden ? 'Hidden' : 'Public' }
+            </button>
+          ) : ''}
+
+          <span className="question">
+            {/*<strong>{this.props.post.username}</strong>:*/}<b>{this.props.post.question}</b>
+            { this.props.isAdmin ? (
+            <button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>
+          ) : ''}
+          </span>
+
+          <br/>
+
+          { this.props.answered ? (
+            <span className="answer">
+            <p><strong>{"Response from " + this.props.post.admin}</strong></p> <p>{this.props.post.answer}</p>
+          </span>
+          ) : ''}
+        </li>
+      );
+    }
+    else {
+      return (null);
+    }
   }
 }
 
@@ -74,4 +83,5 @@ Post.propTypes = {
   // We can use propTypes to indicate it is required
   post: PropTypes.object.isRequired,
   isAdmin: React.PropTypes.bool.isRequired,
+  answered: React.PropTypes.bool.isRequired,
 };
