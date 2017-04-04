@@ -33,7 +33,7 @@ export default class Post extends Component {
 
     return (
       <li className={postClassName}>
-        { this.props.showHiddenButton ? (
+        { this.props.isAdmin ? (
           <button className="delete" onClick={this.deleteThisPost.bind(this)}>
             &times;
           </button>
@@ -48,7 +48,7 @@ export default class Post extends Component {
         />
         */}
 
-        { this.props.showHiddenButton ? (
+        { this.props.isAdmin ? (
           <button className="toggle-hidden" onClick={this.toggleHidden.bind(this)}>
             { this.props.post.hidden ? 'Hidden' : 'Public' }
           </button>
@@ -56,7 +56,9 @@ export default class Post extends Component {
 
         <span className="question">
           {/*<strong>{this.props.post.username}</strong>:*/}<b>{this.props.post.question}</b>
-          {<button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>}
+          { this.props.isAdmin ? (
+          <button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>
+        ) : ''}
         </span>
         <br/>
         <span className="answer">
@@ -71,5 +73,5 @@ Post.propTypes = {
   // This component gets the post to display through a React prop.
   // We can use propTypes to indicate it is required
   post: PropTypes.object.isRequired,
-  showHiddenButton: React.PropTypes.bool.isRequired,
+  isAdmin: React.PropTypes.bool.isRequired,
 };

@@ -51,10 +51,6 @@ class App extends Component {
      this.forceUpdate();
   }
 
-  handleAnser(event) {
-    Meteor.call('posts.answer')
-  }
-
   /*
   toggleHideCompleted() {
     this.setState({
@@ -71,13 +67,13 @@ class App extends Component {
     }
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
-      const showHiddenButton = Roles.userIsInRole(Meteor.userId(), 'admin');
+      const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
 
       return (
         <Post
           key={post._id}
           post={post}
-          showHiddenButton={showHiddenButton}
+          isAdmin={isAdmin}
         />
       );
     });
@@ -91,14 +87,14 @@ class App extends Component {
     }
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
-      const showHiddenButton = Roles.userIsInRole(Meteor.userId(), 'admin');
-      console.log(this.query);
+      const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
+
       if (post.question.includes(this.query) || this.query == undefined) {
         return (
           <Post
             key={post._id}
             post={post}
-            showHiddenButton={showHiddenButton}
+            isAdmin={isAdmin}
           />
         );
       }
