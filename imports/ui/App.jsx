@@ -3,7 +3,6 @@ import { createContainer } from 'meteor/react-meteor-data';
 import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { Posts } from '../api/posts'
-import { Found } from '../api/posts'
 import { Roles } from 'meteor/alanning:roles'
 import Post from './Post.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
