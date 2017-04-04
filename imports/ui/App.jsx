@@ -3,6 +3,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { Posts } from '../api/posts'
+import { Found } from '../api/posts'
 import { Roles } from 'meteor/alanning:roles'
 import Post from './Post.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
@@ -10,6 +11,7 @@ import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
 // App component - represents the whole app
 class App extends Component {
+  //const query;
   constructor(props) {
   super(props);
 
@@ -33,9 +35,21 @@ class App extends Component {
       username: Meteor.user().username,  // username of logged in user
     });
     */
-    console.log(Meteor.user().roles)
+
     // Clear form
     ReactDOM.findDOMNode(this.refs.textInput).value = '';
+  }
+
+  handleSearch(event) {
+     event.preventDefault();
+ 
+     // Find the text field via the React ref
+     this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
+
+     // Clear form
+     ReactDOM.findDOMNode(this.refs.searchString).value = '';
+
+     this.forceUpdate();
   }
 
   handleAnser(event) {
@@ -50,6 +64,7 @@ class App extends Component {
   }
   */
 
+  // Shows all posts
   renderPosts() {
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
@@ -66,6 +81,28 @@ class App extends Component {
           showHiddenButton={showHiddenButton}
         />
       );
+    });
+  }
+
+  // Shows posts that were searched for
+  renderFound() {
+    let filteredPosts = this.props.posts;
+    if (this.state.hideCompleted) {
+      filteredPosts = filteredPosts.filter(post => !post.checked);
+    }
+    return filteredPosts.map((post) => {
+      const currentUserId = this.props.currentUser && this.props.currentUser._id;
+      const showHiddenButton = Roles.userIsInRole(Meteor.userId(), 'admin');
+      console.log(this.query);
+      if (post.question.includes(this.query) || this.query == undefined) {
+        return (
+          <Post
+            key={post._id}
+            post={post}
+            showHiddenButton={showHiddenButton}
+          />
+        );
+      }
     });
   }
 
@@ -98,9 +135,15 @@ class App extends Component {
             </form> : ''
           }
         </header>
-
+        <form onSubmit={this.handleSearch.bind(this)}>
+          <p>
+            <input type = "text"
+                 ref = "searchString" />
+            <input type="submit" value="Search"/>
+          </p>
+        </form>
         <ul>
-          {this.renderPosts()}
+          {this.renderFound()}
         </ul>
       </div>
     );
