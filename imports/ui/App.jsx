@@ -68,12 +68,14 @@ class App extends Component {
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
+      const answered = post.question != "";
 
       return (
         <Post
           key={post._id}
           post={post}
           isAdmin={isAdmin}
+          answered = {answered}
         />
       );
     });
@@ -88,6 +90,7 @@ class App extends Component {
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
+      const answered = post.answer != "";
 
       if (post.question.includes(this.query) || this.query == undefined) {
         return (
@@ -95,6 +98,7 @@ class App extends Component {
             key={post._id}
             post={post}
             isAdmin={isAdmin}
+            answered = {answered}
           />
         );
       }
