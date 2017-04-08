@@ -85,7 +85,7 @@ Meteor.methods({
   'posts.answer'(postId, x) {
    // check(postId, String);
     const post = Posts.findOne(postId);
-    
+
     Posts.update({_id: postId}, {$set: {answer: x }});
     Posts.update({_id: postId}, {$set: {admin: Meteor.user().username}});
   }
