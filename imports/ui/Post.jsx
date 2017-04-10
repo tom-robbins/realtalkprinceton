@@ -56,7 +56,7 @@ export default class Post extends Component {
           ) : ''}
 
           <span className="question">
-            {/*<strong>{this.props.post.username}</strong>:*/}<b>{this.props.post.question}</b>
+            {<b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": " + this.props.post.question}</b>
             { this.props.isAdmin ? (
             <button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>
           ) : ''}
