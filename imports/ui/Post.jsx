@@ -56,7 +56,7 @@ export default class Post extends Component {
           ) : ''}
 
           <span className="question">
-            <b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": " + this.props.post.question}</b>
+            {/*<strong>{this.props.post.username}</strong>:*/}<b>{this.props.post.question}</b>
             { this.props.isAdmin ? (
             <button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>
           ) : ''}
@@ -64,13 +64,21 @@ export default class Post extends Component {
 
           <br/>
 
-          { this.props.answered ? (
+          { 
+            this.props.answered ? (
             <span className="answer">
-            <p><strong>{"Response from " + this.props.post.admin}</strong></p> <p>{this.props.post.answer}</p>
-          </span>
-          ) : ''}
+              {Object.keys(this.props.post.answer).map((obj, i) =>
+                <div>
+                <p key = {obj}><strong>{"Response from " + this.props.post.answer[obj].name}</strong></p>
+                <p key = {300 - obj}>{this.props.post.answer[obj].text}</p>
+                </div>
+              )}
+            </span>
+          ) : ''
+        }
         </li>
       );
+
     }
     else {
       return (null);
