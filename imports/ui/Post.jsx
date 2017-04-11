@@ -23,6 +23,11 @@ export default class Post extends Component {
     Meteor.call('posts.answer', this.props.post._id, ans)
   }
 
+  deleteThisAnswer(t, o) {
+    // o is the index of the answer to remove
+    Meteor.call('posts.ansRemove', this.props.post._id, o);
+  }
+
   render() {
     // Give posts a different className when they are checked off,
     // so that we can style them nicely in CSS
@@ -67,9 +72,15 @@ export default class Post extends Component {
           { 
             this.props.answered ? (
             <span className="answer">
+
               {Object.keys(this.props.post.answer).map((obj, i) =>
                 <div>
                 <p key = {obj}><strong>{"Response from " + this.props.post.answer[obj].name}</strong></p>
+                { this.props.isAdmin ? (
+                <button className="delete" onClick={()=>this.deleteThisAnswer(this, parseInt(obj))}>
+                  &times;
+                </button>
+                ) : '' }
                 <p key = {300 - obj}>{this.props.post.answer[obj].text}</p>
                 </div>
               )}

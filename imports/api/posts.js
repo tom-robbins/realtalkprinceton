@@ -58,6 +58,13 @@ Meteor.methods({
 
     Posts.remove(postId);
   },
+
+  'posts.ansRemove'(postId, index) {
+    const post = Posts.findOne(postId);
+    var newArray = post.answer.slice();
+    newArray.splice(index, 1);
+    Posts.update({_id: postId}, {$set: {answer: newArray}});
+  },
   /*
   'posts.setChecked'(postId, setChecked) {
     check(postId, String);
