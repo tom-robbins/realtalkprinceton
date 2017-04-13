@@ -63,12 +63,12 @@
 }
 
 .stretch {
-  height: 100vh; 
+  height: 100%; 
 }
 
 body {
   font-family: "Avenir",sans-serif;
-  background: #ffffff;
+  background: #ed985f;
   /*background: url(/img/nassau.jpg) no-repeat center center fixed;*/
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -83,7 +83,7 @@ body {
 
   padding: 0;
   margin: 0;
-  height: 100vh; 
+  height: 100%; 
 
   font-size: 14px;
 }
@@ -119,7 +119,13 @@ header {
 }
 
 #login-buttons {
-  display: block;
+  font-size: 1.25em;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  display: inline-block;
+  margin-right: 1em;
+  color: #ffffff;
+  font-family: "Avenir Next";
 }
 
 h1 {
@@ -177,6 +183,49 @@ form {
 
 .new-question input:focus{
   outline: 0;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    resize: none;
+}
+
+.search input {
+  box-sizing: border-box;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  padding-right: 80px;
+  font-size: 1em;
+}
+
+.button {
+  background:none!important;
+  border:none; 
+  padding:0!important;
+  font-size: 1.25em;
+  margin: 0;
+  font-family: "Avenir Next";
+  font-weight: normal; 
+  /*border is optional*/
+  cursor: pointer;
+}
+
+input[type=button], input[type=submit], input[type=reset] {
+    background-color: #f58025;
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-decoration: none;
+    margin: 10px 2px;
+    cursor: pointer;
 }
 
 ul {

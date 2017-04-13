@@ -119,13 +119,29 @@ class App extends Component {
               <div className="row"> 
                 <div className="col*-12">
                   <li>
+                    <form className="search" onSubmit={this.handleSearch.bind(this)}>
+                    <p>
+                      <input type = "text"
+                        ref = "searchString"
+                        placeholder="search" />
+                      <input type="submit" value="Search"/>
+                    </p>
+                  </form>
+                  </li>
+                  <li>
                     <p className="white link">Ask a Question</p>
+                    { this.props.currentUser ?
+                      <form className="new-question" onSubmit={this.handleSubmit.bind(this)} >
+                      <textarea ref="textInput"></textarea>
+                      <input type="submit"/>
+                      </form> : ''
+                    }
                   </li>
                   <li>
-                    <p className="white link">Search for an answer</p>
+                    <button className="button white" onClick={this.goContributors.bind(this)}>About the admins</button>
                   </li>
                   <li>
-                    <p className="white link">About the admins</p>
+                    <AccountsUIWrapper />
                   </li>
                 </div>
               </div> 
