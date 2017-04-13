@@ -32,7 +32,7 @@ class App extends Component {
 
   handleSearch(event) {
      event.preventDefault();
- 
+
      // Find the text field via the React ref
      this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
 
@@ -139,6 +139,7 @@ class App extends Component {
         </div>
 
 
+
       </div>
       ); 
 
@@ -189,7 +190,6 @@ class App extends Component {
 
 App.propTypes = {
   posts: PropTypes.array.isRequired,
-  /* incompleteCount: PropTypes.number.isRequired, */
   currentUser: PropTypes.object,
 };
 
@@ -198,7 +198,6 @@ export default createContainer(() => {
 
   return {
     posts: Posts.find({}, { sort: { createdAt: -1 } }).fetch(),
-    /* incompleteCount: Posts.find({ checked: { $ne: true } }).count(), */
     currentUser: Meteor.user(),
   };
 }, App);

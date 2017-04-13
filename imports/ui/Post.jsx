@@ -23,11 +23,15 @@ export default class Post extends Component {
     Meteor.call('posts.answer', this.props.post._id, ans)
   }
 
+  deleteThisAnswer(t, o) {
+    // o is the index of the answer to remove
+    Meteor.call('posts.ansRemove', this.props.post._id, o);
+  }
+
   render() {
     // Give posts a different className when they are checked off,
     // so that we can style them nicely in CSS
     const postClassName = classnames({
-      /*checked: this.props.post.checked, */
       hidden: this.props.post.hidden,
     });
 
@@ -39,15 +43,6 @@ export default class Post extends Component {
               &times;
             </button>
           ) : '' }
-
-          {/*}
-          <input
-            type="checkbox"
-            readOnly
-            checked={this.props.post.checked}
-            onClick={this.toggleChecked.bind(this)}
-          />
-          */}
 
           { this.props.isAdmin ? (
             <button className="toggle-hidden" onClick={this.toggleHidden.bind(this)}>
@@ -66,7 +61,6 @@ export default class Post extends Component {
             </div>
           <br/>
 
-
           { 
             this.props.answered ? (
             <div className="col-md-4 col-sm-4">
@@ -74,6 +68,7 @@ export default class Post extends Component {
                 <div>
                 <p className="white no-margin" key = {obj}><b>{"Response from " + this.props.post.answer[obj].name}</b></p>
                 <p className="white no-margin" key = {300 - obj}>{this.props.post.answer[obj].text}</p>
+
                 </div>
               )}
             </div>
