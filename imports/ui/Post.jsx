@@ -51,7 +51,7 @@ export default class Post extends Component {
           ) : ''}
 
           <div className="row match-my-cols posts">
-            <div className="col-md-4 col-sm-4">
+            <div className="col-md-6 col-sm-6">
               <p className="tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
               <p className="white no-margin">{this.props.post.question}</p>
 
@@ -63,7 +63,7 @@ export default class Post extends Component {
 
           { 
             this.props.answered ? (
-            <div className="col-md-4 col-sm-4">
+            <div className="col-md-6 col-sm-6">
               {Object.keys(this.props.post.answer).map((obj, i) =>
                 <div>
                 <p className="white no-margin" key = {obj}><b>{"Response from " + this.props.post.answer[obj].name}</b></p>
