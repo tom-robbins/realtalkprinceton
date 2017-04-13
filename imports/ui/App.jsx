@@ -33,7 +33,7 @@ class App extends Component {
 
   handleSearch(event) {
      event.preventDefault();
- 
+
      // Find the text field via the React ref
      this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
 
@@ -100,19 +100,7 @@ class App extends Component {
     return (
       <div className="container">
         <header>
-          <h1>Real Talk Princeton{/*({this.props.incompleteCount}) */}</h1>
-
-          {/*
-          <label className="hide-completed">
-            <input
-              type="checkbox"
-              readOnly
-              checked={this.state.hideCompleted}
-              onClick={this.toggleHideCompleted.bind(this)}
-            />
-            Hide Completed Posts
-          </label>
-          */}
+          <h1>Real Talk Princeton</h1>
 
           <AccountsUIWrapper />
           { this.props.currentUser ?
@@ -126,7 +114,7 @@ class App extends Component {
           }
         </header>
         <button className="contributorsButton" onClick={this.goContributors.bind(this)}>Contributor Bios</button>
-          
+
         <form onSubmit={this.handleSearch.bind(this)}>
           <p>
             <input type = "text"
@@ -145,7 +133,6 @@ class App extends Component {
 
 App.propTypes = {
   posts: PropTypes.array.isRequired,
-  /* incompleteCount: PropTypes.number.isRequired, */
   currentUser: PropTypes.object,
 };
 
@@ -154,7 +141,6 @@ export default createContainer(() => {
 
   return {
     posts: Posts.find({}, { sort: { createdAt: -1 } }).fetch(),
-    /* incompleteCount: Posts.find({ checked: { $ne: true } }).count(), */
     currentUser: Meteor.user(),
   };
 }, App);

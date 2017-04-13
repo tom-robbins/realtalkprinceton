@@ -32,7 +32,6 @@ export default class Post extends Component {
     // Give posts a different className when they are checked off,
     // so that we can style them nicely in CSS
     const postClassName = classnames({
-      /*checked: this.props.post.checked, */
       hidden: this.props.post.hidden,
     });
 
@@ -44,15 +43,6 @@ export default class Post extends Component {
               &times;
             </button>
           ) : '' }
-
-          {/*}
-          <input
-            type="checkbox"
-            readOnly
-            checked={this.props.post.checked}
-            onClick={this.toggleChecked.bind(this)}
-          />
-          */}
 
           { this.props.isAdmin ? (
             <button className="toggle-hidden" onClick={this.toggleHidden.bind(this)}>
@@ -69,7 +59,7 @@ export default class Post extends Component {
 
           <br/>
 
-          { 
+          {
             this.props.answered ? (
             <span className="answer">
 
