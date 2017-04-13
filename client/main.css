@@ -1,7 +1,75 @@
 /* CSS declarations go here */
+
+.orange {
+  color: #f58025;
+}
+
+.light-orange {
+  color: #ed985f; 
+}
+
+.white {
+  color: #ffffff;
+}
+
+.black {
+  color: #000000; 
+}
+
+.back-orange {
+  background: #f58025;
+}
+
+.back-light-orange {
+  background: #ed985f; 
+}
+
+.back-white {
+  background: #ffffff; 
+}
+
+.bold {
+  font-weight: bold; 
+}
+
+.nopad {
+  padding: 0; 
+}
+
+.row.match-my-cols {
+    overflow: hidden; 
+}
+
+.row.match-my-cols [class*="col-"]{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+
+.link {
+  padding: 0; 
+}
+
+.tiny {
+  font-size: .5em;
+}
+
+.posts {
+  padding: 20px 20px 20px 20px
+
+}
+
+.no-margin {
+  margin: 0 !important; 
+}
+
+.stretch {
+  height: 100vh; 
+}
+
 body {
-  font-family: sans-serif;
-  background: url(/img/nassau.jpg) no-repeat center center fixed;
+  font-family: "Avenir",sans-serif;
+  background: #ffffff;
+  /*background: url(/img/nassau.jpg) no-repeat center center fixed;*/
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -15,22 +83,39 @@ body {
 
   padding: 0;
   margin: 0;
+  height: 100vh; 
 
   font-size: 14px;
 }
 
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  min-height: 100%;
-  background: white;
+.sidebar {
+  padding: 20px 20px 20px 20px; 
+  margin: 0 auto; 
+}
+
+.question {
+  float: left;
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+  width: 30%;
+}
+
+.answer {
+  float: left;
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+  width: 45%;
 }
 
 header {
-  background: #f58025;
-  /*background-image: linear-gradient(to bottom, #ff8025, #fcf9bd 100%);*/
-  padding: 20px 15px 15px 15px;
-  position: relative;
+  max-width: 600px; 
+  padding: 50px 0px 15px 0px;
+  margin: 0 auto;
+  text-align: center; 
 }
 
 #login-buttons {
@@ -38,11 +123,40 @@ header {
 }
 
 h1 {
-  font-size: 1.5em;
-  margin: 0;
+  font-size: 2.5em;
+  margin: 0 auto;
   margin-bottom: 10px;
   display: inline-block;
   margin-right: 1em;
+  font-family: "Avenir Next";
+  font-weight: bold; 
+}
+
+h2 {
+  font-size: 1.66666667em;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  display: inline-block;
+  margin-right: 1em;
+  font-family: "Avenir Next";
+  font-weight: normal; 
+}
+
+h3 {
+  font-size: 1.25em;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  display: inline-block;
+  margin-right: 1em;
+  font-family: "Avenir Next";
+  font-weight: normal; 
+}
+
+p {
+  font-size: 1.25em;
+  margin: 0;
+  font-family: "Avenir Next";
+  font-weight: normal; 
 }
 
 form {
@@ -68,7 +182,6 @@ form {
 ul {
   margin: 0;
   padding: 0;
-  background: white;
 }
 
 .delete {
@@ -86,7 +199,7 @@ ul {
 li {
   position: relative;
   list-style: none;
-  padding: 15px;
+  padding: 5px;
   border-bottom: #eee solid 1px;
 }
 
@@ -138,3 +251,4 @@ header .hide-completed {
   font-style: italic;
   color: #aaa;
 }
+

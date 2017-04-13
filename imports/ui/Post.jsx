@@ -50,33 +50,31 @@ export default class Post extends Component {
             </button>
           ) : ''}
 
-          <span className="question">
-            {<b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": " + this.props.post.question}</b>}
-            { this.props.isAdmin ? (
-            <button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>
-          ) : ''}
-          </span>
+          <div className="row match-my-cols posts">
+            <div className="col-md-4 col-sm-4">
+              <p className="tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
+              <p className="white no-margin">{this.props.post.question}</p>
 
+              { this.props.isAdmin ? (
+              <button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>
+            ) : ''}
+            </div>
           <br/>
 
-          {
+          { 
             this.props.answered ? (
-            <span className="answer">
-
+            <div className="col-md-4 col-sm-4">
               {Object.keys(this.props.post.answer).map((obj, i) =>
                 <div>
-                <p key = {obj}><strong>{"Response from " + this.props.post.answer[obj].name}</strong></p>
-                { this.props.isAdmin ? (
-                <button className="delete" onClick={()=>this.deleteThisAnswer(this, parseInt(obj))}>
-                  &times;
-                </button>
-                ) : '' }
-                <p key = {300 - obj}>{this.props.post.answer[obj].text}</p>
+                <p className="white no-margin" key = {obj}><b>{"Response from " + this.props.post.answer[obj].name}</b></p>
+                <p className="white no-margin" key = {300 - obj}>{this.props.post.answer[obj].text}</p>
+
                 </div>
               )}
-            </span>
+            </div>
           ) : ''
         }
+        </div>
         </li>
       );
 
