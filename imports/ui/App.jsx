@@ -7,7 +7,6 @@ import { Roles } from 'meteor/alanning:roles'
 import Post from './Post.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
-
 // App component - represents the whole app
 class App extends Component {
   //const query;
@@ -97,49 +96,94 @@ class App extends Component {
   }
 
   render() {
+
     return (
-      <div className="container">
-        <header>
-          <h1>Real Talk Princeton{/*({this.props.incompleteCount}) */}</h1>
+      <div className="container-fluid back-white stretch">
+          <header>
+            <h1 className="orange">Real Talk Princeton</h1> 
+            <p className="orange">Real Talk Princeton is an established group 
+            committed to answering questions about Princeton academics, student 
+            life, and beyond.</p>
+          </header>
+        <div className="row match-my-cols stretch">
+          <div className="col-md-4 col-sm-4 back-light-orange">
+            <div className="sidebar">
+              <div className="row">
+                <div className="col-md-6 col-xs-6">
+                  <p className="white">Now Viewing: </p>
+                </div>
+                <div className="col-md-6 col-xs-6">
+                  <p className="white">all<br/>academic<br/>social life<br/>extracurricular</p>
+                </div>
+              </div>
+              <div className="row"> 
+                <div className="col*-12">
+                  <li>
+                    <p className="white link">Ask a Question</p>
+                  </li>
+                  <li>
+                    <p className="white link">Search for an answer</p>
+                  </li>
+                  <li>
+                    <p className="white link">About the admins</p>
+                  </li>
+                </div>
+              </div> 
+            </div>
+          </div>
+          <div className="col-md-8 col-sm-8 back-orange">
+            <ul>
+              {this.renderFound()}
+            </ul>
+          </div>
+        </div>
 
-          {/*
-          <label className="hide-completed">
-            <input
-              type="checkbox"
-              readOnly
-              checked={this.state.hideCompleted}
-              onClick={this.toggleHideCompleted.bind(this)}
-            />
-            Hide Completed Posts
-          </label>
-          */}
 
-          <AccountsUIWrapper />
-          { this.props.currentUser ?
-            <form className="new-question" onSubmit={this.handleSubmit.bind(this)} >
-              <input
-                type="text"
-                ref="textInput"
-                placeholder="Ask us anything!"
-              />
-            </form> : ''
-          }
-        </header>
-        <button className="contributorsButton" onClick={this.goContributors.bind(this)}>Contributor Bios</button>
-          
-        <form onSubmit={this.handleSearch.bind(this)}>
-          <p>
-            <input type = "text"
-                 ref = "searchString" />
-            <input type="submit" value="Search"/>
-          </p>
-        </form>
-
-        <ul>
-          {this.renderFound()}
-        </ul>
       </div>
-    );
+      ); 
+
+    // return (
+    //   <div className="container">
+    //     <header>
+    //       <h1>Real Talk Princetonn</h1>
+    //       {/*
+    //       <label className="hide-completed">
+    //         <input
+    //           type="checkbox"
+    //           readOnly
+    //           checked={this.state.hideCompleted}
+    //           onClick={this.toggleHideCompleted.bind(this)}
+    //         />
+    //         Hide Completed Posts
+    //       </label>
+    //       */}
+
+    //       <AccountsUIWrapper />
+    //       { this.props.currentUser ?
+    //         <form className="new-question" onSubmit={this.handleSubmit.bind(this)} >
+    //           <input
+    //             type="text"
+    //             ref="textInput"
+    //             placeholder="Ask us anything!"
+    //           />
+    //         </form> : ''
+    //       }
+    //     </header>
+    //     <button className="contributorsButton" onClick={this.goContributors.bind(this)}>Contributor Bios</button>
+          
+    //     <form onSubmit={this.handleSearch.bind(this)}>
+    //       <p>
+    //         <input type = "text"
+    //              ref = "searchString" />
+    //         <input type="submit" value="Search"/>
+    //       </p>
+    //     </form>
+
+    //     <ul>
+    //       {this.renderFound()}
+    //     </ul>
+    //   </div>
+    // );
   }
 }
 
