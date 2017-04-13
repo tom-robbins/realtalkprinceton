@@ -23,6 +23,11 @@ export default class Post extends Component {
     Meteor.call('posts.answer', this.props.post._id, ans)
   }
 
+  deleteThisAnswer(t, o) {
+    // o is the index of the answer to remove
+    Meteor.call('posts.ansRemove', this.props.post._id, o);
+  }
+
   render() {
     // Give posts a different className when they are checked off,
     // so that we can style them nicely in CSS
@@ -56,7 +61,7 @@ export default class Post extends Component {
           ) : ''}
 
           <span className="question">
-            {/*<strong>{this.props.post.username}</strong>:*/}<b>{this.props.post.question}</b>
+            {<b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": " + this.props.post.question}</b>}
             { this.props.isAdmin ? (
             <button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>
           ) : ''}
@@ -64,13 +69,27 @@ export default class Post extends Component {
 
           <br/>
 
-          { this.props.answered ? (
+          { 
+            this.props.answered ? (
             <span className="answer">
-            <p><strong>{"Response from " + this.props.post.admin}</strong></p> <p>{this.props.post.answer}</p>
-          </span>
-          ) : ''}
+
+              {Object.keys(this.props.post.answer).map((obj, i) =>
+                <div>
+                <p key = {obj}><strong>{"Response from " + this.props.post.answer[obj].name}</strong></p>
+                { this.props.isAdmin ? (
+                <button className="delete" onClick={()=>this.deleteThisAnswer(this, parseInt(obj))}>
+                  &times;
+                </button>
+                ) : '' }
+                <p key = {300 - obj}>{this.props.post.answer[obj].text}</p>
+                </div>
+              )}
+            </span>
+          ) : ''
+        }
         </li>
       );
+
     }
     else {
       return (null);
