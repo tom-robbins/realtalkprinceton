@@ -5,6 +5,12 @@ import { Roles } from 'meteor/alanning:roles';
 
 export const Posts = new Mongo.Collection('posts');
 
+function Answer(text, name) {
+    this.text = text;
+    this.name = name;
+    this.date = new Date();
+}
+
 if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish posts that are public or belong to the current user
@@ -33,7 +39,7 @@ Meteor.methods({
 
     Posts.insert({
       question,
-      answer: '',
+      answer: [],
       createdAt: new Date(),
       owner: Meteor.userId(),
       username: Meteor.user().username,
@@ -51,6 +57,13 @@ Meteor.methods({
     */
 
     Posts.remove(postId);
+  },
+
+  'posts.ansRemove'(postId, index) {
+    const post = Posts.findOne(postId);
+    var newArray = post.answer.slice();
+    newArray.splice(index, 1);
+    Posts.update({_id: postId}, {$set: {answer: newArray}});
   },
   /*
   'posts.setChecked'(postId, setChecked) {
@@ -82,11 +95,33 @@ Meteor.methods({
 
     Posts.update(postId, { $set: { hidden: setToHidden } });
   },
+  
   'posts.answer'(postId, x) {
    // check(postId, String);
     const post = Posts.findOne(postId);
+
+    // Make Answer Obj
+    var newAnswer = new Answer(x, Meteor.user().username);
     
-    Posts.update({_id: postId}, {$set: {answer: x }});
-    Posts.update({_id: postId}, {$set: {admin: Meteor.user().username}});
+    // If user already posted, find index, else -1
+    var index = -1;
+    for (var i = 0; i < post.answer.length; i++) {
+        if (post.answer[i].name === newAnswer.name) {
+            index = i;
+            break;
+        }
+    }
+    
+    // If user didn't post just add
+    if (index == -1) {
+        Posts.update({_id: postId}, {$push: {answer: newAnswer}});
+    }
+    // Else update answer array
+    else {
+        var newArray = post.answer.slice();
+        newArray[parseInt(index)] = newAnswer;
+        Posts.update({_id: postId}, {$set: {answer: newArray}});
+    }
+    
   }
 });

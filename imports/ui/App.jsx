@@ -26,14 +26,6 @@ class App extends Component {
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
     Meteor.call('posts.insert', question);
-    /*
-    Posts.insert({
-      text,
-      createdAt: new Date(), // current time
-      owner: Meteor.userId(),           // _id of logged in user
-      username: Meteor.user().username,  // username of logged in user
-    });
-    */
 
     // Clear form
     ReactDOM.findDOMNode(this.refs.textInput).value = '';
@@ -51,13 +43,10 @@ class App extends Component {
      this.forceUpdate();
   }
 
-  /*
-  toggleHideCompleted() {
-    this.setState({
-      hideCompleted: !this.state.hideCompleted,
-    });
+  goContributors(event) {
+    event.preventDefault();
+    Router.go('/contributors');
   }
-  */
 
   // Shows all posts
   renderPosts() {
@@ -92,7 +81,9 @@ class App extends Component {
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
       const answered = post.answer != "";
 
-      if (post.question.includes(this.query) || this.query == undefined) {
+      var re = new RegExp(this.query, 'i');
+
+      if (post.question.match(re) != null || this.query == undefined) {
         return (
           <Post
             key={post._id}
@@ -134,6 +125,8 @@ class App extends Component {
             </form> : ''
           }
         </header>
+        <button className="contributorsButton" onClick={this.goContributors.bind(this)}>Contributor Bios</button>
+          
         <form onSubmit={this.handleSearch.bind(this)}>
           <p>
             <input type = "text"
@@ -141,6 +134,7 @@ class App extends Component {
             <input type="submit" value="Search"/>
           </p>
         </form>
+
         <ul>
           {this.renderFound()}
         </ul>

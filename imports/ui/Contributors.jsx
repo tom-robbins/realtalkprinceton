@@ -19,18 +19,27 @@ class Contributors extends Component {
     };
   }
 
-  // Shows posts that were searched for
   renderAdmins() {
+    return <p> Under Construction</p>
   }
+
+  goHome(event) {
+    event.preventDefault();
+    Router.go('/');
+  }
+
 
   render() {
     return (
       <div className="container">
         <header>
           <h1>Real Talk Princeton</h1>
-          <h2>Contributor Bios</h2>
           <AccountsUIWrapper />
+          <h2>Contributor Bios</h2>
         </header>
+
+        <button className="homeButton" onClick={this.goHome.bind(this)}>Home</button>
+    
         <ul>
           {this.renderAdmins()}
         </ul>
