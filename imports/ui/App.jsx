@@ -7,6 +7,9 @@ import { Roles } from 'meteor/alanning:roles'
 import Post from './Post.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
+
+var offset = 0; 
+var perPage = 3; 
 // App component - represents the whole app
 class App extends Component {
   //const query;
@@ -38,6 +41,15 @@ class App extends Component {
 
      // Clear form
      ReactDOM.findDOMNode(this.refs.searchString).value = '';
+
+     this.forceUpdate();
+  }
+
+  handlePagination(event) {
+     event.preventDefault();
+
+     offset = 5;
+     perPage = 1; 
 
      this.forceUpdate();
   }
@@ -75,6 +87,7 @@ class App extends Component {
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
     }
+    var count = 0; 
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
@@ -82,7 +95,8 @@ class App extends Component {
 
       var re = new RegExp(this.query, 'i');
 
-      if (post.question.match(re) != null || this.query == undefined) {
+      if ((post.question.match(re) != null || this.query == undefined) && count < perPage) {
+        count++; 
         return (
           <Post
             key={post._id}
@@ -152,6 +166,8 @@ class App extends Component {
             <ul>
               {this.renderFound()}
             </ul>
+            <button className="button white pseudo-link fivemargin" onClick={this.handlePagination.bind(this, -1)}>Prev</button>
+            <button className="button white pseudo-link fivemargin" onClick={this.handlePagination.bind(this, 1)}>Next</button>
           </div>
         </div>
       </div>
@@ -164,11 +180,13 @@ App.propTypes = {
   currentUser: PropTypes.object,
 };
 
+
+//CHANGE THIS FOR PAGINATION 
 export default createContainer(() => {
   Meteor.subscribe('posts');
 
   return {
-    posts: Posts.find({}, { sort: { createdAt: -1 } }).fetch(),
+    posts: Posts.find({}, { sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
   };
 }, App);
