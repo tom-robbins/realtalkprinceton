@@ -154,54 +154,8 @@ class App extends Component {
             </ul>
           </div>
         </div>
-
-
-
       </div>
       ); 
-
-    // return (
-    //   <div className="container">
-    //     <header>
-    //       <h1>Real Talk Princetonn</h1>
-    //       {/*
-    //       <label className="hide-completed">
-    //         <input
-    //           type="checkbox"
-    //           readOnly
-    //           checked={this.state.hideCompleted}
-    //           onClick={this.toggleHideCompleted.bind(this)}
-    //         />
-    //         Hide Completed Posts
-    //       </label>
-    //       */}
-
-    //       <AccountsUIWrapper />
-    //       { this.props.currentUser ?
-    //         <form className="new-question" onSubmit={this.handleSubmit.bind(this)} >
-    //           <input
-    //             type="text"
-    //             ref="textInput"
-    //             placeholder="Ask us anything!"
-    //           />
-    //         </form> : ''
-    //       }
-    //     </header>
-    //     <button className="contributorsButton" onClick={this.goContributors.bind(this)}>Contributor Bios</button>
-          
-    //     <form onSubmit={this.handleSearch.bind(this)}>
-    //       <p>
-    //         <input type = "text"
-    //              ref = "searchString" />
-    //         <input type="submit" value="Search"/>
-    //       </p>
-    //     </form>
-
-    //     <ul>
-    //       {this.renderFound()}
-    //     </ul>
-    //   </div>
-    // );
   }
 }
 
