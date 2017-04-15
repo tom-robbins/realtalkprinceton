@@ -209,7 +209,6 @@ textarea {
 }
 
 .button {
-  background:none!important;
   border:none; 
   padding:0!important;
   font-size: 1.25em;
@@ -218,6 +217,10 @@ textarea {
   font-weight: normal; 
   /*border is optional*/
   cursor: pointer;
+}
+
+.pseudo-link {
+  background:none!important;
 }
 
 input[type=button], input[type=submit], input[type=reset] {
@@ -244,9 +247,24 @@ ul {
   position: relative;
 }
 
-.answerButton {
+.admin-button {
   float: right;
+
+  border:none; 
+  padding: 5px 5px 5px 5px;
+  font-size: 1em;
+  margin: 0;
+  font-family: "Avenir Next";
+  font-weight: normal; 
+  /*border is optional*/
+  cursor: pointer;
 }
+
+.toggle-private {
+  margin-bottom: 5px;
+  float: left;
+}
+
 li {
   position: relative;
   list-style: none;
@@ -275,9 +293,6 @@ header .hide-completed {
   float: right;
 }
 
-.toggle-private {
-  margin-left: 5px;
-}
 
 @media (max-width: 600px) {
   li {

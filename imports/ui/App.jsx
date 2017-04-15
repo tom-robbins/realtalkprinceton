@@ -138,7 +138,7 @@ class App extends Component {
                     }
                   </li>
                   <li>
-                    <button className="button white" onClick={this.goContributors.bind(this)}>About the admins</button>
+                    <button className="button white pseudo-link" onClick={this.goContributors.bind(this)}>About the admins</button>
                   </li>
                   <li>
                     <AccountsUIWrapper />
