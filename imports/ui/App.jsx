@@ -33,6 +33,7 @@ class App extends Component {
   searchAll(event) {
     event.preventDefault();
 
+    this.tagQuery = "";
     this.query = "";
     this.tagSearch = 0;
 
@@ -42,7 +43,8 @@ class App extends Component {
   searchAcademic(event) {
     event.preventDefault();
 
-    this.query = "academic";
+    this.tagQuery = "academic";
+    this.query = "";
     this.tagSearch = 1;
 
     this.forceUpdate();
@@ -51,7 +53,8 @@ class App extends Component {
   searchSocial(event) {
     event.preventDefault();
 
-    this.query = "sociallife";
+    this.tagQuery = "sociallife";
+    this.query = "";
     this.tagSearch = 1;
 
     this.forceUpdate();
@@ -60,7 +63,8 @@ class App extends Component {
   searchExtra(event) {
     event.preventDefault();
 
-    this.query = "extracurricular";
+    this.tagQuery = "extracurricular";
+    this.query = "";
     this.tagSearch = 1;
 
     this.forceUpdate();
@@ -119,15 +123,17 @@ class App extends Component {
       var re = new RegExp(this.query, 'i');
 
       if (this.tagSearch == 1) {
-        if (post.tags.includes(this.query)) {
-          return (
-            <Post
-            key={post._id}
-            post={post}
-            isAdmin={isAdmin}
-            answered = {answered}
-            />
-          );
+        if (post.tags.includes(this.tagQuery)) {
+          if (post.question.match(re) != null || this.query == undefined) {
+            return (
+              <Post
+                key={post._id}
+                post={post}
+                isAdmin={isAdmin}
+                answered = {answered}
+              />
+            );
+          }
         }
       }
       else {
