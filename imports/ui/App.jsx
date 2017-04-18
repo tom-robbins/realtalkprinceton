@@ -30,6 +30,46 @@ class App extends Component {
     ReactDOM.findDOMNode(this.refs.textInput).value = '';
   }
 
+  searchAll(event) {
+    event.preventDefault();
+
+    this.tagQuery = "";
+    this.query = "";
+    this.tagSearch = 0;
+
+    this.forceUpdate();
+  }
+
+  searchAcademic(event) {
+    event.preventDefault();
+
+    this.tagQuery = "academic";
+    this.query = "";
+    this.tagSearch = 1;
+
+    this.forceUpdate();
+  }
+
+  searchSocial(event) {
+    event.preventDefault();
+
+    this.tagQuery = "sociallife";
+    this.query = "";
+    this.tagSearch = 1;
+
+    this.forceUpdate();
+  }
+
+  searchExtra(event) {
+    event.preventDefault();
+
+    this.tagQuery = "extracurricular";
+    this.query = "";
+    this.tagSearch = 1;
+
+    this.forceUpdate();
+  }
+
   handleSearch(event) {
      event.preventDefault();
 
@@ -82,15 +122,31 @@ class App extends Component {
 
       var re = new RegExp(this.query, 'i');
 
-      if (post.question.match(re) != null || this.query == undefined) {
-        return (
-          <Post
-            key={post._id}
-            post={post}
-            isAdmin={isAdmin}
-            answered = {answered}
-          />
-        );
+      if (this.tagSearch == 1) {
+        if (post.tags.includes(this.tagQuery)) {
+          if (post.question.match(re) != null || this.query == undefined) {
+            return (
+              <Post
+                key={post._id}
+                post={post}
+                isAdmin={isAdmin}
+                answered = {answered}
+              />
+            );
+          }
+        }
+      }
+      else {
+        if (post.question.match(re) != null || this.query == undefined) {
+          return (
+            <Post
+              key={post._id}
+              post={post}
+              isAdmin={isAdmin}
+              answered = {answered}
+            />
+          );
+        }
       }
     });
   }
@@ -113,7 +169,10 @@ class App extends Component {
                   <p className="white">Now Viewing: </p>
                 </div>
                 <div className="col-md-6 col-xs-6">
-                  <p className="white">all<br/>academic<br/>social life<br/>extracurricular</p>
+                  <div> <button className="button white" onClick={this.searchAll.bind(this)}>all</button> </div>
+                  <button className="button white" onClick={this.searchAcademic.bind(this)}>academic</button>
+                  <button className="button white" onClick={this.searchSocial.bind(this)}>social life</button>
+                  <button className="button white" onClick={this.searchExtra.bind(this)}>extracurricular</button>
                 </div>
               </div>
               <div className="row"> 
@@ -123,7 +182,7 @@ class App extends Component {
                     <p>
                       <input type = "text"
                         ref = "searchString"
-                        placeholder="search" />
+                        placeholder="search"/>
                       <input type="submit" value="Search"/>
                     </p>
                   </form>

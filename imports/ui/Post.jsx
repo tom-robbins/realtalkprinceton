@@ -23,12 +23,23 @@ export default class Post extends Component {
     Meteor.call('posts.answer', this.props.post._id, ans)
   }
 
+  tagPost() {
+    var tag = prompt("Please enter your your answer", "Blank");
+    Meteor.call('posts.tag', this.props.post._id, tag)
+  }
+
   deleteThisAnswer(t, o) {
     // o is the index of the answer to remove
     Meteor.call('posts.ansRemove', this.props.post._id, o);
   }
 
+  deleteThisTag(t, o) {
+    // o is the index of the answer to remove
+    Meteor.call('posts.tagRemove', this.props.post._id, o);
+  }
+
   render() {
+
     // Give posts a different className when they are checked off,
     // so that we can style them nicely in CSS
     const postClassName = classnames({
@@ -54,11 +65,26 @@ export default class Post extends Component {
             <div className="col-md-6 col-sm-6">
               <p className="tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
               <p className="white no-margin">{this.props.post.question}</p>
+              { this.props.post.tags.length > 0 && this.props.isAdmin? (
+                Object.keys(this.props.post.tags).map((obj, i) => 
+                  <div>
+                    <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
+                    <p className="white no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
+                  </div>
+                )
+              ) : ''}
+              
 
               { this.props.isAdmin ? (
               <button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>
-            ) : ''}
+              ) : ''}
+
+              { this.props.isAdmin ? (
+              <button className="tagButton" onClick={this.tagPost.bind(this)}>Tag</button>
+              ) : ''}
+
             </div>
+
           <br/>
 
           { 
@@ -67,6 +93,11 @@ export default class Post extends Component {
               {Object.keys(this.props.post.answer).map((obj, i) =>
                 <div>
                 <p className="white no-margin" key = {obj}><b>{"Response from " + this.props.post.answer[obj].name}</b></p>
+                { this.props.isAdmin ? (
+                 <button className="delete" onClick={()=>this.deleteThisAnswer(this, parseInt(obj))}>
+                   &times;
+                 </button>
+                 ) : '' }
                 <p className="white no-margin" key = {300 - obj}>{this.props.post.answer[obj].text}</p>
 
                 </div>
