@@ -48,8 +48,15 @@ class App extends Component {
   handlePagination(event) {
      event.preventDefault();
 
-     offset = 5;
-     perPage = 1; 
+     offset = 0;
+
+     this.forceUpdate();
+  }
+
+  handlePaginationDown(event) {
+     event.preventDefault();
+
+     offset = 0;
 
      this.forceUpdate();
   }
@@ -88,6 +95,8 @@ class App extends Component {
       filteredPosts = filteredPosts.filter(post => !post.checked);
     }
     var count = 0; 
+    var firstPost = offset*perPage; 
+    var lastPost = firstPost+perPage; 
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
@@ -95,7 +104,7 @@ class App extends Component {
 
       var re = new RegExp(this.query, 'i');
 
-      if ((post.question.match(re) != null || this.query == undefined) && count < perPage) {
+      if ((post.question.match(re) != null || this.query == undefined)) {
         count++; 
         return (
           <Post
@@ -131,7 +140,7 @@ class App extends Component {
                 </div>
               </div>
               <div className="row"> 
-                <div className="col*-12">
+                <div className="col-md-12">
                   <li>
                     <form className="search" onSubmit={this.handleSearch.bind(this)}>
                     <p>
@@ -166,8 +175,8 @@ class App extends Component {
             <ul>
               {this.renderFound()}
             </ul>
-            <button className="button white pseudo-link fivemargin" onClick={this.handlePagination.bind(this, -1)}>Prev</button>
-            <button className="button white pseudo-link fivemargin" onClick={this.handlePagination.bind(this, 1)}>Next</button>
+            <button className="button white pseudo-link fivemargin" onClick={this.handlePagination.bind(this)}>Prev</button>
+            <button className="button white pseudo-link fivemargin" onClick={this.handlePagination.bind(this)}>Next</button>
           </div>
         </div>
       </div>

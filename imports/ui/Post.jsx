@@ -38,11 +38,6 @@ export default class Post extends Component {
     if (this.props.isAdmin || this.props.answered) {
       return (
         <li className={postClassName}>
-          { this.props.isAdmin ? (
-            <button className="delete" onClick={this.deleteThisPost.bind(this)}>
-              &times;
-            </button>
-          ) : '' }
 
           <div className="row match-my-cols posts">
             <div className="col-md-6 col-sm-6">
@@ -69,6 +64,11 @@ export default class Post extends Component {
               {Object.keys(this.props.post.answer).map((obj, i) =>
                 <div>
                 <p className="white no-margin" key = {obj}><b>{"Response from " + this.props.post.answer[obj].name}</b></p>
+                { this.props.isAdmin ? (
+                  <button className="delete" onClick={()=>this.deleteThisAnswer(this, parseInt(obj))}>
+                  &times;
+                  </button>
+                  ) : '' }
                 <p className="white no-margin" key = {300 - obj}>{this.props.post.answer[obj].text}</p>
 
                 </div>
