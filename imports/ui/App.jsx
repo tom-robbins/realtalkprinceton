@@ -36,6 +36,8 @@ class App extends Component {
   handleSearch(event) {
      event.preventDefault();
 
+     offset = 0; 
+
      // Find the text field via the React ref
      this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
 
@@ -45,18 +47,17 @@ class App extends Component {
      this.forceUpdate();
   }
 
-  handlePagination(event) {
+  handlePaginationUp(event) {
      event.preventDefault();
 
-     offset = 0;
-
+     offset++; 
      this.forceUpdate();
   }
 
   handlePaginationDown(event) {
      event.preventDefault();
 
-     offset = 0;
+     offset--;
 
      this.forceUpdate();
   }
@@ -94,9 +95,12 @@ class App extends Component {
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
     }
-    var count = 0; 
+    var count = -1; 
     var firstPost = offset*perPage; 
     var lastPost = firstPost+perPage; 
+    console.log(offset); 
+    console.log(firstPost); 
+    console.log(lastPost); 
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
@@ -104,8 +108,8 @@ class App extends Component {
 
       var re = new RegExp(this.query, 'i');
 
-      if ((post.question.match(re) != null || this.query == undefined)) {
-        count++; 
+      count++; 
+      if ((post.question.match(re) != null || this.query == undefined) && count<lastPost && count>=firstPost) {
         return (
           <Post
             key={post._id}
@@ -175,8 +179,10 @@ class App extends Component {
             <ul>
               {this.renderFound()}
             </ul>
-            <button className="button white pseudo-link fivemargin" onClick={this.handlePagination.bind(this)}>Prev</button>
-            <button className="button white pseudo-link fivemargin" onClick={this.handlePagination.bind(this)}>Next</button>
+            {offset > 0 ? (
+            <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationDown.bind(this)}>Prev</button>
+            ) : ''}
+            <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Next</button>
           </div>
         </div>
       </div>
