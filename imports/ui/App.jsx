@@ -7,18 +7,48 @@ import { Roles } from 'meteor/alanning:roles'
 import Post from './Post.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
-
-var offset = 0; 
+var pages = 1; 
 var perPage = 3; 
+var totalPosts; 
+var pagesLimit; 
+
+
 // App component - represents the whole app
 class App extends Component {
   //const query;
   constructor(props) {
   super(props);
+  this.handleScroll = this.handleScroll.bind(this);
 
   this.state = {
     hideCompleted: false,
     };
+  }
+
+  //from some random internet man 
+  handleScroll() {
+    const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
+    const body = document.body;
+    const html = document.documentElement;
+    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight);
+    const windowBottom = windowHeight + window.pageYOffset;
+    if (windowBottom >= docHeight && pages < pagesLimit) {
+      pages++; 
+      this.update(); 
+    }
+  }
+
+    componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
+  update() {
+    console.log("force update"); 
+    this.forceUpdate(); 
   }
 
   handleSubmit(event) {
@@ -36,7 +66,7 @@ class App extends Component {
   handleSearch(event) {
      event.preventDefault();
 
-     offset = 0; 
+     pages = 1; 
 
      // Find the text field via the React ref
      this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
@@ -50,14 +80,14 @@ class App extends Component {
   handlePaginationUp(event) {
      event.preventDefault();
 
-     offset++; 
+     pages++; 
      this.forceUpdate();
   }
 
   handlePaginationDown(event) {
      event.preventDefault();
 
-     offset--;
+     pages--;
 
      this.forceUpdate();
   }
@@ -95,11 +125,9 @@ class App extends Component {
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
     }
-    var count = -1; 
-    var firstPost = offset*perPage; 
-    var lastPost = firstPost+perPage; 
-    console.log(offset); 
-    console.log(firstPost); 
+    totalPosts = 0; 
+    var rendered = 0; 
+    var lastPost = pages*perPage; 
     console.log(lastPost); 
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
@@ -108,8 +136,10 @@ class App extends Component {
 
       var re = new RegExp(this.query, 'i');
 
-      count++; 
-      if ((post.question.match(re) != null || this.query == undefined) && count<lastPost && count>=firstPost) {
+      totalPosts++; 
+      pagesLimit = Math.floor(totalPosts/perPage); 
+      if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
+        rendered++; 
         return (
           <Post
             key={post._id}
@@ -179,10 +209,12 @@ class App extends Component {
             <ul>
               {this.renderFound()}
             </ul>
-            {offset > 0 ? (
-            <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationDown.bind(this)}>Prev</button>
+            {pages > 1 ? (
+              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationDown.bind(this)}>Prev</button>
             ) : ''}
-            <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Next</button>
+            {pages < pagesLimit ? (
+              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Next</button>
+            ) : ''}
           </div>
         </div>
       </div>
