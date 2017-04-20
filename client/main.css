@@ -36,6 +36,10 @@
   padding: 0; 
 }
 
+.fivemargin {
+  margin: 5px 5px 5px 5px;
+}
+
 .row.match-my-cols {
     overflow: hidden; 
 }
@@ -170,6 +174,7 @@ p {
 form {
   margin-top: 10px;
   margin-bottom: -10px;
+  margin-right: 10px; 
   position: relative;
 }
 
@@ -181,6 +186,7 @@ form {
   width: 100%;
   padding-right: 80px;
   font-size: 1em;
+  margin-right: 10px;
 }
 
 .new-question input:focus{
@@ -202,22 +208,26 @@ textarea {
 .search input {
   box-sizing: border-box;
   padding: 10px 0;
-  background: transparent;
+  background: #EF8A46;
   border: none;
-  padding-right: 80px;
+  padding-left: 7px; 
+  padding-right: 7px;
   font-size: 1em;
+  width: 100%; 
 }
 
 .button {
-  background:none!important;
   border:none; 
   padding:0!important;
   font-size: 1.25em;
-  margin: 0;
   font-family: "Avenir Next";
   font-weight: normal; 
   /*border is optional*/
   cursor: pointer;
+}
+
+.pseudo-link {
+  background:none!important;
 }
 
 input[type=button], input[type=submit], input[type=reset] {
@@ -244,8 +254,22 @@ ul {
   position: relative;
 }
 
-.answerButton {
+.admin-button {
   float: right;
+
+  border:none; 
+  padding: 5px 5px 5px 5px;
+  font-size: 1em;
+  margin: 0;
+  font-family: "Avenir Next";
+  font-weight: normal; 
+  /*border is optional*/
+  cursor: pointer;
+}
+
+.toggle-private {
+  margin-bottom: 5px;
+  float: left;
 }
 
 .tagButton {
@@ -280,9 +304,6 @@ header .hide-completed {
   float: right;
 }
 
-.toggle-private {
-  margin-left: 5px;
-}
 
 @media (max-width: 600px) {
   li {

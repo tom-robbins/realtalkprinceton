@@ -7,15 +7,48 @@ import { Roles } from 'meteor/alanning:roles'
 import Post from './Post.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
+var pages = 1; 
+var perPage = 3; 
+var totalPosts; 
+var pagesLimit; 
+
+
 // App component - represents the whole app
 class App extends Component {
   //const query;
   constructor(props) {
   super(props);
+  this.handleScroll = this.handleScroll.bind(this);
 
   this.state = {
     hideCompleted: false,
     };
+  }
+
+  //from some random internet man 
+  handleScroll() {
+    const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
+    const body = document.body;
+    const html = document.documentElement;
+    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight);
+    const windowBottom = windowHeight + window.pageYOffset;
+    if (windowBottom >= docHeight && pages < pagesLimit) {
+      pages++; 
+      this.update(); 
+    }
+  }
+
+    componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
+  update() {
+    console.log("force update"); 
+    this.forceUpdate(); 
   }
 
   handleSubmit(event) {
@@ -73,11 +106,28 @@ class App extends Component {
   handleSearch(event) {
      event.preventDefault();
 
+     pages = 1; 
+
      // Find the text field via the React ref
      this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
 
      // Clear form
      ReactDOM.findDOMNode(this.refs.searchString).value = '';
+
+     this.forceUpdate();
+  }
+
+  handlePaginationUp(event) {
+     event.preventDefault();
+
+     pages++; 
+     this.forceUpdate();
+  }
+
+  handlePaginationDown(event) {
+     event.preventDefault();
+
+     pages--;
 
      this.forceUpdate();
   }
@@ -115,6 +165,10 @@ class App extends Component {
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
     }
+    totalPosts = 0; 
+    var rendered = 0; 
+    var lastPost = pages*perPage; 
+    console.log(lastPost); 
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
@@ -122,17 +176,20 @@ class App extends Component {
 
       var re = new RegExp(this.query, 'i');
 
+      totalPosts++; 
+      pagesLimit = Math.floor(totalPosts/perPage); 
       if (this.tagSearch == 1) {
         if (post.tags.includes(this.tagQuery)) {
-          if (post.question.match(re) != null || this.query == undefined) {
+          if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
+            rendered++; 
             return (
-              <Post
-                key={post._id}
-                post={post}
-                isAdmin={isAdmin}
-                answered = {answered}
-              />
-            );
+            <Post
+              key={post._id}
+              post={post}
+              isAdmin={isAdmin}
+              answered = {answered}
+            />
+          );
           }
         }
       }
@@ -176,7 +233,7 @@ class App extends Component {
                 </div>
               </div>
               <div className="row"> 
-                <div className="col*-12">
+                <div className="col-md-12">
                   <li>
                     <form className="search" onSubmit={this.handleSearch.bind(this)}>
                     <p>
@@ -197,7 +254,7 @@ class App extends Component {
                     }
                   </li>
                   <li>
-                    <button className="button white" onClick={this.goContributors.bind(this)}>About the admins</button>
+                    <button className="button white pseudo-link" onClick={this.goContributors.bind(this)}>About the admins</button>
                   </li>
                   <li>
                     <AccountsUIWrapper />
@@ -211,56 +268,16 @@ class App extends Component {
             <ul>
               {this.renderFound()}
             </ul>
+            {pages > 1 ? (
+              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationDown.bind(this)}>Prev</button>
+            ) : ''}
+            {pages < pagesLimit ? (
+              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Next</button>
+            ) : ''}
           </div>
         </div>
-
-
-
       </div>
       ); 
-
-    // return (
-    //   <div className="container">
-    //     <header>
-    //       <h1>Real Talk Princetonn</h1>
-    //       {/*
-    //       <label className="hide-completed">
-    //         <input
-    //           type="checkbox"
-    //           readOnly
-    //           checked={this.state.hideCompleted}
-    //           onClick={this.toggleHideCompleted.bind(this)}
-    //         />
-    //         Hide Completed Posts
-    //       </label>
-    //       */}
-
-    //       <AccountsUIWrapper />
-    //       { this.props.currentUser ?
-    //         <form className="new-question" onSubmit={this.handleSubmit.bind(this)} >
-    //           <input
-    //             type="text"
-    //             ref="textInput"
-    //             placeholder="Ask us anything!"
-    //           />
-    //         </form> : ''
-    //       }
-    //     </header>
-    //     <button className="contributorsButton" onClick={this.goContributors.bind(this)}>Contributor Bios</button>
-          
-    //     <form onSubmit={this.handleSearch.bind(this)}>
-    //       <p>
-    //         <input type = "text"
-    //              ref = "searchString" />
-    //         <input type="submit" value="Search"/>
-    //       </p>
-    //     </form>
-
-    //     <ul>
-    //       {this.renderFound()}
-    //     </ul>
-    //   </div>
-    // );
   }
 }
 
@@ -269,11 +286,13 @@ App.propTypes = {
   currentUser: PropTypes.object,
 };
 
+
+//CHANGE THIS FOR PAGINATION 
 export default createContainer(() => {
   Meteor.subscribe('posts');
 
   return {
-    posts: Posts.find({}, { sort: { createdAt: -1 } }).fetch(),
+    posts: Posts.find({}, { sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
   };
 }, App);
