@@ -179,6 +179,7 @@ class App extends Component {
       totalPosts++; 
       pagesLimit = Math.floor(totalPosts/perPage); 
       if (this.tagSearch == 1) {
+        console.log("182"); 
         if (post.tags.includes(this.tagQuery)) {
           if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
             rendered++; 
@@ -194,7 +195,9 @@ class App extends Component {
         }
       }
       else {
+        console.log("198"); 
         if (post.question.match(re) != null || this.query == undefined) {
+          console.log("200"); 
           return (
             <Post
               key={post._id}
@@ -226,10 +229,10 @@ class App extends Component {
                   <p className="white">Now Viewing: </p>
                 </div>
                 <div className="col-md-6 col-xs-6">
-                  <div> <button className="button white" onClick={this.searchAll.bind(this)}>all</button> </div>
-                  <button className="button white" onClick={this.searchAcademic.bind(this)}>academic</button>
-                  <button className="button white" onClick={this.searchSocial.bind(this)}>social life</button>
-                  <button className="button white" onClick={this.searchExtra.bind(this)}>extracurricular</button>
+                  <div> <button className="button white pseudo-link" onClick={this.searchAll.bind(this)}>all</button> </div>
+                  <div><button className="button white pseudo-link" onClick={this.searchAcademic.bind(this)}>academic</button> </div>
+                  <div><button className="button white pseudo-link" onClick={this.searchSocial.bind(this)}>social life</button> </div>
+                  <div><button className="button white pseudo-link" onClick={this.searchExtra.bind(this)}>extracurricular</button> </div>
                 </div>
               </div>
               <div className="row"> 
