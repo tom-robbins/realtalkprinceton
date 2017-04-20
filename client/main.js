@@ -7,7 +7,6 @@ import App from '../imports/ui/App.jsx';
 import Contributors from '../imports/ui/Contributors.jsx';
 
 Meteor.startup(() => {
-
 	Router.route('/', function () {
   		render(<App />, document.getElementById('render-target'));
 	});

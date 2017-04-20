@@ -272,6 +272,10 @@ ul {
   float: left;
 }
 
+.tagButton {
+  float: right;
+}
+
 li {
   position: relative;
   list-style: none;
@@ -324,4 +328,3 @@ header .hide-completed {
   font-style: italic;
   color: #aaa;
 }
-
