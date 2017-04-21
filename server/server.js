@@ -20,7 +20,7 @@ Meteor.startup(function () {
   Roles.addUsersToRoles(id._id, ['admin']);
   var id = Meteor.users.findOne({username: "vmo"})
   console.log(id)
-  */
+
   Roles.addUsersToRoles(id._id, ['admin']);
   var admins = ['thomasrr', 'vmo', 'savannah', 'jmerali', 'lanchang']
 
@@ -32,7 +32,7 @@ Meteor.startup(function () {
       Roles.addUsersToRoles(id._id, ['admin']);
     }
   }
-
+  */
 });
 
 Meteor.publish(null, function (){
