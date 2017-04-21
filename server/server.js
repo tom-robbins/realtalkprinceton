@@ -10,7 +10,7 @@ Meteor.startup(function () {
     })
   }
 
-  /*console.log('Running server startup code...');
+  console.log('Running server startup code...');
   var id = Meteor.users.findOne({username: "lanchang"})
   console.log(id)
   Roles.addUsersToRoles(id._id, ['admin']);
@@ -29,7 +29,7 @@ Meteor.startup(function () {
     if (id) {
       Roles.addUsersToRoles(id._id, ['admin']);
     }
-  }*/
+  }
 
 });
 

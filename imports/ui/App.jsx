@@ -5,6 +5,8 @@ import { Meteor } from 'meteor/meteor';
 import { Posts } from '../api/posts'
 import { Roles } from 'meteor/alanning:roles'
 import Post from './Post.jsx';
+import { Affix } from 'react-overlays'
+import { StickyContainer, Sticky } from 'react-sticky';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
 var pages = 1; 
@@ -30,7 +32,7 @@ class App extends Component {
     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
     const body = document.body;
     const html = document.documentElement;
-    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight);
+    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight) - 10;
     const windowBottom = windowHeight + window.pageYOffset;
     if (windowBottom >= docHeight && pages < pagesLimit) {
       pages++; 
@@ -170,6 +172,7 @@ class App extends Component {
     var lastPost = pages*perPage; 
     console.log(lastPost); 
     return filteredPosts.map((post) => {
+      console.log(rendered); 
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
       const answered = post.answer != "";
@@ -179,7 +182,6 @@ class App extends Component {
       totalPosts++; 
       pagesLimit = Math.floor(totalPosts/perPage); 
       if (this.tagSearch == 1) {
-        console.log("182"); 
         if (post.tags.includes(this.tagQuery)) {
           if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
             rendered++; 
@@ -195,9 +197,8 @@ class App extends Component {
         }
       }
       else {
-        console.log("198"); 
-        if (post.question.match(re) != null || this.query == undefined) {
-          console.log("200"); 
+        if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
+          rendered++; 
           return (
             <Post
               key={post._id}
@@ -215,14 +216,20 @@ class App extends Component {
 
     return (
       <div className="container-fluid back-white stretch">
+      <StickyContainer>
+      <div>
+        <div>
           <header>
             <h1 className="orange">Real Talk Princeton</h1> 
             <p className="orange">Real Talk Princeton is an established group 
             committed to answering questions about Princeton academics, student 
             life, and beyond.</p>
           </header>
+          </div>
+        </div>
         <div className="row match-my-cols stretch">
           <div className="col-md-4 col-sm-4 back-light-orange">
+            <Sticky>
             <div className="sidebar">
               <div className="row">
                 <div className="col-md-6 col-xs-6">
@@ -266,6 +273,7 @@ class App extends Component {
                 </div>
               </div> 
             </div>
+            </Sticky>
           </div>
           <div className="col-md-8 col-sm-8 back-orange">
             <ul>
@@ -279,6 +287,7 @@ class App extends Component {
             ) : ''}
           </div>
         </div>
+        </StickyContainer>
       </div>
       ); 
   }
