@@ -9,7 +9,7 @@ Meteor.startup(function () {
       Roles.createRole(role)
     })
   }
-
+  /*
   console.log('Running server startup code...');
   var id = Meteor.users.findOne({username: "lanchang"})
   console.log(id)
@@ -30,7 +30,7 @@ Meteor.startup(function () {
       Roles.addUsersToRoles(id._id, ['admin']);
     }
   }
-
+  */
 });
 
 Meteor.publish(null, function (){
