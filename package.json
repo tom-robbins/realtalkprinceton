@@ -16,6 +16,7 @@
     "react-addons-pure-render-mixin": "^15.4.2",
     "react-bootstrap": "^0.30.8",
     "react-dom": "^15.5.3",
-    "react-overlays": "^0.6.12"
+    "react-overlays": "^0.6.12",
+    "react-sticky": "^5.0.8"
   }
 }
