@@ -62,25 +62,20 @@ export default class Post extends Component {
 
               <p className="tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
               <p className="white no-margin">{this.props.post.question}</p>
-              { this.props.post.tags.length > 0 && this.props.isAdmin? (
-                Object.keys(this.props.post.tags).map((obj, i) => 
-                  <div>
-                    <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
-                    <p className="white no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
-                  </div>
-                )
-              ) : ''}
               
+              <div className="row"> 
+                <div className="col-md-6 col-sm-6 float-left">
+                { this.props.isAdmin ? (
+                <button className="admin-button back-light-orange float-left" onClick={this.deleteThisPost.bind(this)}>Tag</button>
+                ) : ''}
+                </div>
 
-              { this.props.isAdmin ? (
-              <button className="admin-button back-light-orange" onClick={this.answerPost.bind(this)}>Answer</button>
-            ) : ''}
-              <button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>
-              ) : ''}
-
-              { this.props.isAdmin ? (
-              <button className="tagButton" onClick={this.tagPost.bind(this)}>Tag</button>
-              ) : ''}
+                <div className="col-md-6 col-sm-6">
+                { this.props.isAdmin ? (
+                <button className="admin-button back-light-orange" onClick={this.answerPost.bind(this)}>Answer</button>
+                ) : ''}
+                </div>
+              </div>
 
             </div>
 
