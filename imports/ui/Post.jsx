@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Posts } from '../api/posts';
+import Modal, {closeStyle} from 'simple-react-modal'
 import classnames from 'classnames';
 
 // Post component - represents a single todo item
@@ -26,6 +27,14 @@ export default class Post extends Component {
   deleteThisAnswer(t, o) {
     // o is the index of the answer to remove
     Meteor.call('posts.ansRemove', this.props.post._id, o);
+  }
+
+  show(){
+      this.setState({show: true})
+  }
+
+  close(){
+      this.setState({show: false})
   }
 
   render() {
@@ -56,7 +65,24 @@ export default class Post extends Component {
               <p className="white no-margin">{this.props.post.question}</p>
 
               { this.props.isAdmin ? (
-              <button className="answerButton" onClick={this.answerPost.bind(this)}>Answer</button>
+
+                  <div>
+                    <a onClick={this.show.bind(this)}>Open Modal</a>
+                    <Modal
+                        className="test-class" //this will completely overwrite the default css completely
+                        style={{background: 'red'}} //overwrites the default background
+                        containerStyle={{background: 'blue'}} //changes styling on the inner content area
+                        containerClassName="test"
+                        closeOnOuterClick={true}
+                        show={this.state.show}
+                        onClose={this.close.bind(this)}>
+
+                      <a style={closeStyle} onClick={this.close.bind(this)}>X</a>
+                      <div>hey</div>
+
+                    </Modal>
+                  </div>
+
             ) : ''}
             </div>
           <br/>

@@ -1,6 +1,5 @@
-
 {
-  "name": "simple-todos",
+  "name": "realtalkprinceton",
   "private": true,
   "scripts": {
     "start": "meteor run"
@@ -13,6 +12,8 @@
     "react": "^15.5.3",
     "react-addons-pure-render-mixin": "^15.4.2",
     "react-bootstrap": "^0.30.8",
-    "react-dom": "^15.5.3"
+    "react-dom": "^15.5.3",
+    "react-modal": "^1.7.6",
+    "simple-react-modal": "^0.5.1"
   }
 }
