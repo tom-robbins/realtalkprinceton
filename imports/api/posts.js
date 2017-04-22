@@ -41,6 +41,7 @@ Meteor.methods({
       question,
       answer: [],
       createdAt: new Date(),
+      tags:[],
       owner: Meteor.userId(),
       username: Meteor.user().username,
     });
@@ -64,6 +65,13 @@ Meteor.methods({
     var newArray = post.answer.slice();
     newArray.splice(index, 1);
     Posts.update({_id: postId}, {$set: {answer: newArray}});
+  },
+
+  'posts.tagRemove'(postId, index) {
+    const post = Posts.findOne(postId);
+    var newArray = post.tags.slice();
+    newArray.splice(index, 1);
+    Posts.update({_id: postId}, {$set: {tags: newArray}});
   },
   /*
   'posts.setChecked'(postId, setChecked) {
@@ -122,6 +130,7 @@ Meteor.methods({
         newArray[parseInt(index)] = newAnswer;
         Posts.update({_id: postId}, {$set: {answer: newArray}});
     }
+
   },
 
   'posts.tag'(postId, x) {

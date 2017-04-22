@@ -5,7 +5,14 @@ import { Meteor } from 'meteor/meteor';
 import { Posts } from '../api/posts'
 import { Roles } from 'meteor/alanning:roles'
 import Post from './Post.jsx';
+import { Affix } from 'react-overlays'
+import { StickyContainer, Sticky } from 'react-sticky';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+
+var pages = 1; 
+var perPage = 3; 
+var totalPosts; 
+var pagesLimit; 
 
 
 // App component - represents the whole app
@@ -13,10 +20,37 @@ class App extends Component {
   //const query;
   constructor(props) {
   super(props);
+  this.handleScroll = this.handleScroll.bind(this);
 
   this.state = {
     hideCompleted: false,
     };
+  }
+
+  //from some random internet man 
+  handleScroll() {
+    const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
+    const body = document.body;
+    const html = document.documentElement;
+    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight) - 10;
+    const windowBottom = windowHeight + window.pageYOffset;
+    if (windowBottom >= docHeight && pages < pagesLimit) {
+      pages++; 
+      this.update(); 
+    }
+  }
+
+    componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
+  update() {
+    console.log("force update"); 
+    this.forceUpdate(); 
   }
 
   handleSubmit(event) {
@@ -31,14 +65,71 @@ class App extends Component {
     ReactDOM.findDOMNode(this.refs.textInput).value = '';
   }
 
+  searchAll(event) {
+    event.preventDefault();
+
+    this.tagQuery = "";
+    this.query = "";
+    this.tagSearch = 0;
+
+    this.forceUpdate();
+  }
+
+  searchAcademic(event) {
+    event.preventDefault();
+
+    this.tagQuery = "academic";
+    this.query = "";
+    this.tagSearch = 1;
+
+    this.forceUpdate();
+  }
+
+  searchSocial(event) {
+    event.preventDefault();
+
+    this.tagQuery = "sociallife";
+    this.query = "";
+    this.tagSearch = 1;
+
+    this.forceUpdate();
+  }
+
+  searchExtra(event) {
+    event.preventDefault();
+
+    this.tagQuery = "extracurricular";
+    this.query = "";
+    this.tagSearch = 1;
+
+    this.forceUpdate();
+  }
+
   handleSearch(event) {
      event.preventDefault();
- 
+
+     pages = 1; 
+
      // Find the text field via the React ref
      this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
 
      // Clear form
      ReactDOM.findDOMNode(this.refs.searchString).value = '';
+
+     this.forceUpdate();
+  }
+
+  handlePaginationUp(event) {
+     event.preventDefault();
+
+     pages++; 
+     this.forceUpdate();
+  }
+
+  handlePaginationDown(event) {
+     event.preventDefault();
+
+     pages--;
 
      this.forceUpdate();
   }
@@ -76,85 +167,144 @@ class App extends Component {
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
     }
+    totalPosts = 0; 
+    var rendered = 0; 
+    var lastPost = pages*perPage; 
+    console.log(lastPost); 
     return filteredPosts.map((post) => {
+      console.log(rendered); 
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
       const answered = post.answer != "";
 
       var re = new RegExp(this.query, 'i');
 
-      if (post.question.match(re) != null || this.query == undefined) {
-        return (
-          <Post
-            key={post._id}
-            post={post}
-            isAdmin={isAdmin}
-            answered = {answered}
-          />
-        );
+      totalPosts++; 
+      pagesLimit = Math.floor(totalPosts/perPage); 
+      if (this.tagSearch == 1) {
+        if (post.tags.includes(this.tagQuery)) {
+          if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
+            rendered++; 
+            return (
+            <Post
+              key={post._id}
+              post={post}
+              isAdmin={isAdmin}
+              answered = {answered}
+            />
+          );
+          }
+        }
+      }
+      else {
+        if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
+          rendered++; 
+          return (
+            <Post
+              key={post._id}
+              post={post}
+              isAdmin={isAdmin}
+              answered = {answered}
+            />
+          );
+        }
       }
     });
   }
 
   render() {
+
     return (
-      <div className="container">
-        <header>
-          <h1>Real Talk Princeton{/*({this.props.incompleteCount}) */}</h1>
-
-          {/*
-          <label className="hide-completed">
-            <input
-              type="checkbox"
-              readOnly
-              checked={this.state.hideCompleted}
-              onClick={this.toggleHideCompleted.bind(this)}
-            />
-            Hide Completed Posts
-          </label>
-          */}
-
-          <AccountsUIWrapper />
-          { this.props.currentUser ?
-            <form className="new-question" onSubmit={this.handleSubmit.bind(this)} >
-              <input
-                type="text"
-                ref="textInput"
-                placeholder="Ask us anything!"
-              />
-            </form> : ''
-          }
-        </header>
-        <button className="contributorsButton" onClick={this.goContributors.bind(this)}>Contributor Bios</button>
-          
-        <form onSubmit={this.handleSearch.bind(this)}>
-          <p>
-            <input type = "text"
-                 ref = "searchString" />
-            <input type="submit" value="Search"/>
-          </p>
-        </form>
-
-        <ul>
-          {this.renderFound()}
-        </ul>
+      <div className="container-fluid back-white stretch">
+      <StickyContainer>
+      <div>
+        <div>
+          <header>
+            <h1 className="orange">Real Talk Princeton</h1> 
+            <p className="orange">Real Talk Princeton is an established group 
+            committed to answering questions about Princeton academics, student 
+            life, and beyond.</p>
+          </header>
+          </div>
+        </div>
+        <div className="row match-my-cols stretch">
+          <div className="col-md-4 col-sm-4 back-light-orange">
+            <Sticky>
+            <div className="sidebar">
+              <div className="row">
+                <div className="col-md-6 col-xs-6">
+                  <p className="white">Now Viewing: </p>
+                </div>
+                <div className="col-md-6 col-xs-6">
+                  <div> <button className="button white pseudo-link" onClick={this.searchAll.bind(this)}>all</button> </div>
+                  <div><button className="button white pseudo-link" onClick={this.searchAcademic.bind(this)}>academic</button> </div>
+                  <div><button className="button white pseudo-link" onClick={this.searchSocial.bind(this)}>social life</button> </div>
+                  <div><button className="button white pseudo-link" onClick={this.searchExtra.bind(this)}>extracurricular</button> </div>
+                </div>
+              </div>
+              <div className="row"> 
+                <div className="col-md-12">
+                  <li>
+                    <form className="search" onSubmit={this.handleSearch.bind(this)}>
+                    <p>
+                      <input type = "text"
+                        ref = "searchString"
+                        placeholder="search"/>
+                      <input type="submit" value="Search"/>
+                    </p>
+                  </form>
+                  </li>
+                  <li>
+                    <p className="white link">Ask a Question</p>
+                    { this.props.currentUser ?
+                      <form className="new-question" onSubmit={this.handleSubmit.bind(this)} >
+                      <textarea ref="textInput"></textarea>
+                      <input type="submit"/>
+                      </form> : ''
+                    }
+                  </li>
+                  <li>
+                    <button className="button white pseudo-link" onClick={this.goContributors.bind(this)}>About the admins</button>
+                  </li>
+                  <li>
+                    <AccountsUIWrapper />
+                  </li>
+                  <p> <br/></p>
+                </div>
+              </div> 
+            </div>
+            </Sticky>
+          </div>
+          <div className="col-md-8 col-sm-8 back-orange">
+            <ul>
+              {this.renderFound()}
+            </ul>
+            {pages > 1 ? (
+              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationDown.bind(this)}>Prev</button>
+            ) : ''}
+            {pages < pagesLimit ? (
+              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Next</button>
+            ) : ''}
+          </div>
+        </div>
+        </StickyContainer>
       </div>
-    );
+      ); 
   }
 }
 
 App.propTypes = {
   posts: PropTypes.array.isRequired,
-  /* incompleteCount: PropTypes.number.isRequired, */
   currentUser: PropTypes.object,
 };
 
+
+//CHANGE THIS FOR PAGINATION 
 export default createContainer(() => {
   Meteor.subscribe('posts');
 
   return {
-    posts: Posts.find({}, { sort: { createdAt: -1 } }).fetch(),
-    /* incompleteCount: Posts.find({ checked: { $ne: true } }).count(), */
+    posts: Posts.find({}, { sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
   };
 }, App);
