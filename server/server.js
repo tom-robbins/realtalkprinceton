@@ -1,7 +1,7 @@
 Meteor.startup(function () {
 
   // user roles
-  var roles = ['admin', 'pleb']
+  var roles = ['superadmin', 'admin', 'pleb']
 
   // this will fail if the roles package isn't installed
   if(Meteor.roles.find().count() === 0) {
@@ -11,12 +11,17 @@ Meteor.startup(function () {
   }
 
   console.log('Running server startup code...');
+
+  var id = Meteor.users.findOne({username: "admin"});
+  Roles.addUsersToRoles(id._id, ['superadmin']);
   /*
   var id = Meteor.users.findOne({username: "lanchang"})
   console.log(id)
   Roles.addUsersToRoles(id._id, ['admin']);
   var id = Meteor.users.findOne({username: "thomasrr"})
   console.log(id)
+  Roles.addUsersToRoles(id._id, ['admin']);
+
   Roles.addUsersToRoles(id._id, ['admin']);
   var id = Meteor.users.findOne({username: "vmo"})
   console.log(id)
@@ -33,8 +38,20 @@ Meteor.startup(function () {
     }
   }
   */
+
 });
 
 Meteor.publish(null, function (){
   return Meteor.roles.find({})
 })
+
+Meteor.methods({
+  'posts.addAdmin'(user) {
+   var id = Meteor.users.findOne({username: user})
+   Roles.addUsersToRoles(id._id, ['admin']);
+  },
+  'posts.removeAdmin'(user) {
+   var id = Meteor.users.findOne({username: user})
+   Roles.removeUsersFromRoles(id._id, ['admin']);
+  }
+});
