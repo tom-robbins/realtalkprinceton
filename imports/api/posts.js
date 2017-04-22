@@ -122,6 +122,15 @@ Meteor.methods({
         newArray[parseInt(index)] = newAnswer;
         Posts.update({_id: postId}, {$set: {answer: newArray}});
     }
-    
-  }
+  },
+
+  'posts.tag'(postId, x) {
+    // check(postId, String);
+    const post = Posts.findOne(postId);
+
+
+    for (var i = 0; i < x.split(" ").length; i++) {
+      Posts.update({_id: postId}, {$push: {tags: x.split(" ")[i]}});
+    }
+  },
 });
