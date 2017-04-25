@@ -222,22 +222,58 @@ textarea {
   font-size: 1.25em;
   font-family: "Avenir Next";
   font-weight: normal; 
+  font-weight: 100; 
   /*border is optional*/
   cursor: pointer;
+}
+
+.button:hover {
+  font-weight: normal!important;
+}
+
+.button:focus {
+  outline: none!important;
 }
 
 .pseudo-link {
   background:none!important;
 }
 
-input[type=button], input[type=submit], input[type=reset] {
-    background-color: #f58025;
-    border: none;
-    color: white;
-    padding: 10px 10px;
-    text-decoration: none;
-    margin: 10px 2px;
-    cursor: pointer;
+input[type=button], input[type=submit] {
+  border-radius: 20px;
+  background-color: #f58025;
+  border: none;
+  color: white;
+  padding: 10px 10px;
+  text-decoration: none;
+  margin: 10px 2px;
+  cursor: pointer;
+}
+
+input[type=reset] {
+  border-radius: 20px;
+  border: none;
+  color: white;
+  text-decoration: none;
+  background-color: #ed985f;
+}
+
+input::placeholder {
+  color: #ed985f;
+}
+
+input:focus {
+  outline: none!important;
+}
+
+textarea:focus {
+  outline: none!important;
+}
+
+input[type=text], textarea {
+  border-radius: 10px;
+  background-color: white;
+  font-weight: 100;
 }
 
 ul {
@@ -310,12 +346,12 @@ header .hide-completed {
     padding: 12px 15px;
   }
 
-  .search {
-    width: 150px;
-    clear: both;
-  }
+.search {
+  width: 100%;
+  clear: both;
+}
 
-  .new-post input {
+.new-post input {
     padding-bottom: 5px;
   }
 }
@@ -327,4 +363,16 @@ header .hide-completed {
 .answer {
   font-style: italic;
   color: #aaa;
+}
+
+.tiny {
+  font-size: 10px;
+}
+
+.material-icons {
+  font-size: 10px!important;
+  background: white;
+  border-radius: 20px;
+  margin: 10px 10px;
+  cursor: pointer;
 }

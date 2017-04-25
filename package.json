@@ -16,6 +16,10 @@
     "react-addons-pure-render-mixin": "^15.4.2",
     "react-bootstrap": "^0.30.8",
     "react-dom": "^15.5.3",
+    "react-native-dropdown": "0.0.6",
+    "react-native-material-design": "^0.3.7",
+    "react-native-menu": "^0.20.2",
+    "react-native-vector-icons": "^4.0.1",
     "react-overlays": "^0.6.12",
     "react-sticky": "^5.0.8"
   }
