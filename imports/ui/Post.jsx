@@ -53,15 +53,25 @@ export default class Post extends Component {
           <div className="row match-my-cols posts">
             <div className="col-md-6 col-sm-6">
             { this.props.isAdmin ? (
-              <button className="admin-button back-light-orange" onClick={this.toggleHidden.bind(this)}>
-                { this.props.post.hidden ? 'Hidden' : 'Public' }
-              </button>
+              <div className="row">
+                <div className="col-md-6 col-sm-6">
+                  <button className="admin-button back-light-orange float-left" onClick={this.toggleHidden.bind(this)}>
+                    { this.props.post.hidden ? 'Hidden' : 'Public' }
+                  </button>
+                </div>
+                <div className="col-md-6 col-sm-6 float-right">
+                  <button className="delete" onClick={()=>this.deleteThisPost()}>
+                       &times;
+                  </button>
+                </div>
+
+              </div>
               ) : ''}
 
               <br/>
 
               <p className="tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-              <p className="white no-margin">{this.props.post.question}</p>
+              <p className="white">{this.props.post.question}</p>
               
               <div className="row"> 
                 <div className="col-md-6 col-sm-6 float-left">
