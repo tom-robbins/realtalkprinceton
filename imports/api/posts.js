@@ -141,6 +141,5 @@ Meteor.methods({
     for (var i = 0; i < x.split(" ").length; i++) {
       Posts.update({_id: postId}, {$push: {tags: x.split(" ")[i]}});
     }
-  }
-
+  },
 });
