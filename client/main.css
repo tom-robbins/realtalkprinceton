@@ -378,5 +378,11 @@ header .hide-completed {
 }
 
 .bio {
-  color: white;
+}
+
+.tag {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  /*background-color: white;*/
+  font-weight: bold;
 }

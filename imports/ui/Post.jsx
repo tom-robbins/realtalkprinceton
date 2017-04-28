@@ -19,12 +19,12 @@ export default class Post extends Component {
   }
 
   answerPost() {
-    var ans = prompt("Please enter your your answer", "Blank");
+    var ans = prompt("Please enter your answer", "Blank");
     Meteor.call('posts.answer', this.props.post._id, ans)
   }
 
   tagPost() {
-    var tag = prompt("Please enter your your answer", "Blank");
+    var tag = prompt("Please enter your tag", "Blank");
     Meteor.call('posts.tag', this.props.post._id, tag)
   }
 
@@ -102,7 +102,8 @@ export default class Post extends Component {
                    &times;
                  </button>
                  ) : '' }
-                <p className="white no-margin" key = {300 - obj}>{this.props.post.answer[obj].text}</p>
+                <p className="white no-margin" key = {300 - obj}>{this.props.post.answer[obj].text}<br/></p>
+                <p className="tag tiny no-margin">{this.props.post.tags[0]}</p>
 
                 </div>
               )}
