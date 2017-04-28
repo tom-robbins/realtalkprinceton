@@ -237,12 +237,12 @@ class App extends Component {
   // Contributor page
   renderContributors() {
     this.toggleRender();
-    Meteor.subscribe('userList');
 
     // const Admins = [];
     const admins = [];
     // var bios = [];
     var placeholder;
+
     const adminList = Roles.getUsersInRole(['admin', 'superadmin']).fetch();
 
     for (var i=0;i<adminList.length;i++) {
@@ -420,6 +420,7 @@ App.propTypes = {
 
 //CHANGE THIS FOR PAGINATION 
 export default createContainer(() => {
+  Meteor.subscribe('userList');
   Meteor.subscribe('posts');
 
   return {
