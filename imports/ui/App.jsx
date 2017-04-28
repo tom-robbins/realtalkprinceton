@@ -143,7 +143,7 @@ class App extends Component {
     event.preventDefault();
 
     // Find the text field via the React ref
-    const newBio = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
+    const newBio = ReactDOM.findDOMNode(this.refs.contributorBio).value.trim();
 
     Meteor.users.update(Meteor.userId(), {
       $set: {
@@ -152,7 +152,7 @@ class App extends Component {
     });
 
     // Clear form
-    ReactDOM.findDOMNode(this.refs.textInput).value = '';
+    ReactDOM.findDOMNode(this.refs.contributorBio).value = '';
 
     this.forceUpdate();
   }
@@ -237,35 +237,38 @@ class App extends Component {
   // Contributor page
   renderContributors() {
     this.toggleRender();
-    // Meteor.subscribe('userList');
+    Meteor.subscribe('userList');
 
-    const Admins = [];
+    // const Admins = [];
     const admins = [];
-    var bios = [];
-    var test;
+    // var bios = [];
+    var placeholder;
     const adminList = Roles.getUsersInRole(['admin', 'superadmin']).fetch();
 
     for (var i=0;i<adminList.length;i++) {
-      Admins.push(<span key={adminList[i].username}></span>);
-      console.log(Admins);
-      admins[i] = adminList[i].username;
-      bios[i] = adminList[i].profile;
+
+      // Admins.push(<span key={adminList[i].username}></span>);
+      // console.log(Admins);
+
+      placeholder = (adminList[i].profile==undefined) ? 'bio' : adminList[i].profile;
+
+      admins[i] = adminList[i].username + ' - ' + placeholder + ' // ';
+      // bios[i] = adminList[i].profile;
     }
 
-    const listItems = Admins.map((test) =>
-      <li>{test}</li>
-    );
+    // const listItems = Admins.map((test) =>
+    //   <li>{test}</li>
+    // );
+    // <ul>{listItems}</ul>
 
     return (
 
       <div className="col-md-8 col-sm-8 back-orange">
-        <p className="bio">{Admins}</p>
-        <p className="bio white">{admins}: {bios}</p>
-        <ul>{listItems}</ul>
+        <p className="bio white">{admins}</p>
 
         {Roles.userIsInRole(Meteor.userId(), 'admin') ? (
             <form className="new-question" onSubmit={this.addBio.bind(this)}>
-              <textarea placeholder="Submit a bio" ref="textInput"></textarea>
+              <textarea placeholder="Submit a bio" ref="contributorBio"></textarea>
               <input type="submit" value="Submit"/>
             </form>
         ) : ''}
