@@ -61,10 +61,12 @@ class App extends Component {
     // Find the text field via the React ref
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-    Meteor.call('posts.insert', question);
+    if (question != '') {
+      Meteor.call('posts.insert', question);
 
-    // Clear form
-    ReactDOM.findDOMNode(this.refs.textInput).value = '';
+      // Clear form
+      ReactDOM.findDOMNode(this.refs.textInput).value = '';
+    }
   }
 
   searchAll(event) {
@@ -129,10 +131,28 @@ class App extends Component {
     this.toggleBold();
     document.getElementById("current-unanswered").style.fontWeight = "normal";
 
-    this.tagQuery = "extracurricular";
+    this.tagQuery = "";
     this.query = "";
     this.tagSearch = 1;
     this.isSearch = 0;
+
+    this.forceUpdate();
+  }
+
+  addBio(event) {
+    event.preventDefault();
+
+    // Find the text field via the React ref
+    const newBio = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
+
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        profile: newBio
+      }
+    });
+
+    // Clear form
+    ReactDOM.findDOMNode(this.refs.textInput).value = '';
 
     this.forceUpdate();
   }
@@ -177,7 +197,8 @@ class App extends Component {
     document.getElementById("current-academic").style.fontWeight = "100";
     document.getElementById("current-social").style.fontWeight = "100";
     document.getElementById("current-extracurricular").style.fontWeight = "100";
-    document.getElementById("current-unanswered").style.fontWeight = "100";
+    Roles.userIsInRole(Meteor.userId(), 'admin') ? 
+      document.getElementById("current-unanswered").style.fontWeight = "100" : '';
     document.getElementById("contributors").style.fontWeight = "100";
   }
 
@@ -213,21 +234,51 @@ class App extends Component {
     });
   }
 
+  // Contributor page
+  renderContributors() {
+    this.toggleRender();
+    // Meteor.subscribe('userList');
+
+    const Admins = [];
+    const admins = [];
+    var bios = [];
+    var test;
+    const adminList = Roles.getUsersInRole(['admin', 'superadmin']).fetch();
+
+    for (var i=0;i<adminList.length;i++) {
+      Admins.push(<span key={adminList[i].username}></span>);
+      console.log(Admins);
+      admins[i] = adminList[i].username;
+      bios[i] = adminList[i].profile;
+    }
+
+    const listItems = Admins.map((test) =>
+      <li>{test}</li>
+    );
+
+    return (
+
+      <div className="col-md-8 col-sm-8 back-orange">
+        <p className="bio">{Admins}</p>
+        <p className="bio white">{admins}: {bios}</p>
+        <ul>{listItems}</ul>
+
+        {Roles.userIsInRole(Meteor.userId(), 'admin') ? (
+            <form className="new-question" onSubmit={this.addBio.bind(this)}>
+              <textarea placeholder="Submit a bio" ref="textInput"></textarea>
+              <input type="submit" value="Submit"/>
+            </form>
+        ) : ''}
+
+        <li>
+          <AccountsUIWrapper />
+        </li>
+    </div>
+    );
+  }
+
   // Shows posts that were searched for
   renderFound() {
-
-    if (this.isAbout == 1) {
-      this.toggleRender();
-      return (
-        <div>
-          <p className = "white link">thomasrr</p>
-          <p className = "white link">jamil</p>
-          <p className = "white link">lanchang</p>
-          <p className = "white link">vmo</p>
-          <p className = "white link">savannah</p>
-        </div>
-      );
-    }
 
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
@@ -236,9 +287,8 @@ class App extends Component {
     totalPosts = 0; 
     var rendered = 0; 
     var lastPost = pages*perPage; 
-    console.log(lastPost); 
+
     return filteredPosts.map((post) => {
-      console.log(rendered); 
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
       const answered = post.answer != "";
@@ -302,11 +352,11 @@ class App extends Component {
                   <p className="white">Now Viewing: </p>
                 </div>
                 <div className="col-md-6 col-xs-6">
-                  <div> <button className="button white pseudo-link" id="current-all" onClick={this.searchAll.bind(this)}>all</button> </div>
+                  <div><button className="button white pseudo-link" id="current-all" onClick={this.searchAll.bind(this)}>all</button> </div>
                   <div><button className="button white pseudo-link" id="current-academic" onClick={this.searchAcademic.bind(this)}>academic</button> </div>
                   <div><button className="button white pseudo-link" id="current-social" onClick={this.searchSocial.bind(this)}>social life</button> </div>
                   <div><button className="button white pseudo-link" id="current-extracurricular" onClick={this.searchExtra.bind(this)}>extracurricular</button> </div>
-                  { this.props.currentUser ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={this.searchUnanswered.bind(this)}>unanswered</button> </div> ) : ''}
+                  { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={this.searchUnanswered.bind(this)}>unanswered</button> </div> ) : ''}
                 </div>
               </div>
               <div className="row"> 
@@ -317,12 +367,10 @@ class App extends Component {
                         <input type = "text"
                           ref = "searchString"
                           placeholder="search"/>
-                        <input type="submit" value="Search"/>
                       </p>
                     </form>
                     { this.isSearch && this.search != '' ? (
                       <p className = "tiny"> 
-                        <i className="material-icons">search</i>
                         Current search: <input type="reset" value={this.search}/>
                       </p> ) : ''}
                   </li>
@@ -337,9 +385,6 @@ class App extends Component {
                   <li>
                     <button className="button white pseudo-link" id="contributors" onClick={this.goContributors.bind(this)}>About the Contributors</button>
                   </li>
-                  <li>
-                    <AccountsUIWrapper />
-                  </li>
                   <p> <br/></p>
                 </div>
               </div> 
@@ -348,7 +393,7 @@ class App extends Component {
           </div>
           <div className="col-md-8 col-sm-8 back-orange">
             <ul>
-              {this.renderFound()}
+              { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
             </ul>
             {pages > 1 ? (
               <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationDown.bind(this)}>Prev</button>

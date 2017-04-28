@@ -55,3 +55,7 @@ Meteor.methods({
    Roles.removeUsersFromRoles(id._id, ['admin']);
   }
 });
+
+Meteor.publish('userList', function (){
+  return Meteor.users.find({});
+})

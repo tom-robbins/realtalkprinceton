@@ -1,5 +1,6 @@
 Meteor.startup(function () {
 
+
   // user roles
   var roles = ['admin']
 
@@ -32,6 +33,6 @@ Meteor.startup(function () {
 
 });
 
-Meteor.publish(null, function (){
-  return Meteor.roles.find({})
+Meteor.publish('userList', function (){
+  return Meteor.users.find({});
 })
