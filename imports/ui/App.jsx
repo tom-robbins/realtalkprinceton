@@ -14,13 +14,15 @@ var perPage = 3;
 var totalPosts; 
 var pagesLimit; 
 
-
 // App component - represents the whole app
 class App extends Component {
   //const query;
   constructor(props) {
   super(props);
   this.handleScroll = this.handleScroll.bind(this);
+  this.search = "";
+  this.searchOn = 0;
+  this.isAbout = 0;
 
   this.state = {
     hideCompleted: false,
@@ -40,7 +42,7 @@ class App extends Component {
     }
   }
 
-    componentDidMount() {
+  componentDidMount() {
     window.addEventListener("scroll", this.handleScroll);
   }
 
@@ -59,18 +61,24 @@ class App extends Component {
     // Find the text field via the React ref
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-    Meteor.call('posts.insert', question);
+    if (question != '') {
+      Meteor.call('posts.insert', question);
 
-    // Clear form
-    ReactDOM.findDOMNode(this.refs.textInput).value = '';
+      // Clear form
+      ReactDOM.findDOMNode(this.refs.textInput).value = '';
+    }
   }
 
   searchAll(event) {
     event.preventDefault();
 
+    this.toggleBold();
+    document.getElementById("current-all").style.fontWeight = "normal";
+
     this.tagQuery = "";
     this.query = "";
     this.tagSearch = 0;
+    this.isSearch = 0;
 
     this.forceUpdate();
   }
@@ -78,9 +86,13 @@ class App extends Component {
   searchAcademic(event) {
     event.preventDefault();
 
+    this.toggleBold();
+    document.getElementById("current-academic").style.fontWeight = "normal";
+
     this.tagQuery = "academic";
     this.query = "";
     this.tagSearch = 1;
+    this.isSearch = 0;
 
     this.forceUpdate();
   }
@@ -88,9 +100,13 @@ class App extends Component {
   searchSocial(event) {
     event.preventDefault();
 
+    this.toggleBold();
+    document.getElementById("current-social").style.fontWeight = "normal";
+
     this.tagQuery = "sociallife";
     this.query = "";
     this.tagSearch = 1;
+    this.isSearch = 0;
 
     this.forceUpdate();
   }
@@ -98,25 +114,62 @@ class App extends Component {
   searchExtra(event) {
     event.preventDefault();
 
+    this.toggleBold();
+    document.getElementById("current-extracurricular").style.fontWeight = "normal";
+
     this.tagQuery = "extracurricular";
     this.query = "";
     this.tagSearch = 1;
+    this.isSearch = 0;
+
+    this.forceUpdate();
+  }
+
+  searchUnanswered(event) {
+    event.preventDefault();
+
+    this.toggleBold();
+    document.getElementById("current-unanswered").style.fontWeight = "normal";
+
+    this.tagQuery = "";
+    this.query = "";
+    this.tagSearch = 1;
+    this.isSearch = 0;
+
+    this.forceUpdate();
+  }
+
+  addBio(event) {
+    event.preventDefault();
+
+    // Find the text field via the React ref
+    const newBio = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
+
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        profile: newBio
+      }
+    });
+
+    // Clear form
+    ReactDOM.findDOMNode(this.refs.textInput).value = '';
 
     this.forceUpdate();
   }
 
   handleSearch(event) {
      event.preventDefault();
-
      pages = 1; 
 
-     // Find the text field via the React ref
-     this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
+    // Find the text field via the React ref
+    this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
+    this.search = this.query;
+    this.isSearch = 1;
+    
+    // Clear form
+    ReactDOM.findDOMNode(this.refs.searchString).value = '';
 
-     // Clear form
-     ReactDOM.findDOMNode(this.refs.searchString).value = '';
-
-     this.forceUpdate();
+    this.forceUpdate();
   }
 
   handlePaginationUp(event) {
@@ -134,9 +187,29 @@ class App extends Component {
      this.forceUpdate();
   }
 
+  toggleRender() {
+    if (this.isAbout == 0) this.isAbout = 1;
+    else this.isAbout = 0;
+  }
+
+  toggleBold() {
+    document.getElementById("current-all").style.fontWeight = "100";
+    document.getElementById("current-academic").style.fontWeight = "100";
+    document.getElementById("current-social").style.fontWeight = "100";
+    document.getElementById("current-extracurricular").style.fontWeight = "100";
+    Roles.userIsInRole(Meteor.userId(), 'admin') ? 
+      document.getElementById("current-unanswered").style.fontWeight = "100" : '';
+    document.getElementById("contributors").style.fontWeight = "100";
+  }
+
   goContributors(event) {
+
+    this.toggleBold();
+    document.getElementById("contributors").style.fontWeight = "normal";
+
     event.preventDefault();
-    Router.go('/contributors');
+    this.toggleRender();
+    this.forceUpdate();
   }
 
   // Shows all posts
@@ -161,8 +234,52 @@ class App extends Component {
     });
   }
 
+  // Contributor page
+  renderContributors() {
+    this.toggleRender();
+    // Meteor.subscribe('userList');
+
+    const Admins = [];
+    const admins = [];
+    var bios = [];
+    var test;
+    const adminList = Roles.getUsersInRole(['admin', 'superadmin']).fetch();
+
+    for (var i=0;i<adminList.length;i++) {
+      Admins.push(<span key={adminList[i].username}></span>);
+      console.log(Admins);
+      admins[i] = adminList[i].username;
+      bios[i] = adminList[i].profile;
+    }
+
+    const listItems = Admins.map((test) =>
+      <li>{test}</li>
+    );
+
+    return (
+
+      <div className="col-md-8 col-sm-8 back-orange">
+        <p className="bio">{Admins}</p>
+        <p className="bio white">{admins}: {bios}</p>
+        <ul>{listItems}</ul>
+
+        {Roles.userIsInRole(Meteor.userId(), 'admin') ? (
+            <form className="new-question" onSubmit={this.addBio.bind(this)}>
+              <textarea placeholder="Submit a bio" ref="textInput"></textarea>
+              <input type="submit" value="Submit"/>
+            </form>
+        ) : ''}
+
+        <li>
+          <AccountsUIWrapper />
+        </li>
+    </div>
+    );
+  }
+
   // Shows posts that were searched for
   renderFound() {
+
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
@@ -170,9 +287,8 @@ class App extends Component {
     totalPosts = 0; 
     var rendered = 0; 
     var lastPost = pages*perPage; 
-    console.log(lastPost); 
+
     return filteredPosts.map((post) => {
-      console.log(rendered); 
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
       const answered = post.answer != "";
@@ -236,38 +352,38 @@ class App extends Component {
                   <p className="white">Now Viewing: </p>
                 </div>
                 <div className="col-md-6 col-xs-6">
-                  <div> <button className="button white pseudo-link" onClick={this.searchAll.bind(this)}>all</button> </div>
-                  <div><button className="button white pseudo-link" onClick={this.searchAcademic.bind(this)}>academic</button> </div>
-                  <div><button className="button white pseudo-link" onClick={this.searchSocial.bind(this)}>social life</button> </div>
-                  <div><button className="button white pseudo-link" onClick={this.searchExtra.bind(this)}>extracurricular</button> </div>
+                  <div><button className="button white pseudo-link" id="current-all" onClick={this.searchAll.bind(this)}>all</button> </div>
+                  <div><button className="button white pseudo-link" id="current-academic" onClick={this.searchAcademic.bind(this)}>academic</button> </div>
+                  <div><button className="button white pseudo-link" id="current-social" onClick={this.searchSocial.bind(this)}>social life</button> </div>
+                  <div><button className="button white pseudo-link" id="current-extracurricular" onClick={this.searchExtra.bind(this)}>extracurricular</button> </div>
+                  { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={this.searchUnanswered.bind(this)}>unanswered</button> </div> ) : ''}
                 </div>
               </div>
               <div className="row"> 
                 <div className="col-md-12">
                   <li>
                     <form className="search" onSubmit={this.handleSearch.bind(this)}>
-                    <p>
-                      <input type = "text"
-                        ref = "searchString"
-                        placeholder="search"/>
-                      <input type="submit" value="Search"/>
-                    </p>
-                  </form>
+                      <p>
+                        <input type = "text"
+                          ref = "searchString"
+                          placeholder="search"/>
+                      </p>
+                    </form>
+                    { this.isSearch && this.search != '' ? (
+                      <p className = "tiny"> 
+                        Current search: <input type="reset" value={this.search}/>
+                      </p> ) : ''}
                   </li>
                   <li>
-                    <p className="white link">Ask a Question</p>
                     { this.props.currentUser ?
-                      <form className="new-question" onSubmit={this.handleSubmit.bind(this)} >
-                      <textarea ref="textInput"></textarea>
-                      <input type="submit"/>
+                      <form className="new-question" onSubmit={this.handleSubmit.bind(this)}>
+                        <textarea placeholder="Ask a question!" ref="textInput"></textarea>
+                        <input type="submit" value="Submit"/>
                       </form> : ''
                     }
                   </li>
                   <li>
-                    <button className="button white pseudo-link" onClick={this.goContributors.bind(this)}>About the admins</button>
-                  </li>
-                  <li>
-                    <AccountsUIWrapper />
+                    <button className="button white pseudo-link" id="contributors" onClick={this.goContributors.bind(this)}>About the Contributors</button>
                   </li>
                   <p> <br/></p>
                 </div>
@@ -277,7 +393,7 @@ class App extends Component {
           </div>
           <div className="col-md-8 col-sm-8 back-orange">
             <ul>
-              {this.renderFound()}
+              { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
             </ul>
             {pages > 1 ? (
               <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationDown.bind(this)}>Prev</button>
