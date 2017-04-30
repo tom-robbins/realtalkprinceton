@@ -137,9 +137,8 @@ Meteor.methods({
     // check(postId, String);
     const post = Posts.findOne(postId);
 
-
-    for (var i = 0; i < x.split(" ").length; i++) {
-      Posts.update({_id: postId}, {$push: {tags: x.split(" ")[i]}});
+    for (var i = 0; i < x.split(",").length; i++) {
+      Posts.update({_id: postId}, {$push: {tags: x.split(",")[i]}});
     }
   },
 });

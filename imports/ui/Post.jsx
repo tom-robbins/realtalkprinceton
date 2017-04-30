@@ -72,6 +72,14 @@ export default class Post extends Component {
 
               <p className="tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
               <p className="white">{this.props.post.question}</p>
+              { this.props.post.tags.length > 0 && this.props.isAdmin? (
+                  Object.keys(this.props.post.tags).map((obj, i) => 
+                   <div>
+                     <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
+                     <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
+                   </div>
+                 )
+               ) : ''}
               
               <div className="row"> 
                 <div className="col-md-6 col-sm-6 float-left">
@@ -103,7 +111,6 @@ export default class Post extends Component {
                  </button>
                  ) : '' }
                 <p className="white no-margin" key = {300 - obj}>{this.props.post.answer[obj].text}<br/></p>
-                <p className="tag tiny no-margin">{this.props.post.tags[0]}</p>
 
                 </div>
               )}
