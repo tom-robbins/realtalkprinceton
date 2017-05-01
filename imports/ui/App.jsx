@@ -72,6 +72,10 @@ class App extends Component {
   searchAll(event) {
     event.preventDefault();
 
+    if (location.pathname.split('/')[1] == "post") {
+        Router.go('/');
+    }
+
     this.toggleBold();
     document.getElementById("current-all").style.fontWeight = "normal";
 
@@ -85,6 +89,10 @@ class App extends Component {
 
   searchAcademic(event) {
     event.preventDefault();
+
+    if (location.pathname.split('/')[1] == "post") {
+        Router.go('/');
+    }
 
     this.toggleBold();
     document.getElementById("current-academic").style.fontWeight = "normal";
@@ -100,6 +108,10 @@ class App extends Component {
   searchSocial(event) {
     event.preventDefault();
 
+    if (location.pathname.split('/')[1] == "post") {
+        Router.go('/');
+    }
+
     this.toggleBold();
     document.getElementById("current-social").style.fontWeight = "normal";
 
@@ -114,6 +126,10 @@ class App extends Component {
   searchExtra(event) {
     event.preventDefault();
 
+    if (location.pathname.split('/')[1] == "post") {
+        Router.go('/');
+    }
+
     this.toggleBold();
     document.getElementById("current-extracurricular").style.fontWeight = "normal";
 
@@ -127,6 +143,10 @@ class App extends Component {
 
   searchUnanswered(event) {
     event.preventDefault();
+
+    if (location.pathname.split('/')[1] == "post") {
+        Router.go('/');
+    }
 
     this.toggleBold();
     document.getElementById("current-unanswered").style.fontWeight = "normal";
@@ -281,7 +301,6 @@ class App extends Component {
 
   // Shows posts that were searched for
   renderFound() {
-
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
@@ -297,39 +316,9 @@ class App extends Component {
 
       var re = new RegExp(this.query, 'i');
 
-      totalPosts++; 
-      pagesLimit = Math.floor(totalPosts/perPage); 
-      if (this.tagSearch == 1) {
-        if (this.tagQuery == "unanswered") {
-          if (!answered) {
-            console.log(answered);
-            return (
-            <Post
-              key={post._id}
-              post={post}
-              isAdmin={isAdmin}
-              answered = {answered}
-            />
-            );
-          }
-        }
-        if (post.tags.includes(this.tagQuery)) {
-          if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
-            rendered++; 
-            return (
-            <Post
-              key={post._id}
-              post={post}
-              isAdmin={isAdmin}
-              answered = {answered}
-            />
-            );
-          }
-        }
-      }
-      else {
-        if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
-          rendered++; 
+      // Show a specific post if the url is for it
+      if (location.pathname.split('/')[1] == "post") {
+        if (post._id == location.pathname.split('/')[2]) {
           return (
             <Post
               key={post._id}
@@ -337,7 +326,54 @@ class App extends Component {
               isAdmin={isAdmin}
               answered = {answered}
             />
-          );
+            );
+        }
+      }
+      else {
+        totalPosts++; 
+        pagesLimit = Math.floor(totalPosts/perPage);
+        // Search through a specific tag
+        if (this.tagSearch == 1) {
+          if (this.tagQuery == "unanswered") {
+            if (!answered) {
+              console.log(answered);
+              return (
+              <Post
+                key={post._id}
+                post={post}
+                isAdmin={isAdmin}
+                answered = {answered}
+              />
+              );
+            }
+          }
+          if (post.tags.includes(this.tagQuery)) {
+            if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
+              rendered++; 
+              return (
+              <Post
+                key={post._id}
+                post={post}
+                isAdmin={isAdmin}
+                answered = {answered}
+              />
+              );
+            }
+          }
+        }
+        else {
+          // Search through all
+          if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
+            rendered++; 
+            return (
+              <Post
+                key={post._id}
+                post={post}
+                isAdmin={isAdmin}
+                answered = {answered}
+              />
+            );
+          }
         }
       }
     });
