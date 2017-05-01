@@ -60,12 +60,26 @@ class App extends Component {
 
     // Find the text field via the React ref
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
+    const email = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
 
-    if (question != '') {
-      Meteor.call('posts.insert', question);
+    if (question != '' && email != '') {
+      Meteor.call('posts.insert', question, email);
 
       // Clear form
       ReactDOM.findDOMNode(this.refs.textInput).value = '';
+      ReactDOM.findDOMNode(this.refs.textInput2).value = '';
+      alert("Thanks for your question!")
+    }
+    else if (question != '') {
+      Meteor.call('posts.insert', question, '');
+
+      // Clear form
+      ReactDOM.findDOMNode(this.refs.textInput).value = '';
+      ReactDOM.findDOMNode(this.refs.textInput2).value = '';
+      alert("Thanks for your question!")
+    }
+    else {
+      alert("Enter some text")
     }
   }
 
@@ -381,6 +395,7 @@ class App extends Component {
                     { this.props.currentUser ?
                       <form className="new-question" onSubmit={this.handleSubmit.bind(this)}>
                         <textarea placeholder="Ask a question!" ref="textInput"></textarea>
+                        <textarea placeholder="Optional email if you want notifications" ref="textInput2"></textarea>
                         <input type="submit" value="Submit"/>
                       </form> : ''
                     }
