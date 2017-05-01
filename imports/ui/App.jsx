@@ -103,7 +103,7 @@ class App extends Component {
     this.toggleBold();
     document.getElementById("current-social").style.fontWeight = "normal";
 
-    this.tagQuery = "sociallife";
+    this.tagQuery = "social life";
     this.query = "";
     this.tagSearch = 1;
     this.isSearch = 0;
@@ -131,7 +131,7 @@ class App extends Component {
     this.toggleBold();
     document.getElementById("current-unanswered").style.fontWeight = "normal";
 
-    this.tagQuery = "";
+    this.tagQuery = "unanswered";
     this.query = "";
     this.tagSearch = 1;
     this.isSearch = 0;
@@ -252,19 +252,18 @@ class App extends Component {
 
       placeholder = (adminList[i].profile==undefined) ? 'bio' : adminList[i].profile;
 
-      admins[i] = adminList[i].username + ' - ' + placeholder + ' // ';
+      admins[i] = adminList[i].username + ': ' + placeholder;
       // bios[i] = adminList[i].profile;
     }
-
-    // const listItems = Admins.map((test) =>
-    //   <li>{test}</li>
-    // );
-    // <ul>{listItems}</ul>
-
+    
     return (
-
       <div className="col-md-8 col-sm-8 back-orange">
-        <p className="bio white">{admins}</p>
+
+        { Object.keys(admins).map((obj, i) => 
+          <div>
+            <p className="bio white" key = {300 - obj}>{admins[obj]}</p>
+          </div>
+        )}
 
         {Roles.userIsInRole(Meteor.userId(), 'admin') ? (
             <form className="new-question" onSubmit={this.addBio.bind(this)}>
@@ -301,6 +300,19 @@ class App extends Component {
       totalPosts++; 
       pagesLimit = Math.floor(totalPosts/perPage); 
       if (this.tagSearch == 1) {
+        if (this.tagQuery == "unanswered") {
+          if (!answered) {
+            console.log(answered);
+            return (
+            <Post
+              key={post._id}
+              post={post}
+              isAdmin={isAdmin}
+              answered = {answered}
+            />
+            );
+          }
+        }
         if (post.tags.includes(this.tagQuery)) {
           if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
             rendered++; 
@@ -311,7 +323,7 @@ class App extends Component {
               isAdmin={isAdmin}
               answered = {answered}
             />
-          );
+            );
           }
         }
       }
