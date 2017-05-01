@@ -461,11 +461,8 @@ class App extends Component {
             <ul>
               { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
             </ul>
-            {pages > 1 ? (
-              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationDown.bind(this)}>Prev</button>
-            ) : ''}
             {pages < pagesLimit ? (
-              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Next</button>
+              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Load More</button>
             ) : ''}
           </div>
         </div>
