@@ -1,6 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Posts } from '../api/posts';
+
+import { render } from 'react-dom';
+
+import App from './App.jsx';
 import classnames from 'classnames';
 
 // Post component - represents a single todo item
@@ -11,7 +15,9 @@ export default class Post extends Component {
   }
 
   deleteThisPost() {
-    Meteor.call('posts.remove', this.props.post._id);
+    if (confirm("Are you sure you want to delete this question?")) {
+      Meteor.call('posts.remove', this.props.post._id);
+    }
   }
 
   toggleHidden() {
@@ -20,12 +26,12 @@ export default class Post extends Component {
 
   answerPost() {
     var ans = prompt("Please enter your answer", "Blank");
-    Meteor.call('posts.answer', this.props.post._id, ans)
+    Meteor.call('posts.answer', this.props.post._id, ans);
   }
 
   tagPost() {
     var tag = prompt("Please enter your tag", "Blank");
-    Meteor.call('posts.tag', this.props.post._id, tag)
+    Meteor.call('posts.tag', this.props.post._id, tag);
   }
 
   deleteThisAnswer(t, o) {
@@ -36,6 +42,12 @@ export default class Post extends Component {
   deleteThisTag(t, o) {
     // o is the index of the answer to remove
     Meteor.call('posts.tagRemove', this.props.post._id, o);
+  }
+
+  goPost(event) {
+    event.preventDefault();
+
+    Router.go('/post/' + this.props.post._id);
   }
 
   render() {
@@ -71,7 +83,8 @@ export default class Post extends Component {
               <br/>
 
               <p className="tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-              <p className="white">{this.props.post.question}</p>
+              <div><button className="button white pseudo-link" onClick={this.goPost.bind(this)}>{this.props.post.question}</button> </div>
+
               { this.props.post.tags.length > 0 && this.props.isAdmin? (
                   Object.keys(this.props.post.tags).map((obj, i) => 
                    <div>
