@@ -133,7 +133,7 @@ Meteor.methods({
         Posts.update({_id: postId}, {$set: {answer: newArray}});
     }
 
-    var textEmail = "New Answer by " + Meteor.user().username + ":" + '\n \n' + x + '\n \n \n' + "See your post at: http://www.realtalkprinceton.com/" + String(postId); 
+    var textEmail = "New Answer by " + Meteor.user().username + ":" + '\n \n' + x + '\n \n \n' + "See your post at: http://www.realtalkprinceton.com/post/" + String(postId); 
 
     // Email notification
     if (post.email != '') {
