@@ -1,5 +1,6 @@
 Meteor.startup(function () {
-
+  process.env.MAIL_URL = "smtp://jamilm9:realtalkprinceton123@smtp.sendgrid.net:587";
+  console.log('this is the mail_url: ', process.env.MAIL_URL);
   // user roles
   var roles = ['superadmin', 'admin', 'pleb']
 

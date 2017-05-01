@@ -29,14 +29,13 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  'posts.insert'(question) {
+  'posts.insert'(question, email) {
     check(question, String);
-
+    check(email, String);
     // Make sure the user is logged in before inserting a post
     if (! Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
-
     Posts.insert({
       question,
       answer: [],
@@ -44,6 +43,7 @@ Meteor.methods({
       tags:[],
       owner: Meteor.userId(),
       username: Meteor.user().username,
+      email: email,
     });
   },
   'posts.remove'(postId) {
@@ -56,8 +56,8 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
     */
-
     Posts.remove(postId);
+    
   },
 
   'posts.ansRemove'(postId, index) {
@@ -111,6 +111,8 @@ Meteor.methods({
     // Make Answer Obj
     var newAnswer = new Answer(x, Meteor.user().username);
     
+
+
     // If user already posted, find index, else -1
     var index = -1;
     for (var i = 0; i < post.answer.length; i++) {
@@ -130,6 +132,19 @@ Meteor.methods({
         newArray[parseInt(index)] = newAnswer;
         Posts.update({_id: postId}, {$set: {answer: newArray}});
     }
+
+    var textEmail = "New Answer by " + Meteor.user().username + ":" + '\n \n' + x + '\n \n \n' + "See your post at: http://www.realtalkprinceton.com/" + String(postId); 
+
+    // Email notification
+    if (post.email != '') {
+    	Email.send({
+		  to: post.email,
+		  from: "RealTalkPrinceton@mailinator.com",
+		  subject: "RealTalkPrinceton Alert",
+		  text: textEmail,
+		});
+    }
+
 
   },
 
