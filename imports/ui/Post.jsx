@@ -44,12 +44,6 @@ export default class Post extends Component {
     Meteor.call('posts.tagRemove', this.props.post._id, o);
   }
 
-  goPost(event) {
-    event.preventDefault();
-
-    Router.go('/post/' + this.props.post._id);
-  }
-
   render() {
 
     // Give posts a different className when they are checked off,
@@ -83,7 +77,7 @@ export default class Post extends Component {
               <br/>
 
               <p className="tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-              <div><button className="button white pseudo-link" onClick={this.goPost.bind(this)}>{this.props.post.question}</button> </div>
+              <p className="white no-margin">{this.props.post.question}</p>
 
               { this.props.post.tags.length > 0 && this.props.isAdmin? (
                   Object.keys(this.props.post.tags).map((obj, i) => 
