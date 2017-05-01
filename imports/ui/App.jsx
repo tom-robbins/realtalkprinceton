@@ -401,7 +401,7 @@ class App extends Component {
       <div>
         <div>
           <header>
-            <h1 className="orange">Real Talk Princeton</h1> 
+            <div><button className="headbutton orange pseudo-link" onClick={this.searchAll.bind(this)}>Real Talk Princeton</button> </div>
             <p className="orange">Real Talk Princeton is an established group 
             committed to answering questions about Princeton academics, student 
             life, and beyond.</p>
@@ -462,7 +462,7 @@ class App extends Component {
               { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
             </ul>
             {pages < pagesLimit ? (
-              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Load More</button>
+              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Load</button>
             ) : ''}
           </div>
         </div>

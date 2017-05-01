@@ -12,7 +12,7 @@ Meteor.startup(function () {
   }
 
   console.log('Running server startup code...');
-
+  
   var id = Meteor.users.findOne({username: "admin"});
   Roles.addUsersToRoles(id._id, ['superadmin']);
   /*

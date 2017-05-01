@@ -111,7 +111,7 @@ export default class Post extends Component {
             <div className="col-md-6 col-sm-6">
               {Object.keys(this.props.post.answer).map((obj, i) =>
                 <div>
-                <p className="white no-margin" key = {obj}><b>{"Response from " + this.props.post.answer[obj].name}</b></p>
+                <p className="white no-margin" key = {obj}><b>{"Response from " + this.props.post.answer[obj].name + ":"}</b></p>
                 { this.props.isAdmin ? (
                  <button className="delete" onClick={()=>this.deleteThisAnswer(this, parseInt(obj))}>
                    &times;
