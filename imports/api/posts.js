@@ -139,7 +139,7 @@ Meteor.methods({
     if (post.email != '') {
     	Email.send({
 		  to: post.email,
-		  from: "RealTalkPrinceton@mailinator.com",
+		  from: "admin@realtalkprinceton.com",
 		  subject: "RealTalkPrinceton Alert",
 		  text: textEmail,
 		});
