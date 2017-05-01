@@ -134,12 +134,12 @@ Meteor.methods({
     }
 
     var textEmail = "New Answer by " + Meteor.user().username + ":" + '\n \n' + x + '\n \n \n' + "See your post at: http://www.realtalkprinceton.com/post/" + String(postId); 
-
+    var address = Meteor.user().username + "@realtalkprinceton.com"
     // Email notification
     if (post.email != '') {
     	Email.send({
 		  to: post.email,
-		  from: "admin@realtalkprinceton.com",
+		  from: address,
 		  subject: "RealTalkPrinceton Alert",
 		  text: textEmail,
 		});
