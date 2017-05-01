@@ -62,9 +62,12 @@ Meteor.methods({
 
   'posts.ansRemove'(postId, index) {
     const post = Posts.findOne(postId);
-    var newArray = post.answer.slice();
-    newArray.splice(index, 1);
-    Posts.update({_id: postId}, {$set: {answer: newArray}});
+
+    if (Meteor.user().username == post.answer[index].name) {
+      var newArray = post.answer.slice();
+      newArray.splice(index, 1);
+      Posts.update({_id: postId}, {$set: {answer: newArray}});
+    }
   },
 
   'posts.tagRemove'(postId, index) {
@@ -110,8 +113,6 @@ Meteor.methods({
 
     // Make Answer Obj
     var newAnswer = new Answer(x, Meteor.user().username);
-    
-
 
     // If user already posted, find index, else -1
     var index = -1;
