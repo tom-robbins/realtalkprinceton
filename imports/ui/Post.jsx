@@ -88,6 +88,8 @@ export default class Post extends Component {
                  )
                ) : ''}
               
+              <br/>
+              
               <div className="row"> 
                 <div className="col-md-6 col-sm-6 float-left">
                 { this.props.isAdmin ? (

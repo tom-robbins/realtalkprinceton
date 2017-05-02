@@ -10,7 +10,7 @@ import { StickyContainer, Sticky } from 'react-sticky';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
 var pages = 1; 
-var perPage = 3; 
+var perPage = 10; 
 var totalPosts; 
 var pagesLimit; 
 
@@ -323,6 +323,8 @@ class App extends Component {
     var rendered = 0; 
     var lastPost = pages*perPage; 
 
+    console.log(lastPost); 
+
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
@@ -345,7 +347,8 @@ class App extends Component {
       }
       else {
         totalPosts++; 
-        pagesLimit = Math.floor(totalPosts/perPage);
+        pagesLimit = Math.ceil(totalPosts/perPage);
+        console.log(pagesLimit); 
         // Search through a specific tag
         if (this.tagSearch == 1) {
           if (this.tagQuery == "unanswered") {
@@ -441,9 +444,9 @@ class App extends Component {
                   </li>
                   <li>
                     { this.props.currentUser ?
-                      <form className="new-question" onSubmit={this.handleSubmit.bind(this)}>
+                      <form className="new-question search" onSubmit={this.handleSubmit.bind(this)}>
                         <textarea placeholder="Ask a question!" ref="textInput"></textarea>
-                        <textarea placeholder="Optional email if you want notifications" ref="textInput2"></textarea>
+                        <input type="text" placeholder="Optional email if you want notifications" ref="textInput2"/>
                         <input type="submit" value="Submit"/>
                       </form> : ''
                     }
