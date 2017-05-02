@@ -160,6 +160,24 @@ class App extends Component {
     this.forceUpdate();
   }
 
+  searchOther(event) {
+    event.preventDefault();
+
+    if (location.pathname.split('/')[1] == "post") {
+        Router.go('/');
+    }
+
+    this.toggleBold();
+    document.getElementById("current-other").style.fontWeight = "normal";
+
+    this.tagQuery = "other";
+    this.query = "";
+    this.tagSearch = 1;
+    this.isSearch = 0;
+
+    this.forceUpdate();
+  }
+
   searchUnanswered(event) {
     event.preventDefault();
     pages = 1; 
@@ -237,6 +255,7 @@ class App extends Component {
     document.getElementById("current-academic").style.fontWeight = "100";
     document.getElementById("current-social").style.fontWeight = "100";
     document.getElementById("current-extracurricular").style.fontWeight = "100";
+    document.getElementById("current-other").style.fontWeight = "100";
     Roles.userIsInRole(Meteor.userId(), 'admin') ? 
       document.getElementById("current-unanswered").style.fontWeight = "100" : '';
     document.getElementById("contributors").style.fontWeight = "100";
@@ -279,30 +298,29 @@ class App extends Component {
   renderContributors() {
     this.toggleRender();
 
-    // const Admins = [];
     const admins = [];
-    // var bios = [];
+    var bios = [];
     var placeholder;
 
     const adminList = Roles.getUsersInRole(['admin', 'superadmin']).fetch();
 
     for (var i=0;i<adminList.length;i++) {
 
-      // Admins.push(<span key={adminList[i].username}></span>);
-      // console.log(Admins);
+      placeholder = (adminList[i].profile==undefined) ? '' : adminList[i].profile;
 
-      placeholder = (adminList[i].profile==undefined) ? 'bio' : adminList[i].profile;
-
-      admins[i] = adminList[i].username + ': ' + placeholder;
-      // bios[i] = adminList[i].profile;
+      admins[i] = adminList[i].username;
+      bios[i] = placeholder;
     }
     
     return (
       <div className="col-md-8 col-sm-8 back-orange">
+      <br/>
+      <p>Real Talk Princeton is an established group committed to 
+      answering questions about Princeton academics, student life, and beyond.</p>
 
         { Object.keys(admins).map((obj, i) => 
           <div>
-            <p className="bio white" key = {300 - obj}>{admins[obj]}</p>
+            <p className="user" key = {300 - obj}><b>{admins[obj]}</b>: {bios[obj]}</p>
           </div>
         )}
 
@@ -410,12 +428,6 @@ class App extends Component {
       <StickyContainer>
       <div>
         <div>
-          <header>
-            <div><button className="headbutton orange pseudo-link" onClick={this.searchAll.bind(this)}>Real Talk Princeton</button> </div>
-            <p className="orange">Real Talk Princeton is an established group 
-            committed to answering questions about Princeton academics, student 
-            life, and beyond.</p>
-          </header>
           </div>
         </div>
         <div className="row match-my-cols stretch">
@@ -423,14 +435,20 @@ class App extends Component {
             <Sticky>
             <div className="sidebar">
               <div className="row">
+                <div className="col-md-12">
+                <p className="white large">Real Talk Princeton</p><br/>
+                </div>
+              </div>
+              <div className="row">
                 <div className="col-md-6 col-xs-6">
-                  <p className="white">Now Viewing: </p>
+                  <p className="white">Now Viewing:</p>
                 </div>
                 <div className="col-md-6 col-xs-6">
                   <div><button className="button white pseudo-link" id="current-all" onClick={this.searchAll.bind(this)}>all</button> </div>
                   <div><button className="button white pseudo-link" id="current-academic" onClick={this.searchAcademic.bind(this)}>academic</button> </div>
                   <div><button className="button white pseudo-link" id="current-social" onClick={this.searchSocial.bind(this)}>social life</button> </div>
                   <div><button className="button white pseudo-link" id="current-extracurricular" onClick={this.searchExtra.bind(this)}>extracurricular</button> </div>
+                  <div><button className="button white pseudo-link" id="current-other" onClick={this.searchOther.bind(this)}>other</button> </div>
                   { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={this.searchUnanswered.bind(this)}>unanswered</button> </div> ) : ''}
                 </div>
               </div>
@@ -453,7 +471,7 @@ class App extends Component {
                     { this.props.currentUser ?
                       <form className="new-question search" onSubmit={this.handleSubmit.bind(this)}>
                         <textarea placeholder="Ask a question!" ref="textInput"></textarea>
-                        <input type="text" placeholder="Optional email if you want notifications" ref="textInput2"/>
+                        <input type="text" placeholder="(Optional) Email to receive notification" ref="textInput2"/>
                         <input type="submit" value="Submit"/>
                       </form> : ''
                     }
@@ -472,7 +490,7 @@ class App extends Component {
               { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
             </ul>
             {pages < pagesLimit ? (
-              <button className="button white pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Load</button>
+              <button className="button black pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Load More</button>
             ) : ''}
           </div>
         </div>

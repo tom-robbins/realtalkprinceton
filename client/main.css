@@ -17,7 +17,7 @@
 }
 
 .back-orange {
-  background: #f58025;
+  /*background: #f58025;*/
 }
 
 .back-light-orange {
@@ -91,7 +91,7 @@ body {
   height: 100%; 
   min-height: 700px; 
 
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .sidebar {
@@ -288,6 +288,10 @@ textarea:focus {
   outline: none!important;
 }
 
+textarea::placeholder {
+  color: #ed985f;
+}
+
 input[type=text], textarea {
   border-radius: 10px;
   background-color: white;
@@ -310,15 +314,20 @@ ul {
 
 .admin-button {
   float: right;
-
+  font-weight: bold;
   border:none; 
-  padding: 5px 5px 5px 5px;
-  font-size: 1em;
+  padding: 7px 7px 7px 9px;
+  /*font-size: 1em;*/
+  font-size: 8px!important;
   margin: 0;
   font-family: "Lato" !important;
   font-weight: normal; 
+  border-radius: 10px;
   /*border is optional*/
   cursor: pointer;
+}
+.admin-button:focus {
+  outline: none!important;
 }
 
 .toggle-private {
@@ -395,7 +404,15 @@ header .hide-completed {
   cursor: pointer;
 }
 
+.user {
+}
+
 .bio {
+
+}
+
+.qa {
+  font-size: 14px;
 }
 
 .tag {
@@ -403,4 +420,13 @@ header .hide-completed {
   letter-spacing: 2px;
   /*background-color: white;*/
   font-weight: bold;
+}
+
+.large {
+  font-size: 50px;
+}
+
+.response {
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
