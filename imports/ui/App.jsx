@@ -36,7 +36,8 @@ class App extends Component {
     const html = document.documentElement;
     const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight) - 10;
     const windowBottom = windowHeight + window.pageYOffset;
-    if (windowBottom >= docHeight && pages < pagesLimit) {
+    console.log(pages); 
+    if (windowBottom >= docHeight && pages < pagesLimit && pages>-1) {
       pages++; 
       this.update(); 
     }
@@ -85,6 +86,7 @@ class App extends Component {
 
   searchAll(event) {
     event.preventDefault();
+    pages = 1; 
 
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
@@ -103,6 +105,7 @@ class App extends Component {
 
   searchAcademic(event) {
     event.preventDefault();
+    pages = 1; 
 
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
@@ -121,6 +124,7 @@ class App extends Component {
 
   searchSocial(event) {
     event.preventDefault();
+    pages = 1; 
 
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
@@ -139,6 +143,7 @@ class App extends Component {
 
   searchExtra(event) {
     event.preventDefault();
+    pages = 1;
 
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
@@ -157,6 +162,7 @@ class App extends Component {
 
   searchUnanswered(event) {
     event.preventDefault();
+    pages = 1; 
 
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
@@ -239,6 +245,7 @@ class App extends Component {
   goContributors(event) {
 
     this.toggleBold();
+    pages = -1; 
     document.getElementById("contributors").style.fontWeight = "normal";
 
     event.preventDefault();
