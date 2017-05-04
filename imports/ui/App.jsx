@@ -77,6 +77,7 @@ class App extends Component {
       // Clear form
       ReactDOM.findDOMNode(this.refs.textInput).value = '';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
+
       alert("Thanks for your question!")
     }
     else {
@@ -197,6 +198,24 @@ class App extends Component {
     this.forceUpdate();
   }
 
+  searchAdmin(admin, event) {
+    event.preventDefault();
+    pages = 1; 
+
+    if (location.pathname.split('/')[1] == "post") {
+        Router.go('/');
+    }
+
+    this.toggleBold();
+
+    this.tagQuery = "admin";
+    this.query = admin
+    this.tagSearch = 1;
+    this.isSearch = 0;
+
+    this.forceUpdate();
+  }
+
   addBio(event) {
     event.preventDefault();
 
@@ -302,29 +321,27 @@ class App extends Component {
     var bios = [];
     var placeholder;
 
-    const adminList = Roles.getUsersInRole(['admin', 'superadmin']).fetch();
+    const adminList = Roles.getUsersInRole(['admin']).fetch();
 
     for (var i=0;i<adminList.length;i++) {
-
       placeholder = (adminList[i].profile==undefined) ? '' : adminList[i].profile;
-
       admins[i] = adminList[i].username;
       bios[i] = placeholder;
     }
     
     return (
-      <div className="col-md-8 col-sm-8 back-orange">
-      <br/>
-      <p>Real Talk Princeton is an established group committed to 
+      <div className="col-md-10 col-sm-10 back-orange margin">
+      <br/><p>Real Talk Princeton is an established group committed to 
       answering questions about Princeton academics, student life, and beyond.</p>
 
         { Object.keys(admins).map((obj, i) => 
           <div>
-            <p className="user" key = {300 - obj}><b>{admins[obj]}</b>: {bios[obj]}</p>
+            <button className="highlight button inline response tiny" key = {300 - obj} onClick={this.searchAdmin.bind(this, admins[obj])}><b>{admins[obj]}</b></button>
+            {bios[obj]}
           </div>
         )}
 
-        {Roles.userIsInRole(Meteor.userId(), 'admin') ? (
+        { Roles.userIsInRole(Meteor.userId(), 'admin') ? (
             <form className="new-question" onSubmit={this.addBio.bind(this)}>
               <textarea placeholder="Submit a bio" ref="contributorBio"></textarea>
               <input type="submit" value="Submit"/>
@@ -373,18 +390,28 @@ class App extends Component {
       else {
         totalPosts++; 
         pagesLimit = Math.ceil(totalPosts/perPage);
-        console.log(pagesLimit); 
         // Search through a specific tag
         if (this.tagSearch == 1) {
           if (this.tagQuery == "unanswered") {
             if (!answered) {
-              console.log(answered);
               return (
               <Post
-                key={post._id}
-                post={post}
-                isAdmin={isAdmin}
-                answered = {answered}
+              key={post._id}
+              post={post}
+              isAdmin={isAdmin}
+              answered = {answered}
+              />
+              );
+            }
+          }
+          else if (answered && this.tagQuery == "admin") {
+            if (post.answer[0].name==this.query) {
+              return (
+              <Post
+              key={post._id}
+              post={post}
+              isAdmin={isAdmin}
+              answered = {answered}
               />
               );
             }

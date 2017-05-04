@@ -44,6 +44,10 @@ export default class Post extends Component {
     Meteor.call('posts.tagRemove', this.props.post._id, o);
   }
 
+  searchAdmin() {
+    // Meteor.call
+  }
+
   render() {
 
     // Give posts a different className when they are checked off,
@@ -122,7 +126,13 @@ export default class Post extends Component {
               {Object.keys(this.props.post.answer).map((obj, i) =>
                 <div>
                 <br/>
-                <p className="response tiny black no-margin" key = {obj}>Response from <b>{this.props.post.answer[obj].name}</b></p>
+
+
+                <p className="response tiny black no-margin inline">Response from </p>
+                <button className="response tiny no-margin highlight button" key={obj} onClick={this.searchAdmin.bind(this)}>{this.props.post.answer[obj].name}</button>
+
+
+
                 { this.props.isAdmin ? (
                  <button className="delete" onClick={()=>this.deleteThisAnswer(this, parseInt(obj))}>
                    &times;
@@ -145,6 +155,7 @@ export default class Post extends Component {
     }
   }
 }
+                // <p className="response tiny black no-margin" key = {obj}>Response from <b>{this.props.post.answer[obj].name}</b></p>
 
 Post.propTypes = {
   // This component gets the post to display through a React prop.

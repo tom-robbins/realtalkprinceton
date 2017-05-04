@@ -424,9 +424,32 @@ header .hide-completed {
 
 .large {
   font-size: 50px;
+  text-align: center;
+  letter-spacing: 2px;
 }
 
 .response {
   text-transform: uppercase;
   letter-spacing: 2px;
+}
+
+.margin {
+  margin: 5% 5% 5% 5%;
+}
+
+.inline {
+  display: inline;
+}
+
+.highlight {
+  margin: 10px 10px 10px 10px;
+  background-color: white;
+  color: #f58025;
+  font-weight: normal;
+}
+.highlight:focus {
+  outline: none!important;
+}
+.highlight:hover {
+  font-weight: bolder !important;
 }
