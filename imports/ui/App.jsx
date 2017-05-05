@@ -523,9 +523,6 @@ class App extends Component {
             <ul>
               { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
             </ul>
-            {pages < pagesLimit ? (
-              <button className="button black pseudo-link fivemargin" onClick={this.handlePaginationUp.bind(this)}>Load More</button>
-            ) : ''}
           </div>
         </div>
         </StickyContainer>
