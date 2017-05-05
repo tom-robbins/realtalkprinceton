@@ -29,6 +29,8 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
+
+
   'posts.insert'(question, email) {
     check(question, String);
     check(email, String);

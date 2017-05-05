@@ -64,10 +64,14 @@ class App extends Component {
     snd.currentTime=0;
 
     // Find the text field via the React ref
+    // console.log(ReactDOM.findDOMNode(this.refs.textInput).value.trim());
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
     const email = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
 
-    if (question != '' && email != '') {
+    if (question.length > 500) {
+      alert("500 character limit");
+    }
+    else if (question != '' && email != '') {
       Meteor.call('posts.insert', question, email);
 
       // Clear form
@@ -376,8 +380,6 @@ class App extends Component {
     var rendered = 0;
     var lastPost = pages*perPage;
 
-    console.log(lastPost);
-
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
@@ -469,7 +471,7 @@ class App extends Component {
           </div>
         </div>
         <div className="row match-my-cols stretch">
-          <div className="col-md-4 col-sm-4 back-light-orange">
+          <div className="col-md-3 col-sm-3 back-light-orange">
             <Sticky>
             <div className="sidebar">
               <div className="row">
@@ -493,11 +495,11 @@ class App extends Component {
               <div className="row">
                 <div className="col-md-12">
                   <li>
-                    <form className="search" onSubmit={this.handleSearch.bind(this)}>
+                    <form className="tiny search" onSubmit={this.handleSearch.bind(this)}>
                       <p>
                         <input type = "text"
                           ref = "searchString"
-                          placeholder="search"/>
+                          placeholder="Search"/>
                       </p>
                     </form>
                     { this.isSearch && this.search != '' ? (
@@ -507,9 +509,9 @@ class App extends Component {
                   </li>
                   <li>
                     { this.props.currentUser ?
-                      <form className="new-question search" onSubmit={this.handleSubmit.bind(this)}>
-                        <textarea placeholder="Ask a question!" ref="textInput"></textarea>
-                        <input type="text" placeholder="(Optional) Email to receive notification" ref="textInput2"/>
+                      <form className="new-question search tiny" onSubmit={this.handleSubmit.bind(this)}>
+                        <textarea placeholder="Ask a question!" ref="textInput" maxlength="500"></textarea>
+                        <input type="text" placeholder="Email for notification (optional)" ref="textInput2"/>
                         <input type="submit" value="Submit"/>
                       </form> : ''
                     }
@@ -523,7 +525,7 @@ class App extends Component {
             </div>
             </Sticky>
           </div>
-          <div className="col-md-8 col-sm-8 back-orange">
+          <div className="col-md-9 col-sm-9 back-orange">
             <ul>
               { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
             </ul>
