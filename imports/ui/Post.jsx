@@ -44,7 +44,7 @@ export default class Post extends Component {
     Meteor.call('posts.tagRemove', this.props.post._id, o);
   }
 
-  searchAdmin() {
+  searchAdmin(admin) {
     // Meteor.call
   }
 
@@ -129,7 +129,7 @@ export default class Post extends Component {
 
 
                 <p className="response tiny black no-margin inline">Response from </p>
-                <button className="response tiny no-margin highlight button" key={obj} onClick={this.searchAdmin.bind(this)}>{this.props.post.answer[obj].name}</button>
+                <button className="response tiny no-margin highlight button" key={obj} onClick={this.searchAdmin(this.props.post.answer[obj].name)}>{this.props.post.answer[obj].name}</button>
 
 
 
