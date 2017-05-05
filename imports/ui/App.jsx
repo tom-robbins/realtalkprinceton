@@ -102,6 +102,7 @@ class App extends Component {
     this.isSearch = 0;
 
     this.forceUpdate();
+    window.scrollTo(0, 0);
   }
 
   searchAcademic(event) {
@@ -121,6 +122,7 @@ class App extends Component {
     this.isSearch = 0;
 
     this.forceUpdate();
+    window.scrollTo(0, 0);
   }
 
   searchSocial(event) {
@@ -140,6 +142,7 @@ class App extends Component {
     this.isSearch = 0;
 
     this.forceUpdate();
+    window.scrollTo(0, 0);
   }
 
   searchExtra(event) {
@@ -177,6 +180,7 @@ class App extends Component {
     this.isSearch = 0;
 
     this.forceUpdate();
+    window.scrollTo(0, 0);
   }
 
   searchUnanswered(event) {
@@ -214,6 +218,7 @@ class App extends Component {
     this.isSearch = 0;
 
     this.forceUpdate();
+    window.scrollTo(0, 0);
   }
 
   addBio(event) {
@@ -247,6 +252,7 @@ class App extends Component {
     ReactDOM.findDOMNode(this.refs.searchString).value = '';
 
     this.forceUpdate();
+    window.scrollTo(0, 0);
   }
 
   handlePaginationUp(event) {
@@ -289,6 +295,7 @@ class App extends Component {
     event.preventDefault();
     this.toggleRender();
     this.forceUpdate();
+    window.scrollTo(0, 0);
   }
 
   // Shows all posts
