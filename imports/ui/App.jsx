@@ -9,10 +9,10 @@ import { Affix } from 'react-overlays'
 import { StickyContainer, Sticky } from 'react-sticky';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
-var pages = 1; 
-var perPage = 10; 
-var totalPosts; 
-var pagesLimit; 
+var pages = 1;
+var perPage = 10;
+var totalPosts;
+var pagesLimit;
 
 // App component - represents the whole app
 class App extends Component {
@@ -29,17 +29,17 @@ class App extends Component {
     };
   }
 
-  //from some random internet man 
+  //from some random internet man
   handleScroll() {
     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
     const body = document.body;
     const html = document.documentElement;
     const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight) - 10;
     const windowBottom = windowHeight + window.pageYOffset;
-    console.log(pages); 
+    console.log(pages);
     if (windowBottom >= docHeight && pages < pagesLimit && pages>-1) {
-      pages++; 
-      this.update(); 
+      pages++;
+      this.update();
     }
   }
 
@@ -52,12 +52,16 @@ class App extends Component {
   }
 
   update() {
-    console.log("force update"); 
-    this.forceUpdate(); 
+    console.log("force update");
+    this.forceUpdate();
   }
 
   handleSubmit(event) {
     event.preventDefault();
+
+    var snd = new Audio("public/audio.mp3");
+    snd.play();
+    snd.currentTime=0;
 
     // Find the text field via the React ref
     // console.log(ReactDOM.findDOMNode(this.refs.textInput).value.trim());
@@ -91,7 +95,7 @@ class App extends Component {
 
   searchAll(event) {
     event.preventDefault();
-    pages = 1; 
+    pages = 1;
 
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
@@ -111,7 +115,7 @@ class App extends Component {
 
   searchAcademic(event) {
     event.preventDefault();
-    pages = 1; 
+    pages = 1;
 
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
@@ -131,7 +135,7 @@ class App extends Component {
 
   searchSocial(event) {
     event.preventDefault();
-    pages = 1; 
+    pages = 1;
 
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
@@ -189,7 +193,7 @@ class App extends Component {
 
   searchUnanswered(event) {
     event.preventDefault();
-    pages = 1; 
+    pages = 1;
 
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
@@ -208,7 +212,7 @@ class App extends Component {
 
   searchAdmin(admin, event) {
     event.preventDefault();
-    pages = 1; 
+    pages = 1;
 
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
@@ -245,13 +249,13 @@ class App extends Component {
 
   handleSearch(event) {
      event.preventDefault();
-     pages = 1; 
+     pages = 1;
 
     // Find the text field via the React ref
     this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
     this.search = this.query;
     this.isSearch = 1;
-    
+
     // Clear form
     ReactDOM.findDOMNode(this.refs.searchString).value = '';
 
@@ -262,7 +266,7 @@ class App extends Component {
   handlePaginationUp(event) {
      event.preventDefault();
 
-     pages++; 
+     pages++;
      this.forceUpdate();
   }
 
@@ -285,7 +289,7 @@ class App extends Component {
     document.getElementById("current-social").style.fontWeight = "100";
     document.getElementById("current-extracurricular").style.fontWeight = "100";
     document.getElementById("current-other").style.fontWeight = "100";
-    Roles.userIsInRole(Meteor.userId(), 'admin') ? 
+    Roles.userIsInRole(Meteor.userId(), 'admin') ?
       document.getElementById("current-unanswered").style.fontWeight = "100" : '';
     document.getElementById("contributors").style.fontWeight = "100";
   }
@@ -293,7 +297,7 @@ class App extends Component {
   goContributors(event) {
 
     this.toggleBold();
-    pages = -1; 
+    pages = -1;
     document.getElementById("contributors").style.fontWeight = "normal";
 
     event.preventDefault();
@@ -339,13 +343,13 @@ class App extends Component {
       admins[i] = adminList[i].username;
       bios[i] = placeholder;
     }
-    
+
     return (
       <div className="col-md-10 col-sm-10 back-orange margin">
-      <br/><p>Real Talk Princeton is an established group committed to 
+      <br/><p>Real Talk Princeton is an established group committed to
       answering questions about Princeton academics, student life, and beyond.</p>
 
-        { Object.keys(admins).map((obj, i) => 
+        { Object.keys(admins).map((obj, i) =>
           <div>
             <button className="highlight button inline response tiny" key = {300 - obj} onClick={this.searchAdmin.bind(this, admins[obj])}><b>{admins[obj]}</b></button>
             {bios[obj]}
@@ -372,9 +376,9 @@ class App extends Component {
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
     }
-    totalPosts = 0; 
-    var rendered = 0; 
-    var lastPost = pages*perPage; 
+    totalPosts = 0;
+    var rendered = 0;
+    var lastPost = pages*perPage;
 
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
@@ -397,7 +401,7 @@ class App extends Component {
         }
       }
       else {
-        totalPosts++; 
+        totalPosts++;
         pagesLimit = Math.ceil(totalPosts/perPage);
         // Search through a specific tag
         if (this.tagSearch == 1) {
@@ -427,7 +431,7 @@ class App extends Component {
           }
           if (post.tags.includes(this.tagQuery)) {
             if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
-              rendered++; 
+              rendered++;
               return (
               <Post
                 key={post._id}
@@ -442,7 +446,7 @@ class App extends Component {
         else {
           // Search through all
           if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
-            rendered++; 
+            rendered++;
             return (
               <Post
                 key={post._id}
@@ -488,7 +492,7 @@ class App extends Component {
                   { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={this.searchUnanswered.bind(this)}>unanswered</button> </div> ) : ''}
                 </div>
               </div>
-              <div className="row"> 
+              <div className="row">
                 <div className="col-md-12">
                   <li>
                     <form className="tiny search" onSubmit={this.handleSearch.bind(this)}>
@@ -499,7 +503,7 @@ class App extends Component {
                       </p>
                     </form>
                     { this.isSearch && this.search != '' ? (
-                      <p className = "tiny"> 
+                      <p className = "tiny">
                         Current search: <input type="reset" value={this.search}/>
                       </p> ) : ''}
                   </li>
@@ -517,7 +521,7 @@ class App extends Component {
                   </li>
                   <p> <br/></p>
                 </div>
-              </div> 
+              </div>
             </div>
             </Sticky>
           </div>
@@ -529,7 +533,7 @@ class App extends Component {
         </div>
         </StickyContainer>
       </div>
-      ); 
+      );
   }
 }
 
@@ -539,7 +543,7 @@ App.propTypes = {
 };
 
 
-//CHANGE THIS FOR PAGINATION 
+//CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
   Meteor.subscribe('userList');
   Meteor.subscribe('posts');
