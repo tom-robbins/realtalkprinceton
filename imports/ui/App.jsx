@@ -502,13 +502,12 @@ class App extends Component {
                       </p> ) : ''}
                   </li>
                   <li>
-                    { this.props.currentUser ?
+
                       <form className="new-question search" onSubmit={this.handleSubmit.bind(this)}>
                         <textarea placeholder="Ask a question!" ref="textInput"></textarea>
                         <input type="text" placeholder="(Optional) Email to receive notification" ref="textInput2"/>
                         <input type="submit" value="Submit"/>
-                      </form> : ''
-                    }
+                      </form> 
                   </li>
                   <li>
                     <button className="button white pseudo-link" id="contributors" onClick={this.goContributors.bind(this)}>About the Contributors</button>

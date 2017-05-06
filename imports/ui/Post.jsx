@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Posts } from '../api/posts';
+import ReactDOM from 'react-dom';
 
 import { render } from 'react-dom';
 
@@ -24,9 +25,47 @@ export default class Post extends Component {
     Meteor.call('posts.setHidden', this.props.post._id, ! this.props.post.hidden);
   }
 
-  answerPost() {
-    var ans = prompt("Please enter your answer", "Blank");
-    Meteor.call('posts.answer', this.props.post._id, ans);
+  answerPost(event) {
+    event.preventDefault();
+    console.log("answerPost"); 
+    // Find the text field via the React ref
+    const ans = ReactDOM.findDOMNode(this.refs.ansInput).value.trim();
+
+    if (ans != '') {
+      Meteor.call('posts.answer', this.props.post._id, ans);
+
+    }
+  }
+
+  youAnswered(){ 
+    let posts = this.props.post.answer; 
+    console.log(Object.keys(posts)); 
+    console.log("youAnswered"); 
+    for (obj in Object.keys(posts)) {
+      console.log(posts[obj]);
+      if (Meteor.user().username == posts[obj].name) {
+        return true; 
+      }
+    }
+    return false;  
+  }
+
+  yourObj(){ 
+    let posts = this.props.post.answer; 
+    console.log(Object.keys(posts)); 
+    console.log("youAnswered"); 
+    for (obj in Object.keys(posts)) {
+      console.log(posts[obj]);
+      if (Meteor.user().username == posts[obj].name) {
+        return obj; 
+      }
+    }
+    return false;  
+  }
+
+  displayForm(event) {
+    event.preventDefault(); 
+    ReactDOM.findDOMNode(this.refs.answerForm).style.display = 'block'; 
   }
 
   tagPost() {
@@ -110,8 +149,8 @@ export default class Post extends Component {
                 </div>
 
                 <div className="col-md-6 col-sm-6">
-                { this.props.isAdmin ? (
-                <button className="admin-button response back-light-orange" onClick={this.answerPost.bind(this)}>Answer</button>
+                { this.props.isAdmin && !this.youAnswered() ? (
+                  <button className="admin-button response back-light-orange" onClick={this.displayForm.bind(this)}>Answer</button>
                 ) : ''}
                 </div>
               </div>
@@ -120,9 +159,25 @@ export default class Post extends Component {
 
           <br/>
 
-          { 
+          <div className="col-md-6 col-sm-6">
+          {this.props.isAdmin ? (
+            this.youAnswered() ? (
+              <form className="new-question search" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
+                  <textarea placeholder="Answer the question!" ref="ansInput">{this.props.post.answer[this.yourObj()].text}</textarea>
+                    <input type="submit" ref="saveButton" value="Save"/>
+              </form> 
+              )
+
+            : (
+              <form className="new-question search hide" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
+                  <textarea placeholder="Answer the question!" ref="ansInput"></textarea>
+                    <input type="submit" ref="saveButton" value="Save"/>
+              </form> 
+              ))
+            : '' }
+          {
             this.props.answered ? (
-            <div className="col-md-6 col-sm-6">
+            <div>
               {Object.keys(this.props.post.answer).map((obj, i) =>
                 <div>
                 <br/>
@@ -145,6 +200,7 @@ export default class Post extends Component {
             </div>
           ) : ''
         }
+        </div>
         </div>
         </li>
       );

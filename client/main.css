@@ -453,3 +453,7 @@ header .hide-completed {
 .highlight:hover {
   font-weight: bolder !important;
 }
+
+.hide {
+  display: none; 
+}
