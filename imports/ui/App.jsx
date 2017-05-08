@@ -36,7 +36,7 @@ class App extends Component {
     const html = document.documentElement;
     const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight) - 10;
     const windowBottom = windowHeight + window.pageYOffset;
-    console.log(pages);
+    //console.log(pages);
     if (windowBottom >= docHeight && pages < pagesLimit && pages>-1) {
       pages++;
       this.update();
@@ -370,6 +370,22 @@ class App extends Component {
     );
   }
 
+  matchAnswers(post, re) {
+    for (i = 0; i < post.answer.length; i++) {
+      if (post.answer[i].text.match(re))
+      {
+        return 1;
+      }
+      else if (post.answer[i].name.match(re))
+      {
+        return 1;
+      }
+    }
+
+    return null
+  }
+
+
   // Shows posts that were searched for
   renderFound() {
     let filteredPosts = this.props.posts;
@@ -445,7 +461,7 @@ class App extends Component {
         }
         else {
           // Search through all
-          if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
+          if ((post.question.match(re) != null || this.matchAnswers(post, re) != null || this.query == undefined) && rendered<lastPost) {
             rendered++;
             return (
               <Post
@@ -514,7 +530,7 @@ class App extends Component {
                         <input type="text" placeholder="(Optional) Email to receive notification" ref="textInput2"/>
                         <input type="submit" value="Submit"/>
                       </form>
-                      <br/> 
+                      <br/>
                   </li>
                   <li>
                     <button className="button white pseudo-link" id="contributors" onClick={this.goContributors.bind(this)}>About the Contributors</button>
