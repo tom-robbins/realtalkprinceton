@@ -382,6 +382,16 @@ class App extends Component {
   }
 
 
+  adminAnswered(admin, post) {
+    for (i = 0; i < post.answer.length; i++) {
+      if (post.answer[i].name == admin) {
+        console.log('success');
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Shows posts that were searched for
   renderFound() {
     let filteredPosts = this.props.posts;
@@ -430,7 +440,7 @@ class App extends Component {
             }
           }
           else if (answered && this.tagQuery == "admin") {
-            if (post.answer[0].name==this.query) {
+            if (this.adminAnswered(this.query, post)) {
               return (
               <Post
               key={post._id}
