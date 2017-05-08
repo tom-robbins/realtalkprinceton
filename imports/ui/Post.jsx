@@ -27,7 +27,6 @@ export default class Post extends Component {
 
   answerPost(event) {
     event.preventDefault();
-    console.log("answerPost");
     // Find the text field via the React ref
     const ans = ReactDOM.findDOMNode(this.refs.ansInput).value.trim();
 
@@ -39,10 +38,7 @@ export default class Post extends Component {
 
   youAnswered(){
     let posts = this.props.post.answer;
-    console.log(Object.keys(posts));
-    console.log("youAnswered");
     for (obj in Object.keys(posts)) {
-      console.log(posts[obj]);
       if (Meteor.user().username == posts[obj].name) {
         return true;
       }
@@ -52,10 +48,7 @@ export default class Post extends Component {
 
   yourObj(){
     let posts = this.props.post.answer;
-    console.log(Object.keys(posts));
-    console.log("youAnswered");
     for (obj in Object.keys(posts)) {
-      console.log(posts[obj]);
       if (Meteor.user().username == posts[obj].name) {
         return obj;
       }
@@ -75,7 +68,9 @@ export default class Post extends Component {
 
   deleteThisAnswer(t, o) {
     // o is the index of the answer to remove
-    Meteor.call('posts.ansRemove', this.props.post._id, o);
+    if (confirm("Are you sure you want to delete this answer?")) {
+      Meteor.call('posts.ansRemove', this.props.post._id, o);
+    }
   }
 
   deleteThisTag(t, o) {
@@ -166,14 +161,14 @@ export default class Post extends Component {
           {this.props.isAdmin ? (
             this.youAnswered() ? (
               <form className="new-question search" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
-                  <textarea placeholder="Answer the question!" ref="ansInput">{this.props.post.answer[this.yourObj()].text}</textarea>
+                  <textarea className="outline" placeholder="Answer the question!" ref="ansInput">{this.props.post.answer[this.yourObj()].text}</textarea>
                     <input type="submit" ref="saveButton" value="Save"/>
               </form>
               )
 
             : (
               <form className="new-question search hide" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
-                  <textarea placeholder="Answer the question!" ref="ansInput"></textarea>
+                  <textarea className="outline" placeholder="Answer the question!" ref="ansInput"></textarea>
                     <input type="submit" ref="saveButton" value="Save"/>
               </form>
               ))
@@ -192,7 +187,7 @@ export default class Post extends Component {
 
 
 
-                { this.props.isAdmin ? (
+                { Meteor.user().username == this.props.post.answer[obj].name ? (
                  <button className="delete" onClick={()=>this.deleteThisAnswer(this, parseInt(obj))}>
                    &times;
                  </button>
