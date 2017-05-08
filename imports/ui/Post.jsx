@@ -27,7 +27,7 @@ export default class Post extends Component {
 
   answerPost(event) {
     event.preventDefault();
-    console.log("answerPost"); 
+    console.log("answerPost");
     // Find the text field via the React ref
     const ans = ReactDOM.findDOMNode(this.refs.ansInput).value.trim();
 
@@ -37,35 +37,35 @@ export default class Post extends Component {
     }
   }
 
-  youAnswered(){ 
-    let posts = this.props.post.answer; 
-    console.log(Object.keys(posts)); 
-    console.log("youAnswered"); 
+  youAnswered(){
+    let posts = this.props.post.answer;
+    console.log(Object.keys(posts));
+    console.log("youAnswered");
     for (obj in Object.keys(posts)) {
       console.log(posts[obj]);
       if (Meteor.user().username == posts[obj].name) {
-        return true; 
+        return true;
       }
     }
-    return false;  
+    return false;
   }
 
-  yourObj(){ 
-    let posts = this.props.post.answer; 
-    console.log(Object.keys(posts)); 
-    console.log("youAnswered"); 
+  yourObj(){
+    let posts = this.props.post.answer;
+    console.log(Object.keys(posts));
+    console.log("youAnswered");
     for (obj in Object.keys(posts)) {
       console.log(posts[obj]);
       if (Meteor.user().username == posts[obj].name) {
-        return obj; 
+        return obj;
       }
     }
-    return false;  
+    return false;
   }
 
   displayForm(event) {
-    event.preventDefault(); 
-    ReactDOM.findDOMNode(this.refs.answerForm).style.display = 'block'; 
+    event.preventDefault();
+    ReactDOM.findDOMNode(this.refs.answerForm).style.display = 'block';
   }
 
   tagPost() {
@@ -125,7 +125,7 @@ export default class Post extends Component {
 
 
               { this.props.post.tags.length > 0 && this.props.isAdmin ? (
-                  Object.keys(this.props.post.tags).map((obj, i) => 
+                  Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
                      <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
                      <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
@@ -134,15 +134,15 @@ export default class Post extends Component {
                ) : ''}
 
               { this.props.post.tags.length > 0 && !this.props.isAdmin ? (
-                  Object.keys(this.props.post.tags).map((obj, i) => 
+                  Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
                      <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
                    </div>
                  )
                ) : ''}
               <br/>
-              
-              <div className="row"> 
+
+              <div className="row">
                 <div className="col-md-6 col-sm-6 float-left">
                 { this.props.isAdmin ? (
                 <button className="admin-button response back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
@@ -168,14 +168,14 @@ export default class Post extends Component {
               <form className="new-question search" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
                   <textarea placeholder="Answer the question!" ref="ansInput">{this.props.post.answer[this.yourObj()].text}</textarea>
                     <input type="submit" ref="saveButton" value="Save"/>
-              </form> 
+              </form>
               )
 
             : (
               <form className="new-question search hide" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
                   <textarea placeholder="Answer the question!" ref="ansInput"></textarea>
                     <input type="submit" ref="saveButton" value="Save"/>
-              </form> 
+              </form>
               ))
             : '' }
           {
@@ -197,7 +197,7 @@ export default class Post extends Component {
                    &times;
                  </button>
                  ) : '' }
-                <p className="black qa no-margin" key = {300 - obj}>{this.props.post.answer[obj].text}<br/></p>
+                <p className="black qa no-margin answertext" key = {300 - obj}>{this.props.post.answer[obj].text}<br/></p>
 
                 </div>
               )}
