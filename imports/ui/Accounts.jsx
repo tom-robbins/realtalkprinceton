@@ -19,9 +19,6 @@ class Accounts extends Component {
     };
   }
 
-  renderAdmins() {
-  }
-
   goHome(event) {
     event.preventDefault();
     Router.go('/');
@@ -44,17 +41,12 @@ class Accounts extends Component {
     return (
       <div className="container">
         <header>
-          <h1>Real Talk Princeton</h1>
-          <AccountsUIWrapper />
-          <h2>Contributor Bios</h2>
+          <h1 className="link" onClick={this.goHome.bind(this)}>Real Talk Princeton</h1>
         </header>
-
-        <button className="homeButton" onClick={this.goHome.bind(this)}>Home</button>
+        <div className="center">
         <button className="addAdmin" onClick={this.addAdmin.bind(this)}>Add Admin</button>
         <button className="removeAdmin" onClick={this.removeAdmin.bind(this)}>Remove Admin</button>
-        <ul>
-          {this.renderAdmins()}
-        </ul>
+        </div>
       </div>
     );
   }

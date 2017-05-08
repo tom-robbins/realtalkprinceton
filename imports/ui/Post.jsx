@@ -161,14 +161,14 @@ export default class Post extends Component {
           {this.props.isAdmin ? (
             this.youAnswered() ? (
               <form className="new-question search" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
-                  <textarea placeholder="Answer the question!" ref="ansInput">{this.props.post.answer[this.yourObj()].text}</textarea>
+                  <textarea className="outline" placeholder="Answer the question!" ref="ansInput">{this.props.post.answer[this.yourObj()].text}</textarea>
                     <input type="submit" ref="saveButton" value="Save"/>
               </form>
               )
 
             : (
               <form className="new-question search hide" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
-                  <textarea placeholder="Answer the question!" ref="ansInput"></textarea>
+                  <textarea className="outline" placeholder="Answer the question!" ref="ansInput"></textarea>
                     <input type="submit" ref="saveButton" value="Save"/>
               </form>
               ))

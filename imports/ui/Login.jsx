@@ -28,14 +28,12 @@ class Login extends Component {
     return (
       <div className="container">
         <header>
-          <h1>Real Talk Princeton</h1>
+          <h1 className="link" onClick={this.goHome.bind(this)}>Real Talk Princeton</h1>
         </header>
+      <div className="center">
         <h2> Admin Login: </h2>
-        <AccountsUIWrapper />
-
-        <li>
-          <button className="button pseudo-link" onClick={this.goHome.bind(this)}>Home</button>
-        </li>
+        <AccountsUIWrapper /><br/>
+      </div>
       </div>
     );
   }

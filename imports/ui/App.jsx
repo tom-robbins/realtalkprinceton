@@ -346,7 +346,7 @@ class App extends Component {
 
     return (
       <div className="col-md-10 col-sm-10 back-orange margin">
-      <br/><p>Real Talk Princeton is an established group committed to
+      <br/><p>Real Talk Princeton is an established group of students committed to
       answering questions about Princeton academics, student life, and beyond.</p>
 
         { Object.keys(admins).map((obj, i) =>
@@ -498,7 +498,7 @@ class App extends Component {
             <div className="sidebar">
               <div className="row">
                 <div className="col-md-12">
-                <p className="white large">Real Talk Princeton</p><br/>
+                <button className="white large title" onClick={this.searchAll.bind(this)}>Real Talk Princeton</button><br/><br/>
                 </div>
               </div>
               <div className="row">
@@ -516,31 +516,24 @@ class App extends Component {
               </div>
               <div className="row">
                 <div className="col-md-12">
-                  <li>
                     <form className="tiny search" onSubmit={this.handleSearch.bind(this)}>
                       <p>
                         <input type = "text"
                           ref = "searchString"
-                          placeholder="Search"/>
+                          placeholder="Search, e.g. eating clubs"/>
+                          <input type="submit" value="Search"/>
                       </p>
                     </form>
                     { this.isSearch && this.search != '' ? (
-                      <p className = "tiny">
+                      <p className = "tiny center">
                         Current search: <input type="reset" value={this.search}/>
                       </p> ) : ''}
-                  </li>
-                  <li>
-
                       <form className="new-question search" onSubmit={this.handleSubmit.bind(this)}>
                         <textarea placeholder="Ask a question!" ref="textInput"></textarea>
-                        <input type="text" placeholder="(Optional) Email to receive notification" ref="textInput2"/>
+                        <input type="text" placeholder="(Optional) Email for notification" ref="textInput2"/>
                         <input type="submit" value="Submit"/>
-                      </form>
-                      <br/>
-                  </li>
-                  <li>
+                      </form> <br/>
                     <button className="button white pseudo-link" id="contributors" onClick={this.goContributors.bind(this)}>About the Contributors</button>
-                  </li>
                   <p> <br/></p>
                 </div>
               </div>
