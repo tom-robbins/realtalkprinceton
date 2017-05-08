@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Posts } from '../api/posts';
+import ReactDOM from 'react-dom';
 
 import { render } from 'react-dom';
 
@@ -24,9 +25,47 @@ export default class Post extends Component {
     Meteor.call('posts.setHidden', this.props.post._id, ! this.props.post.hidden);
   }
 
-  answerPost() {
-    var ans = prompt("Please enter your answer", "Blank");
-    Meteor.call('posts.answer', this.props.post._id, ans);
+  answerPost(event) {
+    event.preventDefault();
+    console.log("answerPost"); 
+    // Find the text field via the React ref
+    const ans = ReactDOM.findDOMNode(this.refs.ansInput).value.trim();
+
+    if (ans != '') {
+      Meteor.call('posts.answer', this.props.post._id, ans);
+
+    }
+  }
+
+  youAnswered(){ 
+    let posts = this.props.post.answer; 
+    console.log(Object.keys(posts)); 
+    console.log("youAnswered"); 
+    for (obj in Object.keys(posts)) {
+      console.log(posts[obj]);
+      if (Meteor.user().username == posts[obj].name) {
+        return true; 
+      }
+    }
+    return false;  
+  }
+
+  yourObj(){ 
+    let posts = this.props.post.answer; 
+    console.log(Object.keys(posts)); 
+    console.log("youAnswered"); 
+    for (obj in Object.keys(posts)) {
+      console.log(posts[obj]);
+      if (Meteor.user().username == posts[obj].name) {
+        return obj; 
+      }
+    }
+    return false;  
+  }
+
+  displayForm(event) {
+    event.preventDefault(); 
+    ReactDOM.findDOMNode(this.refs.answerForm).style.display = 'block'; 
   }
 
   tagPost() {
@@ -44,8 +83,9 @@ export default class Post extends Component {
     Meteor.call('posts.tagRemove', this.props.post._id, o);
   }
 
-  searchAdmin(admin) {
-    // Meteor.call
+
+  searchAdmin(admin, event) {
+    Meteor.call('searchAdmin', admin, event);
   }
 
   render() {
@@ -83,8 +123,9 @@ export default class Post extends Component {
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
               <p className="black qa no-margin">{this.props.post.question}</p>
 
-              { this.props.post.tags.length > 0 && this.props.isAdmin ?
-                  Object.keys(this.props.post.tags).map((obj, i) =>
+
+              { this.props.post.tags.length > 0 && this.props.isAdmin ? (
+                  Object.keys(this.props.post.tags).map((obj, i) => 
                    <div>
                      <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
                      <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
@@ -93,16 +134,15 @@ export default class Post extends Component {
                ) : ''}
 
               { this.props.post.tags.length > 0 && !this.props.isAdmin ? (
-                  Object.keys(this.props.post.tags).map((obj, i) =>
+                  Object.keys(this.props.post.tags).map((obj, i) => 
                    <div>
                      <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
                    </div>
                  )
                ) : ''}
-
               <br/>
-
-              <div className="row">
+              
+              <div className="row"> 
                 <div className="col-md-6 col-sm-6 float-left">
                 { this.props.isAdmin ? (
                 <button className="admin-button response back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
@@ -110,8 +150,9 @@ export default class Post extends Component {
                 </div>
 
                 <div className="col-md-6 col-sm-6">
-                { this.props.isAdmin ? (
-                <button className="admin-button response back-light-orange" onClick={this.answerPost.bind(this)}>Answer</button>
+
+                { this.props.isAdmin && !this.youAnswered() ? (
+                  <button className="admin-button response back-light-orange" onClick={this.displayForm.bind(this)}>Answer</button>
                 ) : ''}
                 </div>
               </div>
@@ -120,16 +161,34 @@ export default class Post extends Component {
 
           <br/>
 
+
+          <div className="col-md-6 col-sm-6">
+          {this.props.isAdmin ? (
+            this.youAnswered() ? (
+              <form className="new-question search" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
+                  <textarea placeholder="Answer the question!" ref="ansInput">{this.props.post.answer[this.yourObj()].text}</textarea>
+                    <input type="submit" ref="saveButton" value="Save"/>
+              </form> 
+              )
+
+            : (
+              <form className="new-question search hide" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
+                  <textarea placeholder="Answer the question!" ref="ansInput"></textarea>
+                    <input type="submit" ref="saveButton" value="Save"/>
+              </form> 
+              ))
+            : '' }
           {
             this.props.answered ? (
-            <div className="col-md-6 col-sm-6">
+            <div>
               {Object.keys(this.props.post.answer).map((obj, i) =>
                 <div>
                 <br/>
 
 
                 <p className="response tiny black no-margin inline">Response from </p>
-                <button className="response tiny no-margin highlight button" key={obj} onClick={this.searchAdmin(this.props.post.answer[obj].name)}>{this.props.post.answer[obj].name}</button>
+
+                <button className="response tiny no-margin highlight button" key={obj} onClick={this.searchAdmin.bind(this.props.post, this.props.post.answer[obj].name)}>{this.props.post.answer[obj].name}</button>
 
 
 
@@ -145,6 +204,7 @@ export default class Post extends Component {
             </div>
           ) : ''
         }
+        </div>
         </div>
         </li>
       );
