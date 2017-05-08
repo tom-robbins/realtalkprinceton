@@ -27,7 +27,7 @@ export default class Post extends Component {
 
   answerPost(event) {
     event.preventDefault();
-    console.log("answerPost");
+    //console.log("answerPost");
     // Find the text field via the React ref
     const ans = ReactDOM.findDOMNode(this.refs.ansInput).value.trim();
 
@@ -39,10 +39,10 @@ export default class Post extends Component {
 
   youAnswered(){
     let posts = this.props.post.answer;
-    console.log(Object.keys(posts));
-    console.log("youAnswered");
+    //console.log(Object.keys(posts));
+    //console.log("youAnswered");
     for (obj in Object.keys(posts)) {
-      console.log(posts[obj]);
+      //console.log(posts[obj]);
       if (Meteor.user().username == posts[obj].name) {
         return true;
       }
@@ -52,10 +52,10 @@ export default class Post extends Component {
 
   yourObj(){
     let posts = this.props.post.answer;
-    console.log(Object.keys(posts));
-    console.log("youAnswered");
+    //console.log(Object.keys(posts));
+    //console.log("youAnswered");
     for (obj in Object.keys(posts)) {
-      console.log(posts[obj]);
+      //console.log(posts[obj]);
       if (Meteor.user().username == posts[obj].name) {
         return obj;
       }
