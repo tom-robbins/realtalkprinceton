@@ -44,6 +44,10 @@ export default class Post extends Component {
     Meteor.call('posts.tagRemove', this.props.post._id, o);
   }
 
+  searchAdmin(admin) {
+    // Meteor.call
+  }
+
   render() {
 
     // Give posts a different className when they are checked off,
@@ -61,7 +65,7 @@ export default class Post extends Component {
             { this.props.isAdmin ? (
               <div className="row">
                 <div className="col-md-6 col-sm-6">
-                  <button className="admin-button back-light-orange float-left" onClick={this.toggleHidden.bind(this)}>
+                  <button className="admin-button response back-light-orange float-left" onClick={this.toggleHidden.bind(this)}>
                     { this.props.post.hidden ? 'Hidden' : 'Public' }
                   </button>
                 </div>
@@ -76,28 +80,38 @@ export default class Post extends Component {
 
               <br/>
 
-              <p className="tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-              <p className="white no-margin">{this.props.post.question}</p>
+              <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
+              <p className="black qa no-margin">{this.props.post.question}</p>
 
-              { this.props.post.tags.length > 0 && this.props.isAdmin? (
-                  Object.keys(this.props.post.tags).map((obj, i) => 
+              { this.props.post.tags.length > 0 && this.props.isAdmin ?
+                  Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
                      <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
                      <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
                    </div>
                  )
                ) : ''}
-              
-              <div className="row"> 
+
+              { this.props.post.tags.length > 0 && !this.props.isAdmin ? (
+                  Object.keys(this.props.post.tags).map((obj, i) =>
+                   <div>
+                     <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
+                   </div>
+                 )
+               ) : ''}
+
+              <br/>
+
+              <div className="row">
                 <div className="col-md-6 col-sm-6 float-left">
                 { this.props.isAdmin ? (
-                <button className="admin-button back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
+                <button className="admin-button response back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
                 ) : ''}
                 </div>
 
                 <div className="col-md-6 col-sm-6">
                 { this.props.isAdmin ? (
-                <button className="admin-button back-light-orange" onClick={this.answerPost.bind(this)}>Answer</button>
+                <button className="admin-button response back-light-orange" onClick={this.answerPost.bind(this)}>Answer</button>
                 ) : ''}
                 </div>
               </div>
@@ -106,18 +120,25 @@ export default class Post extends Component {
 
           <br/>
 
-          { 
+          {
             this.props.answered ? (
             <div className="col-md-6 col-sm-6">
               {Object.keys(this.props.post.answer).map((obj, i) =>
                 <div>
-                <p className="white no-margin" key = {obj}><b>{"Response from " + this.props.post.answer[obj].name + ":"}</b></p>
+                <br/>
+
+
+                <p className="response tiny black no-margin inline">Response from </p>
+                <button className="response tiny no-margin highlight button" key={obj} onClick={this.searchAdmin(this.props.post.answer[obj].name)}>{this.props.post.answer[obj].name}</button>
+
+
+
                 { this.props.isAdmin ? (
                  <button className="delete" onClick={()=>this.deleteThisAnswer(this, parseInt(obj))}>
                    &times;
                  </button>
                  ) : '' }
-                <p className="white no-margin" key = {300 - obj}>{this.props.post.answer[obj].text}<br/></p>
+                <p className="black qa no-margin" key = {300 - obj}>{this.props.post.answer[obj].text}<br/></p>
 
                 </div>
               )}
@@ -134,6 +155,7 @@ export default class Post extends Component {
     }
   }
 }
+                // <p className="response tiny black no-margin" key = {obj}>Response from <b>{this.props.post.answer[obj].name}</b></p>
 
 Post.propTypes = {
   // This component gets the post to display through a React prop.
