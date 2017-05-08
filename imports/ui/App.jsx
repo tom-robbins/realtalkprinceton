@@ -472,7 +472,7 @@ class App extends Component {
             <div className="sidebar">
               <div className="row">
                 <div className="col-md-12">
-                <p className="white large">Real Talk Princeton</p><br/>
+                <button className="white large title" onClick={this.searchAll.bind(this)}>Real Talk Princeton</button><br/>
                 </div>
               </div>
               <div className="row">
