@@ -131,7 +131,7 @@ header {
   margin-bottom: 10px;
   display: inline-block;
   margin-right: 1em;
-  color: #ffffff;
+  color: #000000;
   font-family: "Lato" !important;
 }
 
@@ -459,3 +459,5 @@ header .hide-completed {
 .answertext {
   white-space: pre-wrap;
 }
+
+
