@@ -5,7 +5,7 @@
 }
 
 .light-orange {
-  color: #ed985f; 
+  color: #ed985f;
 }
 
 .white {
@@ -13,7 +13,7 @@
 }
 
 .black {
-  color: #000000; 
+  color: #000000;
 }
 
 .back-orange {
@@ -22,19 +22,19 @@
 }
 
 .back-light-orange {
-  background: #ed985f; 
+  background: #ed985f;
 }
 
 .back-white {
-  background: #ffffff; 
+  background: #ffffff;
 }
 
 .bold {
-  font-weight: bold; 
+  font-weight: bold;
 }
 
 .nopad {
-  padding: 0; 
+  padding: 0;
 }
 
 .fivemargin {
@@ -42,7 +42,7 @@
 }
 
 .row.match-my-cols {
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 .row.match-my-cols [class*="col-"]{
@@ -51,7 +51,7 @@
 }
 
 .link {
-  padding: 0; 
+  padding: 0;
 }
 
 .tiny {
@@ -64,12 +64,12 @@
 }
 
 .no-margin {
-  margin: 0 !important; 
+  margin: 0 !important;
 }
 
 .stretch {
-  min-height: 1000px; 
-  height: 100%; 
+  min-height: 1000px;
+  height: 100%;
 }
 
 body {
@@ -89,15 +89,15 @@ body {
 
   padding: 0;
   margin: 0;
-  height: 100%; 
-  min-height: 700px; 
+  height: 100%;
+  min-height: 700px;
 
   font-size: 12px;
 }
 
 .sidebar {
-  padding: 20px 20px 20px 20px; 
-  margin: 0 auto; 
+  padding: 20px 20px 20px 20px;
+  margin: 0 auto;
 }
 
 .question {
@@ -119,10 +119,10 @@ body {
 }
 
 header {
-  max-width: 600px; 
+  max-width: 600px;
   padding: 50px 0px 15px 0px;
   margin: 0 auto;
-  text-align: center; 
+  text-align: center;
 }
 
 #login-buttons {
@@ -142,7 +142,7 @@ h1 {
   display: inline-block;
   margin-right: 1em;
   font-family: "Lato" !important;
-  font-weight: bold; 
+  font-weight: bold;
 }
 
 h2 {
@@ -152,7 +152,7 @@ h2 {
   display: inline-block;
   margin-right: 1em;
   font-family: "Lato" !important;
-  font-weight: normal; 
+  font-weight: normal;
 }
 
 h3 {
@@ -162,20 +162,20 @@ h3 {
   display: inline-block;
   margin-right: 1em;
   font-family: "Lato" !important;
-  font-weight: normal; 
+  font-weight: normal;
 }
 
 p {
   font-size: 1em;
   margin: 0;
   font-family: "Lato" !important;
-  font-weight: normal; 
+  font-weight: normal;
 }
 
 form {
   margin-top: 10px;
   margin-bottom: -10px;
-  margin-right: 10px; 
+  margin-right: 10px;
   position: relative;
 }
 
@@ -211,19 +211,19 @@ textarea {
   padding: 10px 0;
   background: #EF8A46;
   border: none;
-  padding-left: 7px; 
+  padding-left: 7px;
   padding-right: 7px;
   font-size: 1em;
-  width: 100%; 
+  width: 100%;
 }
 
 .button {
-  border:none; 
+  border:none;
   padding:0!important;
   font-size: 1em;
   font-family: "Lato" !important;
-  font-weight: normal; 
-  font-weight: 100; 
+  font-weight: normal;
+  font-weight: 100;
   /*border is optional*/
   cursor: pointer;
 }
@@ -237,11 +237,11 @@ textarea {
 }
 
 .headbutton {
-  border:none; 
+  border:none;
   padding:0!important;
   font-size: 2.5em;
   font-family: "Lato" !important;
-  font-weight: normal; 
+  font-weight: normal;
   /*border is optional*/
   cursor: pointer;
 }
@@ -316,13 +316,13 @@ ul {
 .admin-button {
   float: right;
   font-weight: bold;
-  border:none; 
+  border:none;
   padding: 7px 7px 7px 9px;
   /*font-size: 1em;*/
   font-size: 8px!important;
   margin: 0;
   font-family: "Lato" !important;
-  font-weight: normal; 
+  font-weight: normal;
   border-radius: 10px;
   /*border is optional*/
   cursor: pointer;
@@ -453,5 +453,10 @@ header .hide-completed {
 }
 
 .hide {
-  display: none; 
+  display: none;
+}
+
+.answertext {
+  white-space: pre-wrap;
+  font-size: 64px;
 }
