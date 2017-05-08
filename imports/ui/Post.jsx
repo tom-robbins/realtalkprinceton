@@ -83,6 +83,7 @@ export default class Post extends Component {
     Meteor.call('posts.tagRemove', this.props.post._id, o);
   }
 
+
   searchAdmin(admin, event) {
     Meteor.call('searchAdmin', admin, event);
   }
@@ -122,6 +123,7 @@ export default class Post extends Component {
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
               <p className="black qa no-margin">{this.props.post.question}</p>
 
+
               { this.props.post.tags.length > 0 && this.props.isAdmin ? (
                   Object.keys(this.props.post.tags).map((obj, i) => 
                    <div>
@@ -138,7 +140,6 @@ export default class Post extends Component {
                    </div>
                  )
                ) : ''}
-              
               <br/>
               
               <div className="row"> 
@@ -149,6 +150,7 @@ export default class Post extends Component {
                 </div>
 
                 <div className="col-md-6 col-sm-6">
+
                 { this.props.isAdmin && !this.youAnswered() ? (
                   <button className="admin-button response back-light-orange" onClick={this.displayForm.bind(this)}>Answer</button>
                 ) : ''}
@@ -158,6 +160,7 @@ export default class Post extends Component {
             </div>
 
           <br/>
+
 
           <div className="col-md-6 col-sm-6">
           {this.props.isAdmin ? (
@@ -184,6 +187,7 @@ export default class Post extends Component {
 
 
                 <p className="response tiny black no-margin inline">Response from </p>
+
                 <button className="response tiny no-margin highlight button" key={obj} onClick={this.searchAdmin.bind(this.props.post, this.props.post.answer[obj].name)}>{this.props.post.answer[obj].name}</button>
 
 
