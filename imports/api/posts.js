@@ -29,14 +29,15 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  'posts.insert'(question) {
-    check(question, String);
 
+
+  'posts.insert'(question, email) {
+    check(question, String);
+    check(email, String);
     // Make sure the user is logged in before inserting a post
     if (! Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
-
     Posts.insert({
       question,
       answer: [],
@@ -44,6 +45,7 @@ Meteor.methods({
       tags:[],
       owner: Meteor.userId(),
       username: Meteor.user().username,
+      email: email,
     });
   },
   'posts.remove'(postId) {
@@ -56,15 +58,18 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
     */
-
     Posts.remove(postId);
+    
   },
 
   'posts.ansRemove'(postId, index) {
     const post = Posts.findOne(postId);
-    var newArray = post.answer.slice();
-    newArray.splice(index, 1);
-    Posts.update({_id: postId}, {$set: {answer: newArray}});
+
+    if (Meteor.user().username == post.answer[index].name) {
+      var newArray = post.answer.slice();
+      newArray.splice(index, 1);
+      Posts.update({_id: postId}, {$set: {answer: newArray}});
+    }
   },
 
   'posts.tagRemove'(postId, index) {
@@ -110,7 +115,7 @@ Meteor.methods({
 
     // Make Answer Obj
     var newAnswer = new Answer(x, Meteor.user().username);
-    
+
     // If user already posted, find index, else -1
     var index = -1;
     for (var i = 0; i < post.answer.length; i++) {
@@ -131,15 +136,27 @@ Meteor.methods({
         Posts.update({_id: postId}, {$set: {answer: newArray}});
     }
 
+    var textEmail = "New Answer by " + Meteor.user().username + ":" + '\n \n' + x + '\n \n \n' + "See your post at: http://www.realtalkprinceton.com/post/" + String(postId); 
+    var address = Meteor.user().username + "@realtalkprinceton.com"
+    // Email notification
+    if (post.email != '') {
+    	Email.send({
+		  to: post.email,
+		  from: address,
+		  subject: "RealTalkPrinceton Alert",
+		  text: textEmail,
+		});
+    }
+
+
   },
 
   'posts.tag'(postId, x) {
     // check(postId, String);
     const post = Posts.findOne(postId);
 
-
-    for (var i = 0; i < x.split(" ").length; i++) {
-      Posts.update({_id: postId}, {$push: {tags: x.split(" ")[i]}});
+    for (var i = 0; i < x.split(",").length; i++) {
+      Posts.update({_id: postId}, {$push: {tags: x.split(",")[i]}});
     }
   },
 });

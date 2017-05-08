@@ -28,3 +28,4 @@ alanning:roles
 iron:router
 percolate:paginated-subscription
 ajduke:bootstrap-tagsinput@=0.5.0
+email

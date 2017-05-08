@@ -1,7 +1,8 @@
 Meteor.startup(function () {
 
+
   // user roles
-  var roles = ['admin']
+  var roles = ['admin', 'pleb']
 
   // this will fail if the roles package isn't installed
   if(Meteor.roles.find().count() === 0) {
@@ -13,7 +14,7 @@ Meteor.startup(function () {
   console.log('Running server startup code...');
 
   Accounts.onCreateUser(function (options, user) {
-    Roles.setRolesOnUserObj(user, ['admin']);
+    Roles.setRolesOnUserObj(user, ['pleb']);
 
     if (options.profile) {
       // include the user profile
@@ -26,12 +27,9 @@ Meteor.startup(function () {
     return user;
   });
 
-  var id = Meteor.users.findOne({username: "thomasrr"})
-  console.log(id)
-  Roles.addUsersToRoles(id._id, ['admin']);
 
 });
 
-Meteor.publish(null, function (){
-  return Meteor.roles.find({})
+Meteor.publish('userList', function (){
+  return Meteor.users.find({});
 })

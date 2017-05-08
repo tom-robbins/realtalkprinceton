@@ -17,7 +17,8 @@
 }
 
 .back-orange {
-  background: #f58025;
+  /*background: #f58025;*/
+  background: white;
 }
 
 .back-light-orange {
@@ -72,7 +73,7 @@
 }
 
 body {
-  font-family: "Avenir",sans-serif;
+  font-family: "Lato",sans-serif !important;
   background: #ed985f;
   /*background: url(/img/nassau.jpg) no-repeat center center fixed;*/
   -webkit-background-size: cover;
@@ -91,7 +92,7 @@ body {
   height: 100%; 
   min-height: 700px; 
 
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .sidebar {
@@ -131,7 +132,7 @@ header {
   display: inline-block;
   margin-right: 1em;
   color: #ffffff;
-  font-family: "Avenir Next";
+  font-family: "Lato" !important;
 }
 
 h1 {
@@ -140,7 +141,7 @@ h1 {
   margin-bottom: 10px;
   display: inline-block;
   margin-right: 1em;
-  font-family: "Avenir Next";
+  font-family: "Lato" !important;
   font-weight: bold; 
 }
 
@@ -150,7 +151,7 @@ h2 {
   margin-bottom: 10px;
   display: inline-block;
   margin-right: 1em;
-  font-family: "Avenir Next";
+  font-family: "Lato" !important;
   font-weight: normal; 
 }
 
@@ -160,14 +161,14 @@ h3 {
   margin-bottom: 10px;
   display: inline-block;
   margin-right: 1em;
-  font-family: "Avenir Next";
+  font-family: "Lato" !important;
   font-weight: normal; 
 }
 
 p {
-  font-size: 1.25em;
+  font-size: 1em;
   margin: 0;
-  font-family: "Avenir Next";
+  font-family: "Lato" !important;
   font-weight: normal; 
 }
 
@@ -196,12 +197,12 @@ form {
 textarea {
     width: 100%;
     height: 150px;
-    padding: 12px 20px;
+    padding: 10px 10px;
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 4px;
     background-color: #f8f8f8;
-    font-size: 16px;
+    font-size: 14px;
     resize: none;
 }
 
@@ -219,25 +220,83 @@ textarea {
 .button {
   border:none; 
   padding:0!important;
-  font-size: 1.25em;
-  font-family: "Avenir Next";
+  font-size: 1em;
+  font-family: "Lato" !important;
+  font-weight: normal; 
+  font-weight: 100; 
+  /*border is optional*/
+  cursor: pointer;
+}
+
+.button:hover {
+  font-weight: normal!important;
+}
+
+.button:focus {
+  outline: none!important;
+}
+
+.headbutton {
+  border:none; 
+  padding:0!important;
+  font-size: 2.5em;
+  font-family: "Lato" !important;
   font-weight: normal; 
   /*border is optional*/
   cursor: pointer;
+}
+
+.headbutton:hover {
+  font-weight: normal!important;
+}
+
+.headbutton:focus {
+  outline: none!important;
 }
 
 .pseudo-link {
   background:none!important;
 }
 
-input[type=button], input[type=submit], input[type=reset] {
-    background-color: #f58025;
-    border: none;
-    color: white;
-    padding: 10px 10px;
-    text-decoration: none;
-    margin: 10px 2px;
-    cursor: pointer;
+input[type=button], input[type=submit] {
+  border-radius: 20px;
+  background-color: #f58025;
+  border: none;
+  color: white;
+  padding: 10px 10px;
+  text-decoration: none;
+  margin: 10px 2px;
+  cursor: pointer;
+}
+
+input[type=reset] {
+  border-radius: 20px;
+  border: none;
+  color: white;
+  text-decoration: none;
+  background-color: #ed985f;
+}
+
+input::placeholder {
+  color: #ed985f;
+}
+
+input:focus {
+  outline: none!important;
+}
+
+textarea:focus {
+  outline: none!important;
+}
+
+textarea::placeholder {
+  color: #ed985f;
+}
+
+input[type=text], textarea {
+  border-radius: 10px;
+  background-color: white;
+  font-weight: 100;
 }
 
 ul {
@@ -256,15 +315,20 @@ ul {
 
 .admin-button {
   float: right;
-
+  font-weight: bold;
   border:none; 
-  padding: 5px 5px 5px 5px;
-  font-size: 1em;
+  padding: 7px 7px 7px 9px;
+  /*font-size: 1em;*/
+  font-size: 8px!important;
   margin: 0;
-  font-family: "Avenir Next";
+  font-family: "Lato" !important;
   font-weight: normal; 
+  border-radius: 10px;
   /*border is optional*/
   cursor: pointer;
+}
+.admin-button:focus {
+  outline: none!important;
 }
 
 .toggle-private {
@@ -310,12 +374,12 @@ header .hide-completed {
     padding: 12px 15px;
   }
 
-  .search {
-    width: 150px;
-    clear: both;
-  }
+.search {
+  width: 100%;
+  clear: both;
+}
 
-  .new-post input {
+.new-post input {
     padding-bottom: 5px;
   }
 }
@@ -327,4 +391,67 @@ header .hide-completed {
 .answer {
   font-style: italic;
   color: #aaa;
+}
+
+.tiny {
+  font-size: 12px;
+}
+
+.material-icons {
+  font-size: 10px!important;
+  background: white;
+  border-radius: 20px;
+  margin: 10px 10px;
+  cursor: pointer;
+}
+
+.bio {
+
+}
+
+.qa {
+  font-size: 14px;
+}
+
+.tag {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  /*background-color: white;*/
+  font-weight: bold;
+}
+
+.large {
+  font-size: 40px;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.response {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.margin {
+  margin: 5% 5% 5% 5%;
+}
+
+.inline {
+  display: inline;
+}
+
+.highlight {
+  margin: 10px 10px 10px 10px;
+  background-color: white;
+  color: #f58025;
+  font-weight: normal;
+}
+.highlight:focus {
+  outline: none!important;
+}
+.highlight:hover {
+  font-weight: bolder !important;
+}
+
+.hide {
+  display: none; 
 }

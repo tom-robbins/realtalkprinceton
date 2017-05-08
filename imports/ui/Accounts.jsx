@@ -39,7 +39,6 @@ class Accounts extends Component {
     Meteor.call('posts.removeAdmin', val)
   }
 
-
   render() {
     if (Roles.userIsInRole( Meteor.userId(), 'superadmin' )) {
     return (

@@ -1,5 +1,6 @@
 Meteor.startup(function () {
-
+  process.env.MAIL_URL = "smtp://jamilm9:realtalkprinceton123@smtp.sendgrid.net:587";
+  console.log('this is the mail_url: ', process.env.MAIL_URL);
   // user roles
   var roles = ['superadmin', 'admin', 'pleb']
 
@@ -11,7 +12,7 @@ Meteor.startup(function () {
   }
 
   console.log('Running server startup code...');
-
+  
   var id = Meteor.users.findOne({username: "admin"});
   Roles.addUsersToRoles(id._id, ['superadmin']);
   /*
@@ -55,3 +56,7 @@ Meteor.methods({
    Roles.removeUsersFromRoles(id._id, ['admin']);
   }
 });
+
+Meteor.publish('userList', function (){
+  return Meteor.users.find({});
+})
