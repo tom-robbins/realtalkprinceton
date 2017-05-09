@@ -165,20 +165,21 @@ export default class Post extends Component {
                ) : ''}
               <br/>
 
+              { this.props.isAdmin ? (
               <div className="row">
                 <div className="col-md-6 col-sm-6 float-left">
-                { this.props.isAdmin ? (
                 <button className="admin-button response back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
-                ) : ''}
                 </div>
 
                 <div className="col-md-6 col-sm-6">
-
-                { this.props.isAdmin && !this.youAnswered() ? (
+                { !this.youAnswered() ? (
                   <button className="admin-button response back-light-orange" onClick={this.displayForm.bind(this)}>Answer</button>
                 ) : ''}
                 </div>
-              </div>
+              </div> ) : ''}
+              
+              
+          
 
             </div>
 
