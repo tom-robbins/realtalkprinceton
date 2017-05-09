@@ -55,6 +55,15 @@ export default class Post extends Component {
     return false;
   }
 
+  hasTag(tag){
+    let tags = this.props.post.tags; 
+    for (obj in Object.keys(tags)) {
+      console.log(tags[obj]); 
+      if (tags[obj] == tag) return true; 
+    }
+    return false; 
+  }
+
   yourObj(){
     let posts = this.props.post.answer;
     for (obj in Object.keys(posts)) {
@@ -148,6 +157,8 @@ export default class Post extends Component {
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
               <button className = "button questionButton black qa" onClick={()=>this.update()}> {this.props.post.question} </button>
 
+              <br/>
+
               { this.props.post.tags.length > 0 && this.props.isAdmin ? (
                   Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
@@ -167,19 +178,20 @@ export default class Post extends Component {
 
               <br/>
 
+              { this.props.isAdmin ? (
               <div className="row">
                 <div className="col-md-6 col-sm-6 float-left">
-                { this.props.isAdmin ? (
-                  <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "academic")}>Academic</button>
+                { !this.hasTag("academic") ? (
+                  <button className="tag-button response back-light-orange" onClick={()=>this.tagPost(this, "academic")}>Academic</button>
                 ) : ''}
-                { this.props.isAdmin ? (
-                  <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "social life")}>Social Life</button>
+                { !this.hasTag("social life") ? (
+                  <button className="tag-button response back-light-orange" onClick={()=>this.tagPost(this, "social life")}>Social Life</button>
                 ) : ''}
-                { this.props.isAdmin ? (
-                  <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "extracurricular")}>Extracurricular</button>
+                { !this.hasTag("extracurricular") ? (
+                  <button className="tag-button response back-light-orange" onClick={()=>this.tagPost(this, "extracurricular")}>Extracurricular</button>
                 ) : ''}
-                { this.props.isAdmin ? (
-                  <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "other")}>Other</button>
+                { !this.hasTag("other") ? (
+                  <button className="tag-button response back-light-orange" onClick={()=>this.tagPost(this, "other")}>Other</button>
                 ) : ''}
                 </div>
 
@@ -190,6 +202,7 @@ export default class Post extends Component {
                 ) : ''}
                 </div>
               </div>
+              ) : ''}
 
             </div>
 
