@@ -13,6 +13,7 @@ var pages = 1;
 var perPage = 10;
 var totalPosts;
 var pagesLimit;
+var max_chars = 500; 
 
 // App component - represents the whole app
 class App extends Component {
@@ -26,7 +27,16 @@ class App extends Component {
 
   this.state = {
     hideCompleted: false,
+    chars_left: max_chars
     };
+  }
+
+  handleChange(event) {
+    var input = event.target.value;
+    console.log("handleChange"); 
+    this.setState({
+      chars_left: max_chars - input.length
+    });
   }
 
   //from some random internet man
@@ -68,28 +78,34 @@ class App extends Component {
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
     const email = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
 
-    if (question.length > 500) {
-      alert("500 character limit");
+    if (question.length > max_chars) {
+      return; 
     }
     else if (question != '' && email != '') {
       Meteor.call('posts.insert', question, email);
 
       // Clear form
-      ReactDOM.findDOMNode(this.refs.textInput).value = '';
+      ReactDOM.findDOMNode(this.refs.textInput).value = ''; 
+      ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
-      alert("Thanks for your question!")
+      this.setState({
+        chars_left: max_chars
+       });
     }
     else if (question != '') {
       Meteor.call('posts.insert', question, '');
 
       // Clear form
-      ReactDOM.findDOMNode(this.refs.textInput).value = '';
+      ReactDOM.findDOMNode(this.refs.textInput).value = ''; 
+      ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
 
-      alert("Thanks for your question!")
+          this.setState({
+      chars_left: max_chars
+    });
     }
     else {
-      alert("Enter some text")
+      ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Enter some text here';
     }
   }
 
@@ -527,7 +543,8 @@ class App extends Component {
                         Current search: <input type="reset" value={this.search}/>
                       </p> ) : ''}
                       <form className="new-question search" onSubmit={this.handleSubmit.bind(this)}>
-                        <textarea placeholder="Ask a question!" ref="textInput"></textarea>
+                        <textarea onChange={this.handleChange.bind(this)} placeholder="Ask a question!" ref="textInput"></textarea>
+                        <p className = "tiny white">Characters left: {this.state.chars_left}</p>
                         <input type="text" placeholder="(Optional) Email for notification" ref="textInput2"/>
                         <input type="submit" value="Submit"/>
                       </form> <br/>
