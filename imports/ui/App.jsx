@@ -10,7 +10,7 @@ import { StickyContainer, Sticky } from 'react-sticky';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
 var pages = 1;
-var perPage = 5;
+var perPage = 10;
 var totalPosts;
 var pagesLimit;
 var max_chars = 500;
@@ -25,7 +25,7 @@ class App extends Component {
   this.searchOn = 0;
   this.isAbout = 0;
   this.rendered = 0;
-  this.limit = 500;
+  this.limit = 300;
 
   this.state = {
     hideCompleted: false,
@@ -566,7 +566,7 @@ App.propTypes = {
 
 //CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
-  this.limit = 10;
+  this.limit = 300;
   Meteor.subscribe('userList');
   Meteor.subscribe('posts', this.limit);
 
