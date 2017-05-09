@@ -36,7 +36,7 @@ class Accounts extends Component {
     Meteor.call('posts.removeAdmin', val)
   }
 
-  updatePageBio(event) {
+  /*updatePageBio(event) {
     event.preventDefault();
 
     // Find the text field via the React ref
@@ -52,7 +52,7 @@ class Accounts extends Component {
     ReactDOM.findDOMNode(this.refs.contributorBio).value = '';
 
     this.forceUpdate();
-  }
+  }*/
 
   render() {
     if (Roles.userIsInRole( Meteor.userId(), 'superadmin' )) {
@@ -64,20 +64,20 @@ class Accounts extends Component {
         <div className="center">
         <button className="addAdmin" onClick={this.addAdmin.bind(this)}>Add Admin</button>
         <button className="removeAdmin" onClick={this.removeAdmin.bind(this)}>Remove Admin</button>
-        <br/>
+        {/*<br/>
           <form className="new-question thin" onSubmit={this.updatePageBio.bind(this)}>
             <textarea className="outline" placeholder="Update the page description." ref="contributorBio"></textarea>
             <input type="submit" value="Submit"/>
-          </form>
+          </form> */}
         </div>
       </div>
     );
   }
   else {
     return (
-    <div className="center"><br/>
+    {/*<div className="center"><br/>
       <h3>Access Denied :(</h3>
-    </div>
+    </div>*/}
     )
   }
   }
