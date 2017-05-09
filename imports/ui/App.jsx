@@ -101,6 +101,8 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
+    //Router.go('/');
+
     this.toggleBold();
     document.getElementById("current-all").style.fontWeight = "normal";
 
@@ -116,6 +118,8 @@ class App extends Component {
   searchAcademic(event) {
     event.preventDefault();
     pages = 1;
+
+    Router.go('/');
 
     this.toggleBold();
     document.getElementById("current-academic").style.fontWeight = "normal";
@@ -133,6 +137,8 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
+    Router.go('/');
+
     this.toggleBold();
     document.getElementById("current-social").style.fontWeight = "normal";
 
@@ -149,6 +155,8 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
+    Router.go('/');
+
     this.toggleBold();
     document.getElementById("current-extracurricular").style.fontWeight = "normal";
 
@@ -162,6 +170,8 @@ class App extends Component {
 
   searchOther(event) {
     event.preventDefault();
+
+    Router.go('/');
 
     this.toggleBold();
     document.getElementById("current-other").style.fontWeight = "normal";
@@ -179,6 +189,8 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
+    Router.go('/');
+
     this.toggleBold();
     document.getElementById("current-unanswered").style.fontWeight = "normal";
 
@@ -193,6 +205,8 @@ class App extends Component {
   searchAdmin(admin, event) {
     event.preventDefault();
     pages = 1;
+
+    Router.go('/');
 
     this.toggleBold();
 
@@ -386,7 +400,7 @@ class App extends Component {
 
     const currentUserId = this.props.currentUser && this.props.currentUser._id;
     const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
-    console.log(isAdmin); 
+    console.log(isAdmin);
 
     return filteredPosts.map((post) => {
       const answered = post.answer != "";
@@ -406,7 +420,7 @@ class App extends Component {
             );
         }
       }
-      
+
       else {
         totalPosts++;
         pagesLimit = Math.ceil(totalPosts/perPage);
@@ -552,6 +566,6 @@ export default createContainer(() => {
   return {
     posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
-    isReady: handle.ready(), 
+    isReady: handle.ready(),
   };
 }, App);
