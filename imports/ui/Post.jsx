@@ -17,13 +17,13 @@ export default class Post extends Component {
   }
 
   deleteThisPost() {
-    this.props.post.delete = true; 
-    this.forceUpdate(); 
+    this.props.post.delete = true;
+    this.forceUpdate();
   }
 
   cancelDeleteThisPost() {
-    this.props.post.delete = false; 
-    this.forceUpdate(); 
+    this.props.post.delete = false;
+    this.forceUpdate();
   }
 
   permDeleteThisPost() {
@@ -165,7 +165,7 @@ export default class Post extends Component {
                    </div>
                  )
                ) : ''}
-              
+
               <br/>
 
               <div className="row">
