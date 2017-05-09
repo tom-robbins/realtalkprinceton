@@ -393,20 +393,22 @@ class App extends Component {
 
       var re = new RegExp(this.query, 'i');
 
+      console.log(Router.current().originalUrl.split('/'));
       // Show a specific post if the url is for it
-      if (location.pathname.split('/')[1] == "post") {
-        if (post._id == location.pathname.split('/')[2]) {
-          console.log(post._id);
-          return (
-            <Post
-              key={post._id}
-              post={post}
-              isAdmin={isAdmin}
-              answered = {answered}
-            />
+      if (Router.current().originalUrl.split('/').includes("post")) {
+          if (post._id == Router.current().originalUrl.split('/')[Router.current().originalUrl.split('/').length - 1]) {
+            console.log(post._id);
+            return (
+              <Post
+                key={post._id}
+                post={post}
+                isAdmin={isAdmin}
+                answered = {answered}
+              />
             );
         }
       }
+      
       else {
         totalPosts++;
         pagesLimit = Math.ceil(totalPosts/perPage);
