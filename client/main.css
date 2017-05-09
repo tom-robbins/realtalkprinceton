@@ -484,3 +484,15 @@ header .hide-completed {
   border: 2px solid #ccc!important;
   border-radius: 10px;
 }
+
+.dropdown {
+  background-color: #f58025;
+  display: inline-block;
+}
+.dropdown__content {
+  display: none;
+  position: absolute;
+}
+.dropdown--active .dropdown__content {
+  display: block;
+}

@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown/lib/components/Dropdown.js';
 import { Meteor } from 'meteor/meteor';
 import { Posts } from '../api/posts';
 import ReactDOM from 'react-dom';
@@ -61,7 +62,12 @@ export default class Post extends Component {
     ReactDOM.findDOMNode(this.refs.answerForm).style.display = 'block';
   }
 
-  tagPost() {
+  tagPost(t, o) {
+    //var tag = prompt("Please enter your tag", "Blank");
+    Meteor.call('posts.tag', this.props.post._id, o);
+  }
+
+  tagExtra() {
     var tag = prompt("Please enter your tag", "Blank");
     Meteor.call('posts.tag', this.props.post._id, tag);
   }
@@ -100,12 +106,9 @@ export default class Post extends Component {
             { this.props.isAdmin ? (
               <div className="row">
                 <div className="col-md-6 col-sm-6">
-                  {this.props.post.hidden ? (
-                    <button className="admin-button response float-left white back-light-orange" onClick={this.toggleHidden.bind(this)}>
-                    Now Hidden</button>) : (
-                    <button className="admin-button response float-left white back-orange" onClick={this.toggleHidden.bind(this)}>
-                    Now Public</button>
-                    ) }
+                  <button className="admin-button response back-light-orange float-left" onClick={this.toggleHidden.bind(this)}>
+                    { this.props.post.hidden ? 'Hidden' : 'Public' }
+                  </button>
                 </div>
                 <div className="col-md-6 col-sm-6 float-right">
                   <button className="delete" onClick={()=>this.deleteThisPost()}>
@@ -126,7 +129,7 @@ export default class Post extends Component {
                   Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
                      <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
-                     <p className="tag tiny no-margin orange" key = {300 - obj}>{this.props.post.tags[obj]}</p>
+                     <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
                    </div>
                  )
                ) : ''}
@@ -134,7 +137,7 @@ export default class Post extends Component {
               { this.props.post.tags.length > 0 && !this.props.isAdmin ? (
                   Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
-                     <p className="tag tiny no-margin orange" key = {300 - obj}>{this.props.post.tags[obj]}</p>
+                     <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
                    </div>
                  )
                ) : ''}
@@ -143,7 +146,16 @@ export default class Post extends Component {
               <div className="row">
                 <div className="col-md-6 col-sm-6 float-left">
                 { this.props.isAdmin ? (
-                <button className="admin-button response back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
+                    <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "academic")}>Academic</button>
+                ) : ''}
+                { this.props.isAdmin ? (
+                    <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "social life")}>Social Life</button>
+                ) : ''}
+                { this.props.isAdmin ? (
+                    <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "extracurricular")}>Extracurricular</button>
+                ) : ''}
+                { this.props.isAdmin ? (
+                    <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "other")}>Other</button>
                 ) : ''}
                 </div>
 
@@ -164,14 +176,14 @@ export default class Post extends Component {
           {this.props.isAdmin ? (
             this.youAnswered() ? (
               <form className="new-question search" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
-                  <textarea className="outline" placeholder="Answer the question!" ref="ansInput">{this.props.post.answer[this.yourObj()].text}</textarea>
+                  <textarea placeholder="Answer the question!" ref="ansInput">{this.props.post.answer[this.yourObj()].text}</textarea>
                     <input type="submit" ref="saveButton" value="Save"/>
               </form>
               )
 
             : (
               <form className="new-question search hide" ref="answerForm" onSubmit={this.answerPost.bind(this)}>
-                  <textarea className="outline" placeholder="Answer the question!" ref="ansInput"></textarea>
+                  <textarea placeholder="Answer the question!" ref="ansInput"></textarea>
                     <input type="submit" ref="saveButton" value="Save"/>
               </form>
               ))
@@ -187,8 +199,6 @@ export default class Post extends Component {
                 <p className="response tiny black no-margin inline">Response from </p>
 
                 <button className="response tiny no-margin highlight button" key={obj} onClick={this.searchAdmin.bind(this.props.post, this.props.post.answer[obj].name)}>{this.props.post.answer[obj].name}</button>
-
-
 
                 { Meteor.user().username == this.props.post.answer[obj].name ? (
                  <button className="delete" onClick={()=>this.deleteThisAnswer(this, parseInt(obj))}>
