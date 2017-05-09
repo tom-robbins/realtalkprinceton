@@ -19,9 +19,6 @@ class Accounts extends Component {
     };
   }
 
-  renderAdmins() {
-  }
-
   goHome(event) {
     event.preventDefault();
     Router.go('/');
@@ -39,29 +36,48 @@ class Accounts extends Component {
     Meteor.call('posts.removeAdmin', val)
   }
 
+  /*updatePageBio(event) {
+    event.preventDefault();
+
+    // Find the text field via the React ref
+    const newBio = ReactDOM.findDOMNode(this.refs.contributorBio).value.trim();
+
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        profile: newBio
+      }
+    });
+
+    // Clear form
+    ReactDOM.findDOMNode(this.refs.contributorBio).value = '';
+
+    this.forceUpdate();
+  }*/
+
   render() {
     if (Roles.userIsInRole( Meteor.userId(), 'superadmin' )) {
     return (
       <div className="container">
         <header>
-          <h1>Real Talk Princeton</h1>
-          <AccountsUIWrapper />
-          <h2>Contributor Bios</h2>
+          <h1 className="link" onClick={this.goHome.bind(this)}>Real Talk Princeton</h1>
         </header>
-
-        <button className="homeButton" onClick={this.goHome.bind(this)}>Home</button>
+        <div className="center">
         <button className="addAdmin" onClick={this.addAdmin.bind(this)}>Add Admin</button>
         <button className="removeAdmin" onClick={this.removeAdmin.bind(this)}>Remove Admin</button>
-        <ul>
-          {this.renderAdmins()}
-        </ul>
+        {/*<br/>
+          <form className="new-question thin" onSubmit={this.updatePageBio.bind(this)}>
+            <textarea className="outline" placeholder="Update the page description." ref="contributorBio"></textarea>
+            <input type="submit" value="Submit"/>
+          </form> */}
+        </div>
       </div>
     );
   }
   else {
     return (
-      <h3>Access Denied Nerd</h3>
-
+    {/*<div className="center"><br/>
+      <h3>Access Denied :(</h3>
+    </div>*/}
     )
   }
   }

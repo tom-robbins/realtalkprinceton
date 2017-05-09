@@ -13,6 +13,7 @@ var pages = 1;
 var perPage = 10;
 var totalPosts;
 var pagesLimit;
+var max_chars = 500;
 
 // App component - represents the whole app
 class App extends Component {
@@ -23,6 +24,8 @@ class App extends Component {
   this.search = "";
   this.searchOn = 0;
   this.isAbout = 0;
+  this.rendered = 0;
+  this.limit = 300;
 
   this.state = {
     hideCompleted: false,
@@ -36,9 +39,14 @@ class App extends Component {
     const html = document.documentElement;
     const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight) - 10;
     const windowBottom = windowHeight + window.pageYOffset;
-    console.log(pages);
+    //console.log(pages);
     if (windowBottom >= docHeight && pages < pagesLimit && pages>-1) {
       pages++;
+
+      if (this.limit <= this.props.posts.length) {
+        this.limit += 10;
+        Meteor.subscribe('posts', this.limit);
+      }
       this.update();
     }
   }
@@ -68,28 +76,28 @@ class App extends Component {
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
     const email = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
 
-    if (question.length > 500) {
-      alert("500 character limit");
+    if (question.length > max_chars) {
+      return;
     }
     else if (question != '' && email != '') {
       Meteor.call('posts.insert', question, email);
 
       // Clear form
       ReactDOM.findDOMNode(this.refs.textInput).value = '';
+      ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
-      alert("Thanks for your question!")
     }
     else if (question != '') {
       Meteor.call('posts.insert', question, '');
 
       // Clear form
       ReactDOM.findDOMNode(this.refs.textInput).value = '';
+      ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
 
-      alert("Thanks for your question!")
     }
     else {
-      alert("Enter some text")
+      ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Enter some text here';
     }
   }
 
@@ -309,6 +317,7 @@ class App extends Component {
     var placeholder;
 
     const adminList = Roles.getUsersInRole(['admin']).fetch();
+    //var pageDescription = Roles.getUsersInRole(['superadmin']).fetch()[0].profile;
 
     for (var i=0;i<adminList.length;i++) {
       placeholder = (adminList[i].profile==undefined) ? '' : adminList[i].profile;
@@ -317,12 +326,11 @@ class App extends Component {
     }
 
     return (
-      <div className="col-md-10 col-sm-10 back-orange margin">
-      <br/><p>Real Talk Princeton is an established group committed to
-      answering questions about Princeton academics, student life, and beyond.</p>
-
+      <div className="col-md-10 col-sm-10 margin">
+      {/*<br/>
+      <p>{pageDescription}</p>*/}
         { Object.keys(admins).map((obj, i) =>
-          <div>
+          <div className="black">
             <button className="highlight button inline response tiny" key = {300 - obj} onClick={this.searchAdmin.bind(this, admins[obj])}><b>{admins[obj]}</b></button>
             {bios[obj]}
           </div>
@@ -330,26 +338,50 @@ class App extends Component {
 
         { Roles.userIsInRole(Meteor.userId(), 'admin') ? (
             <form className="new-question" onSubmit={this.addBio.bind(this)}>
-              <textarea placeholder="Submit a bio" ref="contributorBio"></textarea>
+              <textarea className="outline" placeholder="Update your bio!" ref="contributorBio"></textarea>
               <input type="submit" value="Submit"/>
             </form>
         ) : ''}
-
-        <li>
-          <AccountsUIWrapper />
-        </li>
     </div>
     );
   }
 
+  matchAnswers(post, re) {
+    for (i = 0; i < post.answer.length; i++) {
+      if (post.answer[i].text.match(re))
+      {
+        return 1;
+      }
+      else if (post.answer[i].name.match(re))
+      {
+        return 1;
+      }
+    }
+
+    return null
+  }
+
+
+  adminAnswered(admin, post) {
+    for (i = 0; i < post.answer.length; i++) {
+      if (post.answer[i].name == admin) {
+        console.log('success');
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Shows posts that were searched for
   renderFound() {
+    console.log("limit: " + this.limit);
+    console.log("downloaded: " + this.props.posts.length);
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
     }
     totalPosts = 0;
-    var rendered = 0;
+    this.rendered = 0;
     var lastPost = pages*perPage;
 
     return filteredPosts.map((post) => {
@@ -391,7 +423,7 @@ class App extends Component {
             }
           }
           else if (answered && this.tagQuery == "admin") {
-            if (post.answer[0].name==this.query) {
+            if (this.adminAnswered(this.query, post)) {
               return (
               <Post
               key={post._id}
@@ -403,8 +435,8 @@ class App extends Component {
             }
           }
           if (post.tags.includes(this.tagQuery)) {
-            if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
-              rendered++;
+            if ((post.question.match(re) != null || this.query == undefined) && this.rendered<lastPost) {
+              this.rendered++;
               return (
               <Post
                 key={post._id}
@@ -418,8 +450,8 @@ class App extends Component {
         }
         else {
           // Search through all
-          if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
-            rendered++;
+          if ((post.question.match(re) != null || this.matchAnswers(post, re) != null || this.query == undefined) && this.rendered<lastPost) {
+            this.rendered++;
             return (
               <Post
                 key={post._id}
@@ -438,18 +470,16 @@ class App extends Component {
 
     return (
       <div className="container-fluid back-white stretch">
-      <StickyContainer>
       <div>
         <div>
           </div>
         </div>
         <div className="row match-my-cols stretch">
           <div className="col-md-3 col-sm-3 back-light-orange">
-            <Sticky>
             <div className="sidebar">
               <div className="row">
                 <div className="col-md-12">
-                <p className="white large">Real Talk Princeton</p><br/>
+                <button className="white large title" onClick={this.searchAll.bind(this)}>Real Talk Princeton</button><br/><br/>
                 </div>
               </div>
               <div className="row">
@@ -467,44 +497,35 @@ class App extends Component {
               </div>
               <div className="row">
                 <div className="col-md-12">
-                  <li>
                     <form className="tiny search" onSubmit={this.handleSearch.bind(this)}>
                       <p>
                         <input type = "text"
                           ref = "searchString"
-                          placeholder="Search"/>
+                          placeholder="Search, e.g. eating clubs"/>
+                          <input type="submit" value="Search"/>
                       </p>
                     </form>
                     { this.isSearch && this.search != '' ? (
-                      <p className = "tiny">
+                      <p className = "tiny center">
                         Current search: <input type="reset" value={this.search}/>
                       </p> ) : ''}
-                  </li>
-                  <li>
-                    { this.props.currentUser ?
-                      <form className="new-question search tiny" onSubmit={this.handleSubmit.bind(this)}>
-                        <textarea placeholder="Ask a question!" ref="textInput" maxlength="500"></textarea>
-                        <input type="text" placeholder="Email for notification (optional)" ref="textInput2"/>
+                      <form className="new-question search" onSubmit={this.handleSubmit.bind(this)}>
+                        <textarea placeholder="Ask a question!" ref="textInput"></textarea>
+                        <input type="text" placeholder="(Optional) Email for notification" ref="textInput2"/>
                         <input type="submit" value="Submit"/>
-                      </form> : ''
-                    }
-                  </li>
-                  <li>
+                      </form> <br/>
                     <button className="button white pseudo-link" id="contributors" onClick={this.goContributors.bind(this)}>About the Contributors</button>
-                  </li>
                   <p> <br/></p>
                 </div>
               </div>
             </div>
-            </Sticky>
           </div>
-          <div className="col-md-9 col-sm-9 back-orange">
+          <div className="col-md-9 col-sm-9 white back-white">
             <ul>
               { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
             </ul>
           </div>
         </div>
-        </StickyContainer>
       </div>
       );
   }
@@ -518,11 +539,12 @@ App.propTypes = {
 
 //CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
+  this.limit = 300;
   Meteor.subscribe('userList');
-  Meteor.subscribe('posts');
+  Meteor.subscribe('posts', this.limit);
 
   return {
-    posts: Posts.find({}, { sort: { createdAt: -1 }}).fetch(),
+    posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
   };
 }, App);

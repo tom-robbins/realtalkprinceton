@@ -5,6 +5,7 @@ import { render } from 'react-dom';
 import '../imports/startup/accounts-config.js';
 import App from '../imports/ui/App.jsx';
 import Accounts from '../imports/ui/Accounts.jsx';
+import Login from '../imports/ui/Login.jsx';
 
 Meteor.startup(() => {
 	Router.route('/', function () {
@@ -19,4 +20,10 @@ Meteor.startup(() => {
 		render(<App />, document.getElementById('render-target'));
         //this.next();
 	});
+
+	Router.route('/login', function() {
+		render(<Login />, document.getElementById('render-target'));
+	});
+
 });
+

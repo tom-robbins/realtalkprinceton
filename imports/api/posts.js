@@ -14,16 +14,18 @@ function Answer(text, name) {
 if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish posts that are public or belong to the current user
-  Meteor.publish('posts', function postsPublication() {
+  Meteor.publish('posts', function postsPublication(limit) {
+
+    var dl = limit;
     if (Roles.userIsInRole(this.userId, 'admin')) {
-      return Posts.find({})
+      return Posts.find({}, { sort: { createdAt: -1 }, limit: dl });
     } else {
       return Posts.find({
         $or: [
           { hidden: { $ne: true } },
           { owner: this.userId },
         ],
-      });
+      },{ sort: { createdAt: -1 }, limit: dl });
     }
   });
 }
