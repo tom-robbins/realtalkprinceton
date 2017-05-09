@@ -345,12 +345,12 @@ class App extends Component {
     }
 
     return (
-      <div className="col-md-10 col-sm-10 back-orange margin">
+      <div className="col-md-10 col-sm-10 margin">
       <br/><p>Real Talk Princeton is an established group of students committed to
       answering questions about Princeton academics, student life, and beyond.</p>
 
         { Object.keys(admins).map((obj, i) =>
-          <div>
+          <div className="black">
             <button className="highlight button inline response tiny" key = {300 - obj} onClick={this.searchAdmin.bind(this, admins[obj])}><b>{admins[obj]}</b></button>
             {bios[obj]}
           </div>
@@ -358,7 +358,7 @@ class App extends Component {
 
         { Roles.userIsInRole(Meteor.userId(), 'admin') ? (
             <form className="new-question" onSubmit={this.addBio.bind(this)}>
-              <textarea placeholder="Submit a bio" ref="contributorBio"></textarea>
+              <textarea className="outline" placeholder="Update your bio!" ref="contributorBio"></textarea>
               <input type="submit" value="Submit"/>
             </form>
         ) : ''}
@@ -530,7 +530,7 @@ class App extends Component {
             </div>
             </Sticky>
           </div>
-          <div className="col-md-9 col-sm-9 back-orange">
+          <div className="col-md-9 col-sm-9 white">
             <ul>
               { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
             </ul>

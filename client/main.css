@@ -17,8 +17,7 @@
 }
 
 .back-orange {
-  /*background: #f58025;*/
-  background: white;
+  background: #f58025;
 }
 
 .back-light-orange {
@@ -170,6 +169,7 @@ p {
   margin: 0;
   font-family: "Lato" !important;
   font-weight: normal;
+  color: black;
 }
 
 form {
