@@ -392,8 +392,6 @@ class App extends Component {
       const answered = post.answer != "";
 
       var re = new RegExp(this.query, 'i');
-
-      console.log(Router.current().originalUrl.split('/'));
       // Show a specific post if the url is for it
       if (Router.current().originalUrl.split('/').includes("post")) {
           if (post._id == Router.current().originalUrl.split('/')[Router.current().originalUrl.split('/').length - 1]) {
