@@ -58,7 +58,6 @@ export default class Post extends Component {
   hasTag(tag){
     let tags = this.props.post.tags; 
     for (obj in Object.keys(tags)) {
-      console.log(tags[obj]); 
       if (tags[obj] == tag) return true; 
     }
     return false; 
