@@ -100,9 +100,12 @@ export default class Post extends Component {
             { this.props.isAdmin ? (
               <div className="row">
                 <div className="col-md-6 col-sm-6">
-                  <button className="admin-button response back-light-orange float-left" onClick={this.toggleHidden.bind(this)}>
-                    { this.props.post.hidden ? 'Hidden' : 'Public' }
-                  </button>
+                  {this.props.post.hidden ? (
+                    <button className="admin-button response float-left white back-light-orange" onClick={this.toggleHidden.bind(this)}>
+                    Now Hidden</button>) : (
+                    <button className="admin-button response float-left white back-orange" onClick={this.toggleHidden.bind(this)}>
+                    Now Public</button>
+                    ) }
                 </div>
                 <div className="col-md-6 col-sm-6 float-right">
                   <button className="delete" onClick={()=>this.deleteThisPost()}>
@@ -123,7 +126,7 @@ export default class Post extends Component {
                   Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
                      <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
-                     <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
+                     <p className="tag tiny no-margin orange" key = {300 - obj}>{this.props.post.tags[obj]}</p>
                    </div>
                  )
                ) : ''}
@@ -131,7 +134,7 @@ export default class Post extends Component {
               { this.props.post.tags.length > 0 && !this.props.isAdmin ? (
                   Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
-                     <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
+                     <p className="tag tiny no-margin orange" key = {300 - obj}>{this.props.post.tags[obj]}</p>
                    </div>
                  )
                ) : ''}
