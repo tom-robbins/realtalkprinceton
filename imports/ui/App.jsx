@@ -27,7 +27,6 @@ class App extends Component {
   this.rendered = 0;
   this.limit = 5;
 
-
   this.state = {
     hideCompleted: false,
     chars_left: max_chars
@@ -414,6 +413,8 @@ class App extends Component {
 
   // Shows posts that were searched for
   renderFound() {
+    console.log("limit: " + this.limit);
+    console.log("downloaded: " + this.props.posts.length);
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
@@ -577,9 +578,9 @@ App.propTypes = {
 
 //CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
+  this.limit = 5;
   Meteor.subscribe('userList');
   Meteor.subscribe('posts', this.limit);
-  console.log(this.limit);
 
   return {
     posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),
