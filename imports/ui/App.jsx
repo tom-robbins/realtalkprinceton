@@ -497,12 +497,11 @@ class App extends Component {
   setTag(string) {
     this.currentTag = string;
     if (postSub) {
-      postSub.stop();
+      postSub = new Meteor.Collection(null);
     }
     this.limit = 10;
     console.log('length: ' + this.props.posts.length);
     postSub = Meteor.subscribe('posts', this.limit, this.currentTag);
-    console.log(postSub.ready());
     this.forceUpdate();
   }
 
@@ -588,6 +587,7 @@ export default createContainer(() => {
 
   Meteor.subscribe('userList');
   postSub = Meteor.subscribe('posts', this.limit, this.currentTag);
+  posts = null;
 
   return {
     posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),
