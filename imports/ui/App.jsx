@@ -461,14 +461,12 @@ class App extends Component {
 
     return (
       <div className="container-fluid back-white stretch">
-      <StickyContainer>
       <div>
         <div>
           </div>
         </div>
         <div className="row match-my-cols stretch">
           <div className="col-md-3 col-sm-3 back-light-orange">
-            <Sticky>
             <div className="sidebar">
               <div className="row">
                 <div className="col-md-12">
@@ -519,7 +517,6 @@ class App extends Component {
                 </div>
               </div>
             </div>
-            </Sticky>
           </div>
           <div className="col-md-9 col-sm-9 back-orange">
             <ul>
@@ -527,7 +524,6 @@ class App extends Component {
             </ul>
           </div>
         </div>
-        </StickyContainer>
       </div>
       );
   }
