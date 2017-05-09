@@ -147,7 +147,7 @@ export default class Post extends Component {
               <br/>
 
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-              <button className = "button questionButton black" onClick={()=>this.update()}> {this.props.post.question} </button>
+              <button className = "button questionButton black qa" onClick={()=>this.update()}> {this.props.post.question} </button>
 
               { this.props.post.tags.length > 0 && this.props.isAdmin ? (
                   Object.keys(this.props.post.tags).map((obj, i) =>
