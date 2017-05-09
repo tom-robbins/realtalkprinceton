@@ -29,16 +29,7 @@ class App extends Component {
 
   this.state = {
     hideCompleted: false,
-    chars_left: max_chars
     };
-  }
-
-  handleChange(event) {
-    var input = event.target.value;
-    console.log("handleChange");
-    this.setState({
-      chars_left: max_chars - input.length
-    });
   }
 
   //from some random internet man
@@ -95,9 +86,6 @@ class App extends Component {
       ReactDOM.findDOMNode(this.refs.textInput).value = '';
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
-      this.setState({
-        chars_left: max_chars
-       });
     }
     else if (question != '') {
       Meteor.call('posts.insert', question, '');
@@ -107,9 +95,6 @@ class App extends Component {
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
 
-          this.setState({
-      chars_left: max_chars
-    });
     }
     else {
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Enter some text here';
@@ -552,8 +537,7 @@ class App extends Component {
                         Current search: <input type="reset" value={this.search}/>
                       </p> ) : ''}
                       <form className="new-question search" onSubmit={this.handleSubmit.bind(this)}>
-                        <textarea onChange={this.handleChange.bind(this)} placeholder="Ask a question!" ref="textInput"></textarea>
-                        <p className = "tiny white">Characters left: {this.state.chars_left}</p>
+                        <textarea placeholder="Ask a question!" ref="textInput"></textarea>
                         <input type="text" placeholder="(Optional) Email for notification" ref="textInput2"/>
                         <input type="submit" value="Submit"/>
                       </form> <br/>
@@ -563,7 +547,7 @@ class App extends Component {
               </div>
             </div>
           </div>
-          <div className="col-md-9 col-sm-9 white">
+          <div className="col-md-9 col-sm-9 white back-white">
             <ul>
               { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
             </ul>

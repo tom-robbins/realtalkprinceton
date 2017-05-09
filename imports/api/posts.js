@@ -17,7 +17,6 @@ if (Meteor.isServer) {
   Meteor.publish('posts', function postsPublication(limit) {
 
     var dl = limit;
-
     if (Roles.userIsInRole(this.userId, 'admin')) {
       return Posts.find({}, { sort: { createdAt: -1 }, limit: dl });
     } else {

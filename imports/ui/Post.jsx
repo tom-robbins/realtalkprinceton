@@ -106,7 +106,7 @@ export default class Post extends Component {
       return (
         <li className={postClassName}>
 
-          <div className="row match-my-cols posts">
+          <div className="row match-my-cols posts back-white">
             <div className="col-md-6 col-sm-6">
             { this.props.isAdmin ? (
               <div className="row">
@@ -147,38 +147,32 @@ export default class Post extends Component {
               <p className="black qa no-margin">{this.props.post.question}</p>
 
 
-              { this.props.post.tags.length > 0 && this.props.isAdmin ? (
+              { this.props.post.tags.length > 0 ? (
                   Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
-                     <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
+                     { this.props.isAdmin ? (
+                     <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>) : ''}
+                     
                      <p className="tag tiny no-margin orange" key = {300 - obj}>{this.props.post.tags[obj]}</p>
-                   </div>
-                 )
-               ) : ''}
-
-              { this.props.post.tags.length > 0 && !this.props.isAdmin ? (
-                  Object.keys(this.props.post.tags).map((obj, i) =>
-                   <div>
-                     <p className="tag tiny no-margin orange" key = {300 - obj}>{this.props.post.tags[obj]}</p>
-                   </div>
-                 )
-               ) : ''}
+                   </div> ) 
+                   ) : ''}
               <br/>
 
+              { this.props.isAdmin ? (
               <div className="row">
                 <div className="col-md-6 col-sm-6 float-left">
-                { this.props.isAdmin ? (
                 <button className="admin-button response back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
-                ) : ''}
                 </div>
 
                 <div className="col-md-6 col-sm-6">
-
-                { this.props.isAdmin && !this.youAnswered() ? (
+                { !this.youAnswered() ? (
                   <button className="admin-button response back-light-orange" onClick={this.displayForm.bind(this)}>Answer</button>
                 ) : ''}
                 </div>
-              </div>
+              </div> ) : ''}
+              
+              
+          
 
             </div>
 
