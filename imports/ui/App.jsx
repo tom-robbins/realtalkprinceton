@@ -8,12 +8,15 @@ import Post from './Post.jsx';
 import { Affix } from 'react-overlays'
 import { StickyContainer, Sticky } from 'react-sticky';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+import { ReactiveVar } from 'meteor/reactive-var';
 
 var pages = 1;
 var perPage = 5;
 var totalPosts;
 var pagesLimit;
 var max_chars = 500;
+var limit = new ReactiveVar(10);
+var currentTag = new ReactiveVar('all');
 
 // App component - represents the whole app
 class App extends Component {
@@ -25,8 +28,6 @@ class App extends Component {
   this.searchOn = 0;
   this.isAbout = 0;
   this.rendered = 0;
-  this.limit = 10;
-  this.currentTag = 'all';
 
   this.state = {
     hideCompleted: false,
@@ -43,10 +44,9 @@ class App extends Component {
     //console.log(pages);
     if (windowBottom >= docHeight && pages < pagesLimit && pages>-1) {
       pages++;
-
-      if (this.limit <= this.props.posts.length) {
-        this.limit += 10;
-        postSub = Meteor.subscribe('posts', this.limit, this.currentTag);
+      if (limit.get() <= this.props.posts.length) {
+        limit.set(limit.get() + 10);
+        postSub = Meteor.subscribe('posts', limit.get(), currentTag.get());
       }
       this.update();
     }
@@ -403,7 +403,7 @@ class App extends Component {
 
   // Shows posts that were searched for
   renderFound() {
-    console.log("limit: " + this.limit);
+    console.log("limit: " + limit.get());
     console.log("downloaded: " + this.props.posts.length);
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
@@ -438,7 +438,7 @@ class App extends Component {
         pagesLimit = Math.ceil(totalPosts/perPage);
         // Search through a specific tag
         if (this.tagSearch == 1) {
-          if (this.tagQuery == "unanswered") {
+          if (currentTag.get() == "unanswered") {
             if (!answered) {
               return (
               <Post
@@ -495,14 +495,14 @@ class App extends Component {
   }
 
   setTag(string) {
-    this.currentTag = string;
+    currentTag.set(string);
     if (postSub) {
       postSub = new Meteor.Collection(null);
     }
-    this.limit = 10;
+    limit.set(10);
     console.log('length: ' + this.props.posts.length);
-    postSub = Meteor.subscribe('posts', this.limit, this.currentTag);
-    this.forceUpdate();
+    postSub = Meteor.subscribe('posts', limit.get(), currentTag.get());
+    this.update();
   }
 
   render() {
@@ -531,7 +531,7 @@ class App extends Component {
                   <div><button className="button white pseudo-link" id="current-social" onClick={()=>this.setTag('social life')}>social life</button> </div>
                   <div><button className="button white pseudo-link" id="current-extracurricular" onClick={()=>this.setTag('extracurricular')}>extracurricular</button> </div>
                   <div><button className="button white pseudo-link" id="current-other" onClick={()=>this.setTag('other')}>other</button> </div>
-                  { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={this.searchUnanswered.bind(this)}>unanswered</button> </div> ) : ''}
+                  { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={()=>this.setTag('unanswered')}>unanswered</button> </div> ) : ''}
                 </div>
               </div>
               <div className="row">
@@ -578,19 +578,25 @@ App.propTypes = {
 
 //CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
-  if (!this.limit) {
-    this.limit = 10;
+  console.log('container code')
+  /*if (!limit) {
+    limit = 10;
   }
-  if (!this.currentTag) {
-    this.currentTag = 'all';
-  }
-
+  if (!currentTag) {
+    currentTag = 'all';
+  }*/
   Meteor.subscribe('userList');
-  postSub = Meteor.subscribe('posts', this.limit, this.currentTag);
-  posts = null;
+  postSub = Meteor.subscribe('posts', limit.get(), currentTag.get());
 
-  return {
+  if (currentTag.get() == 'all') {
+    return {
     posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
   };
+  } else {
+    return {
+      posts: Posts.find({"tags" : {$in : [currentTag.get()]}}, {sort: { createdAt: -1 }}).fetch(),
+      currentUser: Meteor.user(),
+    };
+  }
 }, App);
