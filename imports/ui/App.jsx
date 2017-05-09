@@ -25,7 +25,7 @@ class App extends Component {
   this.searchOn = 0;
   this.isAbout = 0;
   this.rendered = 0;
-  this.limit = 10;
+  this.limit = 500;
 
   this.state = {
     hideCompleted: false,
