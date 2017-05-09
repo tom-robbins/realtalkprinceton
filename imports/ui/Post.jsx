@@ -10,15 +10,24 @@ import classnames from 'classnames';
 
 // Post component - represents a single todo item
 export default class Post extends Component {
+
   toggleChecked() {
     // Set the checked property to the opposite of its current value
     Meteor.call('posts.setChecked', this.props.post._id, !this.props.post.checked);
   }
 
   deleteThisPost() {
-    if (confirm("Are you sure you want to delete this question?")) {
-      Meteor.call('posts.remove', this.props.post._id);
-    }
+    this.props.post.delete = true; 
+    this.forceUpdate(); 
+  }
+
+  cancelDeleteThisPost() {
+    this.props.post.delete = false; 
+    this.forceUpdate(); 
+  }
+
+  permDeleteThisPost() {
+    Meteor.call('posts.remove', this.props.post._id);
   }
 
   toggleHidden() {
@@ -108,9 +117,23 @@ export default class Post extends Component {
                     ) }
                 </div>
                 <div className="col-md-6 col-sm-6 float-right">
+                  {this.props.post.delete ? (
+                      <div>
+                      <p className = "tiny red justify-right">Are you sure you want to permanently delete this question?</p>
+                        <div className="col-md-6 col-sm-6 float-right">
+                           <button className="admin-button response float-right white back-red" onClick={()=>this.permDeleteThisPost()}>
+                          Delete</button>
+                        </div>
+                        <div className="col-md-6 col-sm-6 float-right">
+                          <button className="admin-button response float-right white back-light-orange" onClick={()=>this.cancelDeleteThisPost()}>
+                          Cancel</button>
+                        </div>
+                      </div>
+                    ) : (
                   <button className="delete" onClick={()=>this.deleteThisPost()}>
                        &times;
                   </button>
+                )}
                 </div>
 
               </div>
