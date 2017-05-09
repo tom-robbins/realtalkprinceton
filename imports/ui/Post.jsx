@@ -81,10 +81,10 @@ export default class Post extends Component {
               <br/>
 
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-              <p className="black qa no-margin">{this.props.post.question}</p>
+              <p className="black qa no-margin"><a href={"http://www.realtalkprinceton.com/post/" + this.props.post._id}>{this.props.post.question}</a></p>
 
               { this.props.post.tags.length > 0 && this.props.isAdmin ? (
-                  Object.keys(this.props.post.tags).map((obj, i) => 
+                  Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
                      <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
                      <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
@@ -93,16 +93,16 @@ export default class Post extends Component {
                ) : ''}
 
               { this.props.post.tags.length > 0 && !this.props.isAdmin ? (
-                  Object.keys(this.props.post.tags).map((obj, i) => 
+                  Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
                      <p className="tag tiny no-margin" key = {300 - obj}>{this.props.post.tags[obj]}</p>
                    </div>
                  )
                ) : ''}
-              
+
               <br/>
-              
-              <div className="row"> 
+
+              <div className="row">
                 <div className="col-md-6 col-sm-6 float-left">
                 { this.props.isAdmin ? (
                 <button className="admin-button response back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
@@ -120,7 +120,7 @@ export default class Post extends Component {
 
           <br/>
 
-          { 
+          {
             this.props.answered ? (
             <div className="col-md-6 col-sm-6">
               {Object.keys(this.props.post.answer).map((obj, i) =>
