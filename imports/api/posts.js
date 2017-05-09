@@ -15,15 +15,18 @@ if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish posts that are public or belong to the current user
   Meteor.publish('posts', function postsPublication() {
+
+    var dl = 100;
+
     if (Roles.userIsInRole(this.userId, 'admin')) {
-      return Posts.find({})
+      return Posts.find({}, {limit: dl});
     } else {
       return Posts.find({
         $or: [
           { hidden: { $ne: true } },
           { owner: this.userId },
         ],
-      });
+      }, {limit: dl});
     }
   });
 }
