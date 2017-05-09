@@ -17,13 +17,13 @@ export default class Post extends Component {
   }
 
   deleteThisPost() {
-    this.props.post.delete = true; 
-    this.forceUpdate(); 
+    this.props.post.delete = true;
+    this.forceUpdate();
   }
 
   cancelDeleteThisPost() {
-    this.props.post.delete = false; 
-    this.forceUpdate(); 
+    this.props.post.delete = false;
+    this.forceUpdate();
   }
 
   permDeleteThisPost() {
@@ -141,7 +141,7 @@ export default class Post extends Component {
               <br/>
 
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-              <p className="black qa no-margin"><a href={"http://www.realtalkprinceton.com/post/" + this.props.post._id}>{this.props.post.question}</a></p>
+              <p className="black qa no-margin"><a href={"localhost:8080.com/post/" + this.props.post._id}>{this.props.post.question}</a></p>
 
 
               { this.props.post.tags.length > 0 && this.props.isAdmin ? (
@@ -160,7 +160,7 @@ export default class Post extends Component {
                    </div>
                  )
                ) : ''}
-              
+
               <br/>
 
               <div className="row">
