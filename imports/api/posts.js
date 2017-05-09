@@ -16,7 +16,7 @@ if (Meteor.isServer) {
   // Only publish posts that are public or belong to the current user
   Meteor.publish('posts', function postsPublication() {
 
-    var dl = 100;
+    var dl = 500;
 
     if (Roles.userIsInRole(this.userId, 'admin')) {
       return Posts.find({}, {limit: dl});
