@@ -70,9 +70,8 @@ export default class Post extends Component {
     ReactDOM.findDOMNode(this.refs.answerForm).style.display = 'block';
   }
 
-  tagPost() {
-    var tag = prompt("Please enter your tag", "Blank");
-    Meteor.call('posts.tag', this.props.post._id, tag);
+  tagPost(t, o) {
+    Meteor.call('posts.tag', this.props.post._id, o);
   }
 
   deleteThisAnswer(t, o) {
@@ -171,7 +170,16 @@ export default class Post extends Component {
               <div className="row">
                 <div className="col-md-6 col-sm-6 float-left">
                 { this.props.isAdmin ? (
-                <button className="admin-button response back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
+                  <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "academic")}>Academic</button>
+                ) : ''}
+                { this.props.isAdmin ? (
+                  <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "social life")}>Social Life</button>
+                ) : ''}
+                { this.props.isAdmin ? (
+                  <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "extracurricular")}>Extracurricular</button>
+                ) : ''}
+                { this.props.isAdmin ? (
+                  <button className="admin-button response back-light-orange" onClick={()=>this.tagPost(this, "other")}>Other</button>
                 ) : ''}
                 </div>
 
