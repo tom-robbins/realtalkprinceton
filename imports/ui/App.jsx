@@ -44,7 +44,7 @@ class App extends Component {
       pages++;
 
       if (this.limit <= this.props.posts.length) {
-        this.limit += 10;
+        this.limit += 20;
         Meteor.subscribe('posts', this.limit);
       }
       this.update();
