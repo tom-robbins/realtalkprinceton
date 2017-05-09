@@ -26,6 +26,7 @@ class App extends Component {
   this.isAbout = 0;
   this.rendered = 0;
   this.limit = 10;
+  this.currentTag = 'all';
 
   this.state = {
     hideCompleted: false,
@@ -45,7 +46,7 @@ class App extends Component {
 
       if (this.limit <= this.props.posts.length) {
         this.limit += 10;
-        Meteor.subscribe('posts', this.limit);
+        postSub = Meteor.subscribe('posts', this.limit, this.currentTag);
       }
       this.update();
     }
@@ -493,6 +494,18 @@ class App extends Component {
     });
   }
 
+  setTag(string) {
+    this.currentTag = string;
+    if (postSub) {
+      postSub.stop();
+    }
+    this.limit = 10;
+    console.log('length: ' + this.props.posts.length);
+    postSub = Meteor.subscribe('posts', this.limit, this.currentTag);
+    console.log(postSub.ready());
+    this.forceUpdate();
+  }
+
   render() {
 
     return (
@@ -514,11 +527,11 @@ class App extends Component {
                   <p className="white">Now Viewing:</p>
                 </div>
                 <div className="col-md-6 col-xs-6">
-                  <div><button className="button white pseudo-link" id="current-all" onClick={this.searchAll.bind(this)}>all</button> </div>
-                  <div><button className="button white pseudo-link" id="current-academic" onClick={this.searchAcademic.bind(this)}>academic</button> </div>
-                  <div><button className="button white pseudo-link" id="current-social" onClick={this.searchSocial.bind(this)}>social life</button> </div>
-                  <div><button className="button white pseudo-link" id="current-extracurricular" onClick={this.searchExtra.bind(this)}>extracurricular</button> </div>
-                  <div><button className="button white pseudo-link" id="current-other" onClick={this.searchOther.bind(this)}>other</button> </div>
+                  <div><button className="button white pseudo-link" id="current-all" onClick={()=>this.setTag('all')}>all</button> </div>
+                  <div><button className="button white pseudo-link" id="current-academic" onClick={()=>this.setTag('academic')}>academic</button> </div>
+                  <div><button className="button white pseudo-link" id="current-social" onClick={()=>this.setTag('social life')}>social life</button> </div>
+                  <div><button className="button white pseudo-link" id="current-extracurricular" onClick={()=>this.setTag('extracurricular')}>extracurricular</button> </div>
+                  <div><button className="button white pseudo-link" id="current-other" onClick={()=>this.setTag('other')}>other</button> </div>
                   { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={this.searchUnanswered.bind(this)}>unanswered</button> </div> ) : ''}
                 </div>
               </div>
@@ -566,9 +579,15 @@ App.propTypes = {
 
 //CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
-  this.limit = 10;
+  if (!this.limit) {
+    this.limit = 10;
+  }
+  if (!this.currentTag) {
+    this.currentTag = 'all';
+  }
+
   Meteor.subscribe('userList');
-  Meteor.subscribe('posts', this.limit);
+  postSub = Meteor.subscribe('posts', this.limit, this.currentTag);
 
   return {
     posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),

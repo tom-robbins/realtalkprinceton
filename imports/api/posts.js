@@ -14,18 +14,35 @@ function Answer(text, name) {
 if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish posts that are public or belong to the current user
-  Meteor.publish('posts', function postsPublication(limit) {
-
+  Meteor.publish('posts', function postsPublication(limit, tag) {
+    console.log('tag: ' + tag);
+    console.log('limit (server): ' + limit);
     var dl = limit;
     if (Roles.userIsInRole(this.userId, 'admin')) {
-      return Posts.find({}, { sort: { createdAt: -1 }, limit: dl });
-    } else {
-      return Posts.find({
-        $or: [
-          { hidden: { $ne: true } },
-          { owner: this.userId },
-        ],
-      },{ sort: { createdAt: -1 }, limit: dl });
+      if (tag == 'all') {
+        return Posts.find({}, { sort: { createdAt: -1 }, limit: dl });
+        console.log('all');
+      }
+      else
+        return Posts.find(/*{"tags" : {$in : [tag]}}, */{ sort: { createdAt: -1 }, limit: dl });
+    }
+    else {
+      if (tag == 'all') {
+        return Posts.find({
+          $or: [
+            { hidden: { $ne: true } },
+            { owner: this.userId },
+          ],
+        },{ sort: { createdAt: -1 }, limit: dl });
+      }
+      else {
+        return Posts.find(/*{"tags" : {$in : [tag]},*/
+          {$or: [
+            { hidden: { $ne: true } },
+            { owner: this.userId },
+          ],
+        },{ sort: { createdAt: -1 }, limit: dl });
+      }
     }
   });
 }
@@ -61,7 +78,7 @@ Meteor.methods({
     }
     */
     Posts.remove(postId);
-    
+
   },
 
   'posts.ansRemove'(postId, index) {
@@ -110,7 +127,7 @@ Meteor.methods({
 
     Posts.update(postId, { $set: { hidden: setToHidden } });
   },
-  
+
   'posts.answer'(postId, x) {
    // check(postId, String);
     const post = Posts.findOne(postId);
@@ -126,7 +143,7 @@ Meteor.methods({
             break;
         }
     }
-    
+
     // If user didn't post just add
     if (index == -1) {
         Posts.update({_id: postId}, {$push: {answer: newAnswer}});
@@ -138,7 +155,7 @@ Meteor.methods({
         Posts.update({_id: postId}, {$set: {answer: newArray}});
     }
 
-    var textEmail = "New Answer by " + Meteor.user().username + ":" + '\n \n' + x + '\n \n \n' + "See your post at: http://www.realtalkprinceton.com/post/" + String(postId); 
+    var textEmail = "New Answer by " + Meteor.user().username + ":" + '\n \n' + x + '\n \n \n' + "See your post at: http://www.realtalkprinceton.com/post/" + String(postId);
     var address = Meteor.user().username + "@realtalkprinceton.com"
     // Email notification
     if (post.email != '') {
