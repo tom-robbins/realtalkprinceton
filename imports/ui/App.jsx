@@ -386,7 +386,7 @@ class App extends Component {
 
     const currentUserId = this.props.currentUser && this.props.currentUser._id;
     const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
-    console.log(isAdmin); 
+    console.log(isAdmin);
 
     return filteredPosts.map((post) => {
       const answered = post.answer != "";
@@ -394,8 +394,8 @@ class App extends Component {
       var re = new RegExp(this.query, 'i');
 
       // Show a specific post if the url is for it
-      if (location.pathname.split('/')[1] == "post") {
-        if (post._id == location.pathname.split('/')[2]) {
+      if (Iron.Location.get().path.split('/')[1] == "post") {
+        if (post._id == Iron.Location.get().path.split('/')[2]) {
           console.log(post._id);
           return (
             <Post
@@ -552,6 +552,6 @@ export default createContainer(() => {
   return {
     posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
-    isReady: handle.ready(), 
+    isReady: handle.ready(),
   };
 }, App);
