@@ -412,6 +412,7 @@ class App extends Component {
     this.rendered = 0;
     var lastPost = pages*perPage;
 
+
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
@@ -549,7 +550,11 @@ class App extends Component {
           </div>
           <div className="col-md-9 col-sm-9 white back-white">
             <ul>
-              { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
+              { this.isAbout ? (
+                  this.props.isReady ? (
+                this.renderFound()
+                  ) : ''
+                ) : (this.renderContributors())}
             </ul>
           </div>
         </div>
@@ -568,10 +573,11 @@ App.propTypes = {
 export default createContainer(() => {
   this.limit = 300;
   Meteor.subscribe('userList');
-  Meteor.subscribe('posts', this.limit);
+  const handle = Meteor.subscribe('posts', this.limit);
 
   return {
     posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
+    isReady: handle.ready(), 
   };
 }, App);
