@@ -419,7 +419,6 @@ class App extends Component {
   adminAnswered(admin, post) {
     for (i = 0; i < post.answer.length; i++) {
       if (post.answer[i].name == admin) {
-        console.log('success');
         return true;
       }
     }
@@ -428,9 +427,6 @@ class App extends Component {
 
   // Shows posts that were searched for
   renderFound() {
-    console.log("renderfound");
-    console.log("limit: " + this.limit);
-    console.log("downloaded: " + this.props.posts.length);
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
