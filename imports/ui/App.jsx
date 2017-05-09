@@ -25,8 +25,7 @@ class App extends Component {
   this.searchOn = 0;
   this.isAbout = 0;
   this.rendered = 0;
-  this.limit = 5;
-
+  this.limit = 10;
 
   this.state = {
     hideCompleted: false,
@@ -43,9 +42,13 @@ class App extends Component {
     //console.log(pages);
     if (windowBottom >= docHeight && pages < pagesLimit && pages>-1) {
       pages++;
+
+      if (this.limit <= this.props.posts.length) {
+        this.limit += 10;
+        Meteor.subscribe('posts', this.limit);
+      }
       this.update();
     }
-    this.limit += 5;
   }
 
   componentDidMount() {
@@ -399,6 +402,8 @@ class App extends Component {
 
   // Shows posts that were searched for
   renderFound() {
+    console.log("limit: " + this.limit);
+    console.log("downloaded: " + this.props.posts.length);
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
@@ -561,9 +566,9 @@ App.propTypes = {
 
 //CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
+  this.limit = 10;
   Meteor.subscribe('userList');
   Meteor.subscribe('posts', this.limit);
-  console.log(this.limit);
 
   return {
     posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),

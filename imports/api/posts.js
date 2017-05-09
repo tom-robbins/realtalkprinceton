@@ -14,10 +14,9 @@ function Answer(text, name) {
 if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish posts that are public or belong to the current user
-  Meteor.publish('posts', function postsPublication() {
+  Meteor.publish('posts', function postsPublication(limit) {
 
-    var dl = 500;
-
+    var dl = limit;
     if (Roles.userIsInRole(this.userId, 'admin')) {
       return Posts.find({}, { sort: { createdAt: -1 }, limit: dl });
     } else {
