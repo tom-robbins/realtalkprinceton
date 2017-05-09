@@ -10,7 +10,7 @@ import { StickyContainer, Sticky } from 'react-sticky';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
 var pages = 1;
-var perPage = 10;
+var perPage = 5;
 var totalPosts;
 var pagesLimit;
 var max_chars = 500;
@@ -24,6 +24,9 @@ class App extends Component {
   this.search = "";
   this.searchOn = 0;
   this.isAbout = 0;
+  this.rendered = 0;
+  this.limit = 5;
+
 
   this.state = {
     hideCompleted: false,
@@ -51,6 +54,7 @@ class App extends Component {
       pages++;
       this.update();
     }
+    this.limit += 5;
   }
 
   componentDidMount() {
@@ -415,7 +419,7 @@ class App extends Component {
       filteredPosts = filteredPosts.filter(post => !post.checked);
     }
     totalPosts = 0;
-    var rendered = 0;
+    this.rendered = 0;
     var lastPost = pages*perPage;
 
     return filteredPosts.map((post) => {
@@ -468,8 +472,8 @@ class App extends Component {
             }
           }
           if (post.tags.includes(this.tagQuery)) {
-            if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
-              rendered++;
+            if ((post.question.match(re) != null || this.query == undefined) && this.rendered<lastPost) {
+              this.rendered++;
               return (
               <Post
                 key={post._id}
@@ -483,8 +487,8 @@ class App extends Component {
         }
         else {
           // Search through all
-          if ((post.question.match(re) != null || this.matchAnswers(post, re) != null || this.query == undefined) && rendered<lastPost) {
-            rendered++;
+          if ((post.question.match(re) != null || this.matchAnswers(post, re) != null || this.query == undefined) && this.rendered<lastPost) {
+            this.rendered++;
             return (
               <Post
                 key={post._id}
@@ -574,7 +578,8 @@ App.propTypes = {
 //CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
   Meteor.subscribe('userList');
-  Meteor.subscribe('posts');
+  Meteor.subscribe('posts', this.limit);
+  console.log(this.limit);
 
   return {
     posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),
