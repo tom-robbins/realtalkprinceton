@@ -101,7 +101,7 @@ export default class Post extends Component {
   update() {
     var delayMillis = 300;
     setTimeout(location.reload.bind(location), delayMillis);
-    Router.go("http://www.realtalkprinceton.com/post/" + this.props.post._id);
+    Router.go("/post/" + this.props.post._id);
   }
 
   render() {
