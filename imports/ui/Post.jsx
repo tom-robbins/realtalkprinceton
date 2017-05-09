@@ -8,7 +8,6 @@ import { render } from 'react-dom';
 import App from './App.jsx';
 import classnames from 'classnames';
 
-var deletepost = false; 
 // Post component - represents a single todo item
 export default class Post extends Component {
 
@@ -18,12 +17,12 @@ export default class Post extends Component {
   }
 
   deleteThisPost() {
-    deletepost= true; 
+    this.props.post.delete = true; 
     this.forceUpdate(); 
   }
 
   cancelDeleteThisPost() {
-    deletepost = false; 
+    this.props.post.delete = false; 
     this.forceUpdate(); 
   }
 
@@ -78,9 +77,7 @@ export default class Post extends Component {
 
   deleteThisAnswer(t, o) {
     // o is the index of the answer to remove
-    if (confirm("Are you sure you want to delete this answer?")) {
-      Meteor.call('posts.ansRemove', this.props.post._id, o);
-    }
+    Meteor.call('posts.ansRemove', this.props.post._id, o);
   }
 
   deleteThisTag(t, o) {
@@ -106,7 +103,7 @@ export default class Post extends Component {
       return (
         <li className={postClassName}>
 
-          <div className="row match-my-cols posts back-white">
+          <div className="row match-my-cols posts">
             <div className="col-md-6 col-sm-6">
             { this.props.isAdmin ? (
               <div className="row">
@@ -119,7 +116,7 @@ export default class Post extends Component {
                     ) }
                 </div>
                 <div className="col-md-6 col-sm-6 float-right">
-                  {deletepost ? (
+                  {this.props.post.delete ? (
                       <div>
                       <p className = "tiny red justify-right">Are you sure you want to permanently delete this question?</p>
                         <div className="col-md-6 col-sm-6 float-right">
@@ -147,32 +144,38 @@ export default class Post extends Component {
               <p className="black qa no-margin">{this.props.post.question}</p>
 
 
-              { this.props.post.tags.length > 0 ? (
+              { this.props.post.tags.length > 0 && this.props.isAdmin ? (
                   Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
-                     { this.props.isAdmin ? (
-                     <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>) : ''}
-                     
+                     <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
                      <p className="tag tiny no-margin orange" key = {300 - obj}>{this.props.post.tags[obj]}</p>
-                   </div> ) 
-                   ) : ''}
+                   </div>
+                 )
+               ) : ''}
+
+              { this.props.post.tags.length > 0 && !this.props.isAdmin ? (
+                  Object.keys(this.props.post.tags).map((obj, i) =>
+                   <div>
+                     <p className="tag tiny no-margin orange" key = {300 - obj}>{this.props.post.tags[obj]}</p>
+                   </div>
+                 )
+               ) : ''}
               <br/>
 
-              { this.props.isAdmin ? (
               <div className="row">
                 <div className="col-md-6 col-sm-6 float-left">
+                { this.props.isAdmin ? (
                 <button className="admin-button response back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
+                ) : ''}
                 </div>
 
                 <div className="col-md-6 col-sm-6">
-                { !this.youAnswered() ? (
+
+                { this.props.isAdmin && !this.youAnswered() ? (
                   <button className="admin-button response back-light-orange" onClick={this.displayForm.bind(this)}>Answer</button>
                 ) : ''}
                 </div>
-              </div> ) : ''}
-              
-              
-          
+              </div>
 
             </div>
 
