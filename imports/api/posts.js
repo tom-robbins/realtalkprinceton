@@ -19,14 +19,14 @@ if (Meteor.isServer) {
     var dl = 500;
 
     if (Roles.userIsInRole(this.userId, 'admin')) {
-      return Posts.find({}, {limit: dl});
+      return Posts.find({}, { sort: { createdAt: -1 }, limit: dl });
     } else {
       return Posts.find({
         $or: [
           { hidden: { $ne: true } },
           { owner: this.userId },
         ],
-      }, {limit: dl});
+      },{ sort: { createdAt: -1 }, limit: dl });
     }
   });
 }
