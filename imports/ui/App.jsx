@@ -44,7 +44,7 @@ class App extends Component {
       pages++;
 
       if (this.limit <= this.props.posts.length) {
-        this.limit += 10;
+        this.limit += 25;
         Meteor.subscribe('posts', this.limit);
       }
       this.update();
@@ -66,10 +66,6 @@ class App extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-
-    var snd = new Audio("audio.mp3");
-    snd.play();
-    snd.currentTime=0;
 
     // Find the text field via the React ref
     // console.log(ReactDOM.findDOMNode(this.refs.textInput).value.trim());
@@ -231,6 +227,9 @@ class App extends Component {
      event.preventDefault();
      pages = 1;
 
+    this.limit += 75;
+    Meteor.subscribe('posts', this.limit);
+
     // Find the text field via the React ref
     this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
     this.search = this.query;
@@ -374,6 +373,7 @@ class App extends Component {
 
   // Shows posts that were searched for
   renderFound() {
+    console.log("renderfound");
     console.log("limit: " + this.limit);
     console.log("downloaded: " + this.props.posts.length);
     let filteredPosts = this.props.posts;
@@ -384,10 +384,11 @@ class App extends Component {
     this.rendered = 0;
     var lastPost = pages*perPage;
 
+    const currentUserId = this.props.currentUser && this.props.currentUser._id;
+    const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
+    console.log(isAdmin); 
 
     return filteredPosts.map((post) => {
-      const currentUserId = this.props.currentUser && this.props.currentUser._id;
-      const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
       const answered = post.answer != "";
 
       var re = new RegExp(this.query, 'i');
