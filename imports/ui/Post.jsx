@@ -150,9 +150,10 @@ export default class Post extends Component {
               { this.props.post.tags.length > 0 ? (
                   Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
-                     <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
                      { this.props.isAdmin ? (
-                     <p className="tag tiny no-margin orange" key = {300 - obj}>{this.props.post.tags[obj]}</p>) : ''}
+                     <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>) : ''}
+                     
+                     <p className="tag tiny no-margin orange" key = {300 - obj}>{this.props.post.tags[obj]}</p>
                    </div> ) 
                    ) : ''}
               <br/>
