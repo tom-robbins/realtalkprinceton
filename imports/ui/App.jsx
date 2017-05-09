@@ -353,6 +353,7 @@ class App extends Component {
     var placeholder;
 
     const adminList = Roles.getUsersInRole(['admin']).fetch();
+    var pageDescription = Roles.getUsersInRole(['superadmin']).fetch()[0].profile;
 
     for (var i=0;i<adminList.length;i++) {
       placeholder = (adminList[i].profile==undefined) ? '' : adminList[i].profile;
@@ -362,9 +363,8 @@ class App extends Component {
 
     return (
       <div className="col-md-10 col-sm-10 margin">
-      <br/><p>Real Talk Princeton is an established group of students committed to
-      answering questions about Princeton academics, student life, and beyond.</p>
-
+      <br/>
+      <p>{pageDescription}</p>
         { Object.keys(admins).map((obj, i) =>
           <div className="black">
             <button className="highlight button inline response tiny" key = {300 - obj} onClick={this.searchAdmin.bind(this, admins[obj])}><b>{admins[obj]}</b></button>
