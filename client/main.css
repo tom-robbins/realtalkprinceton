@@ -504,6 +504,8 @@ header .hide-completed {
 
 .questionButton {
   background-color: white;
+  font-weight: normal;
+  text-align: left;
 }
 
 /* unvisited link */
