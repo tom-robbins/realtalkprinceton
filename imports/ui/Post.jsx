@@ -141,7 +141,7 @@ export default class Post extends Component {
               <br/>
 
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-              <p className="black qa no-margin">{this.props.post.question}</p>
+              <p className="black qa no-margin"><a href={"http://www.realtalkprinceton.com/post/" + this.props.post._id}>{this.props.post.question}</a></p>
 
 
               { this.props.post.tags.length > 0 && this.props.isAdmin ? (
@@ -160,6 +160,7 @@ export default class Post extends Component {
                    </div>
                  )
                ) : ''}
+              
               <br/>
 
               <div className="row">

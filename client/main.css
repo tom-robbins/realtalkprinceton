@@ -340,6 +340,7 @@ ul {
   border-radius: 10px;
   /*border is optional*/
   cursor: pointer;
+  z-index: -1;
 }
 .admin-button:focus {
   outline: none!important;

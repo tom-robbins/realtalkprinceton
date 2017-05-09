@@ -105,10 +105,6 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
-    }
-
     this.toggleBold();
     document.getElementById("current-all").style.fontWeight = "normal";
 
@@ -124,10 +120,6 @@ class App extends Component {
   searchAcademic(event) {
     event.preventDefault();
     pages = 1;
-
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
-    }
 
     this.toggleBold();
     document.getElementById("current-academic").style.fontWeight = "normal";
@@ -145,10 +137,6 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
-    }
-
     this.toggleBold();
     document.getElementById("current-social").style.fontWeight = "normal";
 
@@ -165,10 +153,6 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
-    }
-
     this.toggleBold();
     document.getElementById("current-extracurricular").style.fontWeight = "normal";
 
@@ -182,10 +166,6 @@ class App extends Component {
 
   searchOther(event) {
     event.preventDefault();
-
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
-    }
 
     this.toggleBold();
     document.getElementById("current-other").style.fontWeight = "normal";
@@ -203,10 +183,6 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
-    }
-
     this.toggleBold();
     document.getElementById("current-unanswered").style.fontWeight = "normal";
 
@@ -221,10 +197,6 @@ class App extends Component {
   searchAdmin(admin, event) {
     event.preventDefault();
     pages = 1;
-
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
-    }
 
     this.toggleBold();
 
@@ -423,6 +395,7 @@ class App extends Component {
       // Show a specific post if the url is for it
       if (location.pathname.split('/')[1] == "post") {
         if (post._id == location.pathname.split('/')[2]) {
+          console.log(post._id);
           return (
             <Post
               key={post._id}
