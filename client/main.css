@@ -501,3 +501,8 @@ header .hide-completed {
 .justify-right {
   text-align:right;
 }
+
+/* unvisited link */
+a {
+    color: #000000 !important; 
+}

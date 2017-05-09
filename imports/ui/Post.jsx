@@ -141,7 +141,7 @@ export default class Post extends Component {
               <br/>
 
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-              <p className="black qa no-margin"><a href={"http://www.realtalkprinceton.com/post/" + this.props.post._id}>{this.props.post.question}</a></p>
+              <p className="black qa no-margin black_link"><a href={"http://www.realtalkprinceton.com/post/" + this.props.post._id}>{this.props.post.question}</a></p>
 
 
               { this.props.post.tags.length > 0 && this.props.isAdmin ? (
@@ -209,7 +209,7 @@ export default class Post extends Component {
 
                 <p className="response tiny black no-margin inline">Response from </p>
 
-                <button className="response tiny no-margin highlight button" key={obj} onClick={this.searchAdmin.bind(this.props.post, this.props.post.answer[obj].name)}>{this.props.post.answer[obj].name}</button>
+                <button className="response tiny no-margin highlight button black_link" key={obj} onClick={this.searchAdmin.bind(this.props.post, this.props.post.answer[obj].name)}>{this.props.post.answer[obj].name}</button>
 
 
 

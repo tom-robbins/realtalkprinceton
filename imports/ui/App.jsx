@@ -374,6 +374,7 @@ class App extends Component {
 
   // Shows posts that were searched for
   renderFound() {
+    console.log("renderfound");
     console.log("limit: " + this.limit);
     console.log("downloaded: " + this.props.posts.length);
     let filteredPosts = this.props.posts;
