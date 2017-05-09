@@ -59,7 +59,7 @@ class App extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    var snd = new Audio("public/audio.mp3");
+    var snd = new Audio("audio.mp3");
     snd.play();
     snd.currentTime=0;
 
