@@ -574,7 +574,7 @@ App.propTypes = {
 //CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
   Meteor.subscribe('userList');
-  Meteor.subscribe('posts');
+  Meteor.subscribe('posts', 100);
 
   return {
     posts: Posts.find({}, { sort: { createdAt: -1 }}).fetch(),
