@@ -44,7 +44,7 @@ class App extends Component {
       pages++;
 
       if (this.limit <= this.props.posts.length) {
-        this.limit += 20;
+        this.limit += 25;
         Meteor.subscribe('posts', this.limit);
       }
       this.update();
@@ -66,10 +66,6 @@ class App extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-
-    var snd = new Audio("audio.mp3");
-    snd.play();
-    snd.currentTime=0;
 
     // Find the text field via the React ref
     // console.log(ReactDOM.findDOMNode(this.refs.textInput).value.trim());
@@ -390,7 +386,6 @@ class App extends Component {
 
     const currentUserId = this.props.currentUser && this.props.currentUser._id;
     const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
-    console.log(currentUserId); 
     console.log(isAdmin); 
 
     return filteredPosts.map((post) => {
