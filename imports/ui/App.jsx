@@ -104,6 +104,7 @@ class App extends Component {
   searchAll(event) {
     event.preventDefault();
     pages = 1;
+    this.limit += 50;
 
     this.toggleBold();
     document.getElementById("current-all").style.fontWeight = "normal";
@@ -385,10 +386,12 @@ class App extends Component {
     this.rendered = 0;
     var lastPost = pages*perPage;
 
+    const currentUserId = this.props.currentUser && this.props.currentUser._id;
+    const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
+    console.log(currentUserId); 
+    console.log(isAdmin); 
 
     return filteredPosts.map((post) => {
-      const currentUserId = this.props.currentUser && this.props.currentUser._id;
-      const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
       const answered = post.answer != "";
 
       var re = new RegExp(this.query, 'i');
