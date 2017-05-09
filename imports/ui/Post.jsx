@@ -106,7 +106,7 @@ export default class Post extends Component {
       return (
         <li className={postClassName}>
 
-          <div className="row match-my-cols posts">
+          <div className="row match-my-cols posts back-white">
             <div className="col-md-6 col-sm-6">
             { this.props.isAdmin ? (
               <div className="row">
