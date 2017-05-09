@@ -577,7 +577,7 @@ export default createContainer(() => {
   Meteor.subscribe('posts');
 
   return {
-    posts: Posts.find({}, {limit: 100, sort: { createdAt: -1 }}).fetch(),
+    posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
   };
 }, App);
