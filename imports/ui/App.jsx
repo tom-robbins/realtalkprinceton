@@ -104,7 +104,6 @@ class App extends Component {
   searchAll(event) {
     event.preventDefault();
     pages = 1;
-    this.limit += 50;
 
     this.toggleBold();
     document.getElementById("current-all").style.fontWeight = "normal";
@@ -231,6 +230,9 @@ class App extends Component {
   handleSearch(event) {
      event.preventDefault();
      pages = 1;
+
+    this.limit += 75;
+    Meteor.subscribe('posts', this.limit);
 
     // Find the text field via the React ref
     this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
