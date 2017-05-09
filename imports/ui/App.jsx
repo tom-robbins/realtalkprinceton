@@ -13,7 +13,7 @@ var pages = 1;
 var perPage = 10;
 var totalPosts;
 var pagesLimit;
-var max_chars = 500; 
+var max_chars = 500;
 
 // App component - represents the whole app
 class App extends Component {
@@ -33,7 +33,7 @@ class App extends Component {
 
   handleChange(event) {
     var input = event.target.value;
-    console.log("handleChange"); 
+    console.log("handleChange");
     this.setState({
       chars_left: max_chars - input.length
     });
@@ -79,13 +79,13 @@ class App extends Component {
     const email = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
 
     if (question.length > max_chars) {
-      return; 
+      return;
     }
     else if (question != '' && email != '') {
       Meteor.call('posts.insert', question, email);
 
       // Clear form
-      ReactDOM.findDOMNode(this.refs.textInput).value = ''; 
+      ReactDOM.findDOMNode(this.refs.textInput).value = '';
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
       this.setState({
@@ -96,7 +96,7 @@ class App extends Component {
       Meteor.call('posts.insert', question, '');
 
       // Clear form
-      ReactDOM.findDOMNode(this.refs.textInput).value = ''; 
+      ReactDOM.findDOMNode(this.refs.textInput).value = '';
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
 
@@ -353,7 +353,7 @@ class App extends Component {
     var placeholder;
 
     const adminList = Roles.getUsersInRole(['admin']).fetch();
-    var pageDescription = Roles.getUsersInRole(['superadmin']).fetch()[0].profile;
+    //var pageDescription = Roles.getUsersInRole(['superadmin']).fetch()[0].profile;
 
     for (var i=0;i<adminList.length;i++) {
       placeholder = (adminList[i].profile==undefined) ? '' : adminList[i].profile;
@@ -363,8 +363,8 @@ class App extends Component {
 
     return (
       <div className="col-md-10 col-sm-10 margin">
-      <br/>
-      <p>{pageDescription}</p>
+      {/*<br/>
+      <p>{pageDescription}</p>*/}
         { Object.keys(admins).map((obj, i) =>
           <div className="black">
             <button className="highlight button inline response tiny" key = {300 - obj} onClick={this.searchAdmin.bind(this, admins[obj])}><b>{admins[obj]}</b></button>
