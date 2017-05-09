@@ -90,6 +90,12 @@ export default class Post extends Component {
     Meteor.call('searchAdmin', admin, event);
   }
 
+  update() {
+    var delayMillis = 300;
+    setTimeout(location.reload.bind(location), delayMillis);
+    Router.go("http://www.realtalkprinceton.com/post/" + this.props.post._id);
+  }
+
   render() {
 
     // Give posts a different className when they are checked off,
@@ -141,8 +147,7 @@ export default class Post extends Component {
               <br/>
 
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-
-              <p className="black qa no-margin"><a href={"http://www.realtalkprinceton.com/post/" + this.props.post._id}>{this.props.post.question}</a></p>
+              <button className = "button questionButton black" onClick={()=>this.update()}> {this.props.post.question} </button>
 
               { this.props.post.tags.length > 0 && this.props.isAdmin ? (
                   Object.keys(this.props.post.tags).map((obj, i) =>

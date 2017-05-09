@@ -502,6 +502,10 @@ header .hide-completed {
   text-align:right;
 }
 
+.questionButton {
+  background-color: white;
+}
+
 /* unvisited link */
 a {
     color: #000000 !important; 
