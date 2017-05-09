@@ -8,6 +8,7 @@ import { render } from 'react-dom';
 import App from './App.jsx';
 import classnames from 'classnames';
 
+var deletepost = false; 
 // Post component - represents a single todo item
 export default class Post extends Component {
 
@@ -17,12 +18,12 @@ export default class Post extends Component {
   }
 
   deleteThisPost() {
-    this.props.post.delete = true; 
+    deletepost= true; 
     this.forceUpdate(); 
   }
 
   cancelDeleteThisPost() {
-    this.props.post.delete = false; 
+    deletepost = false; 
     this.forceUpdate(); 
   }
 
@@ -100,6 +101,7 @@ export default class Post extends Component {
       hidden: this.props.post.hidden,
     });
 
+
     if (this.props.isAdmin || this.props.answered) {
       return (
         <li className={postClassName}>
@@ -117,7 +119,7 @@ export default class Post extends Component {
                     ) }
                 </div>
                 <div className="col-md-6 col-sm-6 float-right">
-                  {this.props.post.delete ? (
+                  {deletepost ? (
                       <div>
                       <p className = "tiny red justify-right">Are you sure you want to permanently delete this question?</p>
                         <div className="col-md-6 col-sm-6 float-right">
