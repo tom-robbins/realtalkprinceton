@@ -60,11 +60,11 @@ export default class Post extends Component {
   }
 
   hasTag(tag){
-    let tags = this.props.post.tags; 
+    let tags = this.props.post.tags;
     for (obj in Object.keys(tags)) {
-      if (tags[obj] == tag) return true; 
+      if (tags[obj] == tag) return true;
     }
-    return false; 
+    return false;
   }
 
   yourObj(){
@@ -95,7 +95,6 @@ export default class Post extends Component {
     // o is the index of the answer to remove
     Meteor.call('posts.tagRemove', this.props.post._id, o);
   }
-
 
   searchAdmin(admin, event) {
     Meteor.call('searchAdmin', admin, event);
@@ -158,7 +157,7 @@ export default class Post extends Component {
               <br/>
 
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-              /* <p className="black qa no-margin"><a href={"/post/" + this.props.post._id}>{this.props.post.question}</a></p> */
+              {/* <p className="black qa no-margin"><a href={"/post/" + this.props.post._id}>{this.props.post.question}</a></p> */}
               <button className = "button questionButton black qa" onClick={()=>this.update()}> {this.props.post.question} </button>
 
               <br/>
@@ -240,7 +239,7 @@ export default class Post extends Component {
 
                 <p className="response tiny black no-margin inline">Response from </p>
 
-                <button className="response tiny no-margin highlight button black_link" key={obj} onClick={this.searchAdmin.bind(this.props.post, this.props.post.answer[obj].name)}>{this.props.post.answer[obj].name}</button>
+                <button className="response tiny no-margin highlight button black_link" key={obj}>{this.props.post.answer[obj].name}</button>
 
 
 
