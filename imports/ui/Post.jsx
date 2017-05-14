@@ -100,7 +100,7 @@ export default class Post extends Component {
     Meteor.call('searchAdmin', admin, event);
   }
 
-  update() {
+  my_update() {
     var delayMillis = 300;
     setTimeout(location.reload.bind(location), delayMillis);
     Router.go("/post/" + this.props.post._id);
@@ -158,7 +158,7 @@ export default class Post extends Component {
 
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
               {/* <p className="black qa no-margin"><a href={"/post/" + this.props.post._id}>{this.props.post.question}</a></p> */}
-              <button className = "button questionButton black qa" onClick={()=>this.update()}> {this.props.post.question} </button>
+              <button className = "button questionButton black qa" onClick={()=>this.my_update()}> {this.props.post.question} </button>
 
               <br/>
 
