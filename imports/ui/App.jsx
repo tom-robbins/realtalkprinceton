@@ -38,7 +38,7 @@ class App extends Component {
     };
   }
 
-  //from some random internet man
+  // from some random internet man
   handleScroll() {
     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
     const body = document.body;
@@ -476,7 +476,6 @@ class App extends Component {
 
     const currentUserId = this.props.currentUser && this.props.currentUser._id;
     const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
-    console.log(isAdmin);
 
     return filteredPosts.map((post) => {
       const answered = post.answer != "";
@@ -484,7 +483,7 @@ class App extends Component {
       var re = new RegExp(this.query, 'i');
       // Show a specific post if the url is for it
       if (location.pathname.split('/')[1] == "post") {
-        console.log("found post!");
+        console.log("rendering single post!");
         unique_id.set(location.pathname.split('/')[2]);
         //Router.go("/");
         if (post._id == location.pathname.split('/')[2]) {
@@ -547,7 +546,7 @@ class App extends Component {
         else {
           // Search through all
           if ((post.question.match(re) != null || this.matchAnswers(post, re) != null || this.query == undefined) ) {
-      */    console.log(post.question)
+      */    // console.log(post.question)
             this.rendered++;
             return (
               <Post
@@ -585,7 +584,6 @@ class App extends Component {
   }
 
   render() {
-    console.log('RENDERING???');
     return (
       <div className="container-fluid back-white stretch">
       <div>
@@ -663,13 +661,12 @@ export default createContainer(() => {
   //pages = 1;
 
   console.log('container code');
-  console.log(unique_id.get());
 
   Meteor.subscribe('userList');
   console.log('LIMIT: ' + limit.get())
   postSub = Meteor.subscribe('posts', limit.get(), currentTag.get(), query.get(), unique_id.get(), this_admin.get());
 
-  re = new RegExp(query.get());
+  re = new RegExp(query.get(), 'i');
   dl = limit.get();
   tag = currentTag.get();
 
