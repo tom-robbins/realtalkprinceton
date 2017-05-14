@@ -35,7 +35,16 @@ class App extends Component {
 
   this.state = {
     hideCompleted: false,
+    chars_left: max_chars
     };
+  }
+
+  handleChange(event) {
+    var input = event.target.value;
+    console.log("handleChange");
+    this.setState({
+      chars_left: max_chars - input.length
+    });
   }
 
   // from some random internet man
@@ -69,7 +78,6 @@ class App extends Component {
   }
 
   update() {
-    console.log("force update");
     this.forceUpdate();
   }
 
@@ -84,27 +92,42 @@ class App extends Component {
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
     const email = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
 
+    if (question.match(/\S/)) {
+      console.log('MATCH ' + question);
+    } else {
+      console.log('NOT ' + question);
+    }
+
     if (question.length > max_chars) {
       return;
     }
-    else if (question != '' && email != '') {
+    else if (question.match(/\S/) && email != '') {
+      console.log('1 ' + question);
       Meteor.call('posts.insert', question, email);
 
       // Clear form
       ReactDOM.findDOMNode(this.refs.textInput).value = '';
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
+      this.setState({
+        chars_left: max_chars
+       });
     }
-    else if (question != '') {
+    else if (question.match(/\S/)) {
       Meteor.call('posts.insert', question, '');
-
+      console.log('2 ' + question);
       // Clear form
       ReactDOM.findDOMNode(this.refs.textInput).value = '';
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
+      this.setState({
+      chars_left: max_chars
+    });
 
     }
     else {
+      console.log('3 ' + question);
+      ReactDOM.findDOMNode(this.refs.textInput).value = '';
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Enter some text here';
     }
   }
@@ -121,7 +144,7 @@ class App extends Component {
       Router.go("/");
     }
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-all").style.fontWeight = "normal";
 
     this.tagQuery = "";
@@ -146,7 +169,7 @@ class App extends Component {
     }
 
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-academic").style.fontWeight = "normal";
 
     this.tagQuery = "academic";
@@ -170,7 +193,7 @@ class App extends Component {
     }
 
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-social").style.fontWeight = "normal";
 
     this.tagQuery = "social life";
@@ -195,7 +218,7 @@ class App extends Component {
     }
 
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-extracurricular").style.fontWeight = "normal";
 
     this.tagQuery = "extracurricular";
@@ -217,7 +240,7 @@ class App extends Component {
     }
 
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-other").style.fontWeight = "normal";
 
     this.tagQuery = "other";
@@ -241,7 +264,7 @@ class App extends Component {
     }
 
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-unanswered").style.fontWeight = "normal";
 
     this.tagQuery = "unanswered";
@@ -267,7 +290,7 @@ class App extends Component {
     }
     */
 
-    this.toggleBold();
+    this.unbold();
 
     /*
     this.tagQuery = "admin";
@@ -351,20 +374,20 @@ class App extends Component {
     else this.isAbout = 0;
   }
 
-  toggleBold() {
-    document.getElementById("current-all").style.fontWeight = "100";
-    document.getElementById("current-academic").style.fontWeight = "100";
-    document.getElementById("current-social").style.fontWeight = "100";
-    document.getElementById("current-extracurricular").style.fontWeight = "100";
-    document.getElementById("current-other").style.fontWeight = "100";
+  unbold() {
+    document.getElementById("all").style.fontWeight = "100";
+    document.getElementById("academic").style.fontWeight = "100";
+    document.getElementById("social life").style.fontWeight = "100";
+    document.getElementById("extracurricular").style.fontWeight = "100";
+    document.getElementById("other").style.fontWeight = "100";
     Roles.userIsInRole(Meteor.userId(), 'admin') ?
-      document.getElementById("current-unanswered").style.fontWeight = "100" : '';
+      document.getElementById("unanswered").style.fontWeight = "100" : '';
     document.getElementById("contributors").style.fontWeight = "100";
   }
 
   goContributors(event) {
 
-    this.toggleBold();
+    this.unbold();
     pages = -1;
     document.getElementById("contributors").style.fontWeight = "normal";
 
@@ -403,9 +426,10 @@ class App extends Component {
     const admins = [];
     var bios = [];
     var placeholder;
+    var pageDescription = [];
 
     const adminList = Roles.getUsersInRole(['admin']).fetch();
-    //var pageDescription = Roles.getUsersInRole(['superadmin']).fetch()[0].profile;
+    const superadmin = Roles.getUsersInRole(['superadmin']).fetch();
 
     for (var i=0;i<adminList.length;i++) {
       placeholder = (adminList[i].profile==undefined) ? '' : adminList[i].profile;
@@ -413,10 +437,14 @@ class App extends Component {
       bios[i] = placeholder;
     }
 
+    for (var i=0;i<superadmin.length;i++) {
+      pageDescription = (superadmin[i].profile==undefined) ? '' : superadmin[i].profile;
+    }
+
     return (
       <div className="col-md-10 col-sm-10 margin">
-      {/*<br/>
-      <p>{pageDescription}</p>*/}
+      {<p>{pageDescription}</p>}
+
         { Object.keys(admins).map((obj, i) =>
           <div className="black">
             <button className="highlight button inline response tiny" key = {300 - obj} onClick={this.searchAdmin.bind(this, admins[obj])}><b>{admins[obj]}</b></button>
@@ -430,6 +458,14 @@ class App extends Component {
               <input type="submit" value="Submit"/>
             </form>
         ) : ''}
+
+        { Roles.userIsInRole(Meteor.userId(), 'superadmin') ? (
+            <form className="new-question" onSubmit={this.addBio.bind(this)}>
+              <textarea className="outline" placeholder="Update the page description!" ref="contributorBio"></textarea>
+              <input type="submit" value="Submit"/>
+            </form>
+        ) : ''}
+
     </div>
     );
   }
@@ -571,7 +607,9 @@ class App extends Component {
     limit.set(10);
     //postSub.stop();
     currentTag.set(string);
-    this.toggleBold();
+    this.unbold();
+    document.getElementById(string).style.fontWeight = "normal";
+
 
     // console.log('length: ' + this.props.posts.length);
     // postSub = Meteor.subscribe('posts', limit.get(), currentTag.get(), query.get());
@@ -603,12 +641,12 @@ class App extends Component {
                   <p className="white">Now Viewing:</p>
                 </div>
                 <div className="col-md-6 col-xs-6">
-                  <div><button className="button white pseudo-link" id="current-all" onClick={()=>this.setTag('all')}>all</button> </div>
-                  <div><button className="button white pseudo-link" id="current-academic" onClick={()=>this.setTag('academic')}>academic</button> </div>
-                  <div><button className="button white pseudo-link" id="current-social" onClick={()=>this.setTag('social life')}>social life</button> </div>
-                  <div><button className="button white pseudo-link" id="current-extracurricular" onClick={()=>this.setTag('extracurricular')}>extracurricular</button> </div>
-                  <div><button className="button white pseudo-link" id="current-other" onClick={()=>this.setTag('other')}>other</button> </div>
-                  { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={()=>this.setTag('unanswered')}>unanswered</button> </div> ) : ''}
+                  <div><button className="button white pseudo-link" id="all" onClick={()=>this.setTag('all')}>all</button> </div>
+                  <div><button className="button white pseudo-link" id="academic" onClick={()=>this.setTag('academic')}>academic</button> </div>
+                  <div><button className="button white pseudo-link" id="social life" onClick={()=>this.setTag('social life')}>social life</button> </div>
+                  <div><button className="button white pseudo-link" id="extracurricular" onClick={()=>this.setTag('extracurricular')}>extracurricular</button> </div>
+                  <div><button className="button white pseudo-link" id="other" onClick={()=>this.setTag('other')}>other</button> </div>
+                  { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="unanswered" onClick={()=>this.setTag('unanswered')}>unanswered</button> </div> ) : ''}
                 </div>
               </div>
               <div className="row">
@@ -626,7 +664,8 @@ class App extends Component {
                         Current search: <input type="reset" value={this.search}/>
                       </p> ) : ''}
                       <form className="new-question search" onSubmit={this.handleSubmit.bind(this)}>
-                        <textarea placeholder="Ask a question!" ref="textInput"></textarea>
+                        <textarea onChange={this.handleChange.bind(this)} placeholder="Ask a question!" ref="textInput"></textarea>
+                        <p className = "tiny white">Characters left: {this.state.chars_left}</p>
                         <input type="text" placeholder="(Optional) Email for notification" ref="textInput2"/>
                         <input type="submit" value="Submit"/>
                       </form> <br/>
