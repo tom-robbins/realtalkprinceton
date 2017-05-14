@@ -14,18 +14,88 @@ function Answer(text, name) {
 if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish posts that are public or belong to the current user
-  Meteor.publish('posts', function postsPublication(limit) {
-
+  Meteor.publish('posts', function postsPublication(limit, tag, query, id, admin) {
+    console.log('tag: ' + tag);
+    console.log('limit (server): ' + limit);
     var dl = limit;
+    var re = new RegExp(query, 'i');
+    console.log('QUERY IS: \"' + re + "\"");
+
+    if (id != "") {
+      console.log("ID: " + id)
+      console.log(Posts.find("_id" : id).count());
+      return Posts.find({"_id" : id});
+    }
+    if (admin != "") {
+      return Posts.find({"answer.name" : {$in : [admin]}});
+    }
     if (Roles.userIsInRole(this.userId, 'admin')) {
-      return Posts.find({}, { sort: { createdAt: -1 }, limit: dl });
-    } else {
-      return Posts.find({
-        $or: [
-          { hidden: { $ne: true } },
-          { owner: this.userId },
-        ],
-      },{ sort: { createdAt: -1 }, limit: dl });
+      if (tag == 'all') {
+        return Posts.find(
+          {$or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$in : [re]}},
+            {"answer.text" : {$in : [re]}},
+            ]},
+          { sort: { createdAt: -1 },
+          "limit": dl });
+      }
+      else if (tag == 'unanswered') {
+        return Posts.find(
+          {$or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$regex: re}},
+            {"answer.text" : {$in : [re]}},
+            ]},
+            {"answer" : []},
+          { sort: { createdAt: -1 },
+          "limit": dl });
+      } else {
+        return Posts.find({
+          "tags" : {$in : [tag]}},
+          {$or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$regex: re}},
+            {"answer.text" : {$in : [re]}},
+            ]},
+          { sort: { createdAt: -1 },
+          "limit": dl });
+      }
+    }
+    else {
+      if (tag == 'all') {
+        return Posts.find(
+        {$or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$regex: re}},
+            {"answer.text" : {$in : [re]}},
+            ]},
+          {$or: [
+            { hidden: { $ne: true } },
+            { owner: this.userId },
+          ]},
+          { sort: { createdAt: -1 },
+          "limit": dl });
+      }
+      else {
+        return Posts.find({"tags" : {$in : [tag]}},
+          {$or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$regex: re}},
+            {"answer.text" : {$in : [re]}},
+            ]},
+          {$or: [
+            { hidden: { $ne: true } },
+            { owner: this.userId },
+          ]},
+        { sort: { createdAt: -1 },
+          "limit": dl });
+      }
     }
   });
 }
@@ -61,7 +131,7 @@ Meteor.methods({
     }
     */
     Posts.remove(postId);
-    
+
   },
 
   'posts.ansRemove'(postId, index) {
@@ -80,20 +150,6 @@ Meteor.methods({
     newArray.splice(index, 1);
     Posts.update({_id: postId}, {$set: {tags: newArray}});
   },
-  /*
-  'posts.setChecked'(postId, setChecked) {
-    check(postId, String);
-    check(setChecked, Boolean);
-
-    const post = Posts.findOne(postId);
-    if (post.public && post.owner !== Meteor.userId()) {
-      // If the post is hidden, make sure only the owner can check it off
-      throw new Meteor.Error('not-authorized');
-    }
-
-    Posts.update(postId, { $set: { checked: setChecked } });
-  },
-  */
 
   'posts.setHidden'(postId, setToHidden) {
     check(postId, String);
@@ -110,7 +166,7 @@ Meteor.methods({
 
     Posts.update(postId, { $set: { hidden: setToHidden } });
   },
-  
+
   'posts.answer'(postId, x) {
    // check(postId, String);
     const post = Posts.findOne(postId);
@@ -126,7 +182,7 @@ Meteor.methods({
             break;
         }
     }
-    
+
     // If user didn't post just add
     if (index == -1) {
         Posts.update({_id: postId}, {$push: {answer: newAnswer}});
@@ -138,7 +194,7 @@ Meteor.methods({
         Posts.update({_id: postId}, {$set: {answer: newArray}});
     }
 
-    var textEmail = "New Answer by " + Meteor.user().username + ":" + '\n \n' + x + '\n \n \n' + "See your post at: http://www.realtalkprinceton.com/post/" + String(postId); 
+    var textEmail = "New Answer by " + Meteor.user().username + ":" + '\n \n' + x + '\n \n \n' + "See your post at: http://www.realtalkprinceton.com/post/" + String(postId);
     var address = Meteor.user().username + "@realtalkprinceton.com"
     // Email notification
     if (post.email != '') {

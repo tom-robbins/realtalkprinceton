@@ -8,6 +8,8 @@ import { render } from 'react-dom';
 import App from './App.jsx';
 import classnames from 'classnames';
 
+var deletepost = false;
+
 // Post component - represents a single todo item
 export default class Post extends Component {
 
@@ -17,11 +19,13 @@ export default class Post extends Component {
   }
 
   deleteThisPost() {
+    deletepost= true;
     this.props.post.delete = true;
     this.forceUpdate();
   }
 
   cancelDeleteThisPost() {
+    deletepost = false;
     this.props.post.delete = false;
     this.forceUpdate();
   }
@@ -154,6 +158,7 @@ export default class Post extends Component {
               <br/>
 
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
+              /* <p className="black qa no-margin"><a href={"/post/" + this.props.post._id}>{this.props.post.question}</a></p> */
               <button className = "button questionButton black qa" onClick={()=>this.update()}> {this.props.post.question} </button>
 
               <br/>
@@ -161,6 +166,7 @@ export default class Post extends Component {
               { this.props.post.tags.length > 0 && this.props.isAdmin ? (
                   Object.keys(this.props.post.tags).map((obj, i) =>
                    <div>
+
                      <button className="delete" onClick={()=>this.deleteThisTag(this, parseInt(obj))}> &times; </button>
                      <p className="tag tiny no-margin orange" key = {300 - obj}>{this.props.post.tags[obj]}</p>
                    </div>
