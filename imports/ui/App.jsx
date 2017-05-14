@@ -92,10 +92,17 @@ class App extends Component {
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
     const email = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
 
+    if (question.match(/\S/)) {
+      console.log('MATCH ' + question);
+    } else {
+      console.log('NOT ' + question);
+    }
+
     if (question.length > max_chars) {
       return;
     }
-    else if (question != '' && email != '') {
+    else if (question.match(/\S/) && email != '') {
+      console.log('1 ' + question);
       Meteor.call('posts.insert', question, email);
 
       // Clear form
@@ -106,9 +113,9 @@ class App extends Component {
         chars_left: max_chars
        });
     }
-    else if (question != '') {
+    else if (question.match(/\S/)) {
       Meteor.call('posts.insert', question, '');
-
+      console.log('2 ' + question);
       // Clear form
       ReactDOM.findDOMNode(this.refs.textInput).value = '';
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
@@ -119,6 +126,8 @@ class App extends Component {
 
     }
     else {
+      console.log('3 ' + question);
+      ReactDOM.findDOMNode(this.refs.textInput).value = '';
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Enter some text here';
     }
   }
