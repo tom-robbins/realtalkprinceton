@@ -85,7 +85,7 @@ class App extends Component {
     event.preventDefault();
 
     var snd = new Audio("audio.mp3");
-    //snd.play();
+    snd.play();
     snd.currentTime=0;
     // Find the text field via the React ref
     // console.log(ReactDOM.findDOMNode(this.refs.textInput).value.trim());
