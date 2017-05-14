@@ -69,7 +69,6 @@ class App extends Component {
   }
 
   update() {
-    console.log("force update");
     this.forceUpdate();
   }
 
@@ -403,14 +402,20 @@ class App extends Component {
     const admins = [];
     var bios = [];
     var placeholder;
+    var pageDescription = [];
 
     const adminList = Roles.getUsersInRole(['admin']).fetch();
     //var pageDescription = Roles.getUsersInRole(['superadmin']).fetch()[0].profile;
+    const superadmin = Roles.getUsersInRole(['superadmin']).fetch();
 
     for (var i=0;i<adminList.length;i++) {
       placeholder = (adminList[i].profile==undefined) ? '' : adminList[i].profile;
       admins[i] = adminList[i].username;
       bios[i] = placeholder;
+    }
+
+    for (var i=0;i<superadmin.length;i++) {
+      pageDescription = (superadmin[i].profile==undefined) ? '' : superadmin[i].profile;
     }
 
     return (
