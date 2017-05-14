@@ -68,30 +68,29 @@ if (Meteor.isServer) {
     else {
       if (tag == 'all') {
         return Posts.find(
-        {$or:[
+        {$and : [
+        {$or : [
             {"question": {$regex: re}},
             {"date": {$regex: re}},
             {"answer.name": {$regex: re}},
             {"answer.text" : {$in : [re]}},
             ]},
-          {$or: [
-            { hidden: { $ne: true } },
-            { owner: this.userId },
+          {$or : [{$and : [{"hidden" : {$exists : true}}, {"hidden" : false}]}, {"hidden" : {$exists : false}} ]}
           ]},
           { sort: { createdAt: -1 },
           "limit": dl });
       }
       else {
-        return Posts.find({"tags" : {$in : [tag]}},
-          {$or:[
-            {"question": {$regex: re}},
-            {"date": {$regex: re}},
-            {"answer.name": {$regex: re}},
-            {"answer.text" : {$in : [re]}},
-            ]},
-          {$or: [
-            { hidden: { $ne: true } },
-            { owner: this.userId },
+        return Posts.find(
+          {$and : [
+            {"tags" : {$in : [tag]}},
+            {$or : [
+              {"question": {$regex: re}},
+              {"date": {$regex: re}},
+              {"answer.name": {$regex: re}},
+              {"answer.text" : {$in : [re]}},
+              ]},
+              {$or : [{$and : [{"hidden" : {$exists : true}}, {"hidden" : false}]}, {"hidden" : {$exists : false}} ]},
           ]},
         { sort: { createdAt: -1 },
           "limit": dl });
