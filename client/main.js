@@ -8,6 +8,7 @@ import Accounts from '../imports/ui/Accounts.jsx';
 import Login from '../imports/ui/Login.jsx';
 
 Meteor.startup(() => {
+
 	Router.route('/', function () {
   		render(<App />, document.getElementById('render-target'));
   		this.next();

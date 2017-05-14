@@ -340,7 +340,25 @@ ul {
   border-radius: 10px;
   /*border is optional*/
   cursor: pointer;
+  z-index: -1;
 }
+
+.tag-button {
+  float: left;
+  font-weight: bold;
+  border:none;
+  padding: 7px 7px 7px 9px;
+  /*font-size: 1em;*/
+  font-size: 8px!important;
+  margin: 5px 5px 5px 5px;
+  font-family: "Lato" !important;
+  font-weight: normal;
+  border-radius: 10px;
+  /*border is optional*/
+  cursor: pointer;
+  z-index: -1;
+}
+
 .admin-button:focus {
   outline: none!important;
 }
@@ -499,4 +517,15 @@ header .hide-completed {
 
 .justify-right {
   text-align:right;
+}
+
+.questionButton {
+  background-color: white;
+  font-weight: normal;
+  text-align: left;
+}
+
+/* unvisited link */
+a {
+    color: #000000 !important; 
 }

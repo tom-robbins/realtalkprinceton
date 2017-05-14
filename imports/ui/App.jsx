@@ -79,7 +79,6 @@ class App extends Component {
     var snd = new Audio("audio.mp3");
     //snd.play();
     snd.currentTime=0;
-
     // Find the text field via the React ref
     // console.log(ReactDOM.findDOMNode(this.refs.textInput).value.trim());
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
@@ -115,8 +114,11 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
 
     this.toggleBold();
@@ -136,9 +138,13 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+    /*
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
+    */
 
     this.toggleBold();
     document.getElementById("current-academic").style.fontWeight = "normal";
@@ -156,9 +162,13 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+    /*
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
+    */
 
     this.toggleBold();
     document.getElementById("current-social").style.fontWeight = "normal";
@@ -176,9 +186,14 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+    /*
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
+      searchExtra(event);
     }
+    */
 
     this.toggleBold();
     document.getElementById("current-extracurricular").style.fontWeight = "normal";
@@ -194,9 +209,13 @@ class App extends Component {
   searchOther(event) {
     event.preventDefault();
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+    /*
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
+    */
 
     this.toggleBold();
     document.getElementById("current-other").style.fontWeight = "normal";
@@ -214,9 +233,13 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+    /*
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
+    */
 
     this.toggleBold();
     document.getElementById("current-unanswered").style.fontWeight = "normal";
@@ -236,6 +259,11 @@ class App extends Component {
     /*
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
+
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
     */
 
@@ -283,6 +311,9 @@ class App extends Component {
 
 
     pages = 1;
+
+    this.limit += 75;
+    Meteor.subscribe('posts', this.limit);
 
     // Find the text field via the React ref
     // this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
@@ -434,6 +465,7 @@ class App extends Component {
     // console.log("limit: " + limit.get());
     // console.log("downloaded: " + this.props.posts.length);
     console.log("RENDERING NOW..." + Posts.find().count() + " POSTS");
+
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
@@ -442,13 +474,14 @@ class App extends Component {
     this.rendered = 0;
     //var lastPost = pages*perPage;
 
+    const currentUserId = this.props.currentUser && this.props.currentUser._id;
+    const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
+    console.log(isAdmin);
+
     return filteredPosts.map((post) => {
-      const currentUserId = this.props.currentUser && this.props.currentUser._id;
-      const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
       const answered = post.answer != "";
 
       var re = new RegExp(this.query, 'i');
-
       // Show a specific post if the url is for it
       if (location.pathname.split('/')[1] == "post") {
         console.log("found post!");
@@ -462,9 +495,11 @@ class App extends Component {
               isAdmin={isAdmin}
               answered = {answered}
             />
+
             );
         }
       }
+
       else {
         /*
         totalPosts++;
@@ -605,7 +640,11 @@ class App extends Component {
           </div>
           <div className="col-md-9 col-sm-9 white back-white">
             <ul>
-              { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
+              { this.isAbout ? (
+                  this.props.isReady ? (
+                this.renderFound()
+                  ) : ''
+                ) : (this.renderContributors())}
             </ul>
           </div>
         </div>
@@ -635,6 +674,7 @@ export default createContainer(() => {
   re = new RegExp(query.get());
   dl = limit.get();
   tag = currentTag.get();
+
 
   if (currentTag.get() == "all") {
     // console.log("IN THE ALL TAG");
@@ -666,6 +706,7 @@ export default createContainer(() => {
       },
       { limit : limit.get(), sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
+    isReady: handle.ready(),
   };
   } else {
     // console.log("IN THE TAGGGGG");
