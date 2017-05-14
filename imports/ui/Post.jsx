@@ -196,7 +196,6 @@ export default class Post extends Component {
                 { !this.hasTag("other") ? (
                   <button className="tag-button response back-light-orange" onClick={()=>this.tagPost(this, "other")}>Other</button>
                 ) : ''}
-                <button className="admin-button response back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
                 </div>
 
                 <div className="col-md-6 col-sm-6">
