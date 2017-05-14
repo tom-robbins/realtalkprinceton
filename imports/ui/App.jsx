@@ -121,7 +121,7 @@ class App extends Component {
       Router.go("/");
     }
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-all").style.fontWeight = "normal";
 
     this.tagQuery = "";
@@ -146,7 +146,7 @@ class App extends Component {
     }
 
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-academic").style.fontWeight = "normal";
 
     this.tagQuery = "academic";
@@ -170,7 +170,7 @@ class App extends Component {
     }
 
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-social").style.fontWeight = "normal";
 
     this.tagQuery = "social life";
@@ -195,7 +195,7 @@ class App extends Component {
     }
 
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-extracurricular").style.fontWeight = "normal";
 
     this.tagQuery = "extracurricular";
@@ -217,7 +217,7 @@ class App extends Component {
     }
 
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-other").style.fontWeight = "normal";
 
     this.tagQuery = "other";
@@ -241,7 +241,7 @@ class App extends Component {
     }
 
 
-    this.toggleBold();
+    this.unbold();
     document.getElementById("current-unanswered").style.fontWeight = "normal";
 
     this.tagQuery = "unanswered";
@@ -267,7 +267,7 @@ class App extends Component {
     }
     */
 
-    this.toggleBold();
+    this.unbold();
 
     /*
     this.tagQuery = "admin";
@@ -351,20 +351,20 @@ class App extends Component {
     else this.isAbout = 0;
   }
 
-  toggleBold() {
-    document.getElementById("current-all").style.fontWeight = "100";
-    document.getElementById("current-academic").style.fontWeight = "100";
-    document.getElementById("current-social").style.fontWeight = "100";
-    document.getElementById("current-extracurricular").style.fontWeight = "100";
-    document.getElementById("current-other").style.fontWeight = "100";
+  unbold() {
+    document.getElementById("all").style.fontWeight = "100";
+    document.getElementById("academic").style.fontWeight = "100";
+    document.getElementById("social life").style.fontWeight = "100";
+    document.getElementById("extracurricular").style.fontWeight = "100";
+    document.getElementById("other").style.fontWeight = "100";
     Roles.userIsInRole(Meteor.userId(), 'admin') ?
-      document.getElementById("current-unanswered").style.fontWeight = "100" : '';
+      document.getElementById("unanswered").style.fontWeight = "100" : '';
     document.getElementById("contributors").style.fontWeight = "100";
   }
 
   goContributors(event) {
 
-    this.toggleBold();
+    this.unbold();
     pages = -1;
     document.getElementById("contributors").style.fontWeight = "normal";
 
@@ -572,7 +572,9 @@ class App extends Component {
     limit.set(10);
     //postSub.stop();
     currentTag.set(string);
-    this.toggleBold();
+    this.unbold();
+    document.getElementById(string).style.fontWeight = "normal";
+
 
     // console.log('length: ' + this.props.posts.length);
     // postSub = Meteor.subscribe('posts', limit.get(), currentTag.get(), query.get());
@@ -605,12 +607,12 @@ class App extends Component {
                   <p className="white">Now Viewing:</p>
                 </div>
                 <div className="col-md-6 col-xs-6">
-                  <div><button className="button white pseudo-link" id="current-all" onClick={()=>this.setTag('all')}>all</button> </div>
-                  <div><button className="button white pseudo-link" id="current-academic" onClick={()=>this.setTag('academic')}>academic</button> </div>
-                  <div><button className="button white pseudo-link" id="current-social" onClick={()=>this.setTag('social life')}>social life</button> </div>
-                  <div><button className="button white pseudo-link" id="current-extracurricular" onClick={()=>this.setTag('extracurricular')}>extracurricular</button> </div>
-                  <div><button className="button white pseudo-link" id="current-other" onClick={()=>this.setTag('other')}>other</button> </div>
-                  { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={()=>this.setTag('unanswered')}>unanswered</button> </div> ) : ''}
+                  <div><button className="button white pseudo-link" id="all" onClick={()=>this.setTag('all')}>all</button> </div>
+                  <div><button className="button white pseudo-link" id="academic" onClick={()=>this.setTag('academic')}>academic</button> </div>
+                  <div><button className="button white pseudo-link" id="social life" onClick={()=>this.setTag('social life')}>social life</button> </div>
+                  <div><button className="button white pseudo-link" id="extracurricular" onClick={()=>this.setTag('extracurricular')}>extracurricular</button> </div>
+                  <div><button className="button white pseudo-link" id="other" onClick={()=>this.setTag('other')}>other</button> </div>
+                  { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="unanswered" onClick={()=>this.setTag('unanswered')}>unanswered</button> </div> ) : ''}
                 </div>
               </div>
               <div className="row">
