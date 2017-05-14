@@ -84,14 +84,17 @@ class App extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    var snd = new Audio("audio.mp3");
-    snd.volume = 0.05;
-    snd.play();
-    snd.currentTime=0;
     // Find the text field via the React ref
     // console.log(ReactDOM.findDOMNode(this.refs.textInput).value.trim());
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
     const email = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
+
+    if (question.match(/oink/i)) {
+      var snd = new Audio("audio.mp3");
+      snd.volume = 0.05;
+      snd.play();
+      snd.currentTime=0;
+    }
 
     if (question.match(/\S/)) {
       console.log('MATCH ' + question);
