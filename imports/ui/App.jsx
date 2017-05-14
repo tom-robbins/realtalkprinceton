@@ -11,12 +11,16 @@ import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 var pages = 1;
-var perPage = 5;
+var perPage = 10;
 var totalPosts;
 var pagesLimit;
 var max_chars = 500;
 var limit = new ReactiveVar(10);
 var currentTag = new ReactiveVar('all');
+var query = new ReactiveVar("");
+var unique_id = new ReactiveVar("");
+var this_admin = new ReactiveVar("");
+var morePosts = true;
 
 // App component - represents the whole app
 class App extends Component {
@@ -41,12 +45,16 @@ class App extends Component {
     const html = document.documentElement;
     const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight) - 10;
     const windowBottom = windowHeight + window.pageYOffset;
-    //console.log(pages);
-    if (windowBottom >= docHeight && pages < pagesLimit && pages>-1) {
-      pages++;
-      if (limit.get() <= this.props.posts.length) {
+    if (windowBottom >= docHeight) {
+      if (Posts.find().count() < limit.get()) {
+          morePosts = false;
+      } else {
+        morePosts = true;
+      }
+
+      if (morePosts) {
         limit.set(limit.get() + 10);
-        postSub = Meteor.subscribe('posts', limit.get(), currentTag.get());
+        console.log("Handle Scroll... limit=" + limit.get() +  " tag=" + currentTag.get());
       }
       this.update();
     }
@@ -69,7 +77,7 @@ class App extends Component {
     event.preventDefault();
 
     var snd = new Audio("audio.mp3");
-    snd.play();
+    //snd.play();
     snd.currentTime=0;
 
     // Find the text field via the React ref
@@ -102,6 +110,7 @@ class App extends Component {
     }
   }
 
+/*
   searchAll(event) {
     event.preventDefault();
     pages = 1;
@@ -114,7 +123,8 @@ class App extends Component {
     document.getElementById("current-all").style.fontWeight = "normal";
 
     this.tagQuery = "";
-    this.query = "";
+    // this.query = "";
+    query.set("")
     this.tagSearch = 0;
     this.isSearch = 0;
 
@@ -218,21 +228,26 @@ class App extends Component {
 
     this.forceUpdate();
   }
-
+*/
   searchAdmin(admin, event) {
     event.preventDefault();
     pages = 1;
 
+    /*
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
     }
+    */
 
     this.toggleBold();
 
+    /*
     this.tagQuery = "admin";
     this.query = admin
     this.tagSearch = 1;
     this.isSearch = 0;
+    */
+    this_admin.set(admin)
 
     this.forceUpdate();
     window.scrollTo(0, 0);
@@ -257,16 +272,29 @@ class App extends Component {
   }
 
   handleSearch(event) {
-     event.preventDefault();
-     pages = 1;
+    event.preventDefault();
+    pages = 1;
+
+    morePosts = true;
+    pages = 1;
+    limit.set(10);
+    Router.go("/");
+    unique_id.set("");
+
+
+    pages = 1;
 
     // Find the text field via the React ref
-    this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
-    this.search = this.query;
+    // this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
+    query.set(ReactDOM.findDOMNode(this.refs.searchString).value.trim());
+    // this.search = this.query;
+    this.search = query.get()
     this.isSearch = 1;
 
     // Clear form
     ReactDOM.findDOMNode(this.refs.searchString).value = '';
+
+    //postSub = Meteor.subscribe('posts', limit.get(), currentTag.get(), query.get());
 
     this.forceUpdate();
     window.scrollTo(0, 0);
@@ -394,7 +422,7 @@ class App extends Component {
   adminAnswered(admin, post) {
     for (i = 0; i < post.answer.length; i++) {
       if (post.answer[i].name == admin) {
-        console.log('success');
+        // console.log('success');
         return true;
       }
     }
@@ -403,15 +431,16 @@ class App extends Component {
 
   // Shows posts that were searched for
   renderFound() {
-    console.log("limit: " + limit.get());
-    console.log("downloaded: " + this.props.posts.length);
+    // console.log("limit: " + limit.get());
+    // console.log("downloaded: " + this.props.posts.length);
+    console.log("RENDERING NOW..." + Posts.find().count() + " POSTS");
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
     }
     totalPosts = 0;
     this.rendered = 0;
-    var lastPost = pages*perPage;
+    //var lastPost = pages*perPage;
 
     return filteredPosts.map((post) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
@@ -422,6 +451,9 @@ class App extends Component {
 
       // Show a specific post if the url is for it
       if (location.pathname.split('/')[1] == "post") {
+        console.log("found post!");
+        unique_id.set(location.pathname.split('/')[2]);
+        //Router.go("/");
         if (post._id == location.pathname.split('/')[2]) {
           return (
             <Post
@@ -434,6 +466,7 @@ class App extends Component {
         }
       }
       else {
+        /*
         totalPosts++;
         pagesLimit = Math.ceil(totalPosts/perPage);
         // Search through a specific tag
@@ -463,7 +496,7 @@ class App extends Component {
             }
           }
           if (post.tags.includes(this.tagQuery)) {
-            if ((post.question.match(re) != null || this.query == undefined) && this.rendered<lastPost) {
+            if ((post.question.match(re) != null || this.query == undefined)  ) {
               this.rendered++;
               return (
               <Post
@@ -478,7 +511,8 @@ class App extends Component {
         }
         else {
           // Search through all
-          if ((post.question.match(re) != null || this.matchAnswers(post, re) != null || this.query == undefined) && this.rendered<lastPost) {
+          if ((post.question.match(re) != null || this.matchAnswers(post, re) != null || this.query == undefined) ) {
+      */
             this.rendered++;
             return (
               <Post
@@ -489,19 +523,29 @@ class App extends Component {
               />
             );
           }
-        }
-      }
+        /*}
+      } */
     });
   }
 
   setTag(string) {
-    currentTag.set(string);
-    if (postSub) {
-      postSub = new Meteor.Collection(null);
-    }
+    unique_id.set("");
+    this_admin.set("");
+    window.scrollTo(0, 0);
+    morePosts = true;
+    pages = 1;
     limit.set(10);
-    console.log('length: ' + this.props.posts.length);
-    postSub = Meteor.subscribe('posts', limit.get(), currentTag.get());
+    //postSub.stop();
+    currentTag.set(string);
+    this.toggleBold();
+
+    // console.log('length: ' + this.props.posts.length);
+    // postSub = Meteor.subscribe('posts', limit.get(), currentTag.get(), query.get());
+    // console.log("post count: " + Posts.find().count());
+    if (location.pathname.split('/')[1] == "post") {
+      Router.go("/");
+    }
+
     this.update();
   }
 
@@ -518,7 +562,7 @@ class App extends Component {
             <div className="sidebar">
               <div className="row">
                 <div className="col-md-12">
-                <button className="white large title" onClick={this.searchAll.bind(this)}>Real Talk Princeton</button><br/><br/>
+                <button className="white large title" onClick={()=>this.setTag('all')}>Real Talk Princeton</button><br/><br/>
                 </div>
               </div>
               <div className="row">
@@ -578,24 +622,66 @@ App.propTypes = {
 
 //CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
-  console.log('container code')
-  /*if (!limit) {
-    limit = 10;
-  }
-  if (!currentTag) {
-    currentTag = 'all';
-  }*/
-  Meteor.subscribe('userList');
-  postSub = Meteor.subscribe('posts', limit.get(), currentTag.get());
+  //morePosts = true;
+  //pages = 1;
 
-  if (currentTag.get() == 'all') {
+  console.log('container code');
+  console.log(unique_id.get());
+
+  Meteor.subscribe('userList');
+  console.log('LIMIT: ' + limit.get())
+  postSub = Meteor.subscribe('posts', limit.get(), currentTag.get(), query.get(), unique_id.get(), this_admin.get());
+
+  re = new RegExp(query.get());
+  dl = limit.get();
+  tag = currentTag.get();
+
+  if (currentTag.get() == "all") {
+    // console.log("IN THE ALL TAG");
     return {
-    posts: Posts.find({}, {sort: { createdAt: -1 }}).fetch(),
+    posts: Posts.find(
+      {
+        $or:[
+          {"question": {$regex: re}},
+          {"date": {$regex: re}},
+          {"answer.name": {$regex: re}},
+          {"answer.text" : {$in : [re]}}
+        ]
+      },
+      { limit : limit.get(), sort: { createdAt: -1 }}).fetch(),
+    currentUser: Meteor.user(),
+  };
+  } else if (currentTag.get() == "unanswered") {
+    // console.log("IN THE ALL TAG");
+    return {
+    posts: Posts.find(
+      {
+        "answer" : [],
+        $or:[
+          {"question": {$regex: re}},
+          {"date": {$regex: re}},
+          {"answer.name": {$regex: re}},
+          {"answer.text" : {$in : [re]}}
+        ]
+      },
+      { limit : limit.get(), sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
   };
   } else {
+    // console.log("IN THE TAGGGGG");
     return {
-      posts: Posts.find({"tags" : {$in : [currentTag.get()]}}, {sort: { createdAt: -1 }}).fetch(),
+      posts: Posts.find(
+        {
+          "tags" : {$in : [currentTag.get()]},
+          $or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$regex: re}},
+            {"answer.text" : {$in : [re]}},
+          ]
+        },
+        { limit : limit.get(), sort: { createdAt: -1 }}
+      ).fetch(),
       currentUser: Meteor.user(),
     };
   }

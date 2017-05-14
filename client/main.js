@@ -10,6 +10,7 @@ import Login from '../imports/ui/Login.jsx';
 Meteor.startup(() => {
 	Router.route('/', function () {
   		render(<App />, document.getElementById('render-target'));
+  		this.next();
 	});
 
 	Router.route('/accounts', function () {
@@ -18,6 +19,7 @@ Meteor.startup(() => {
 
 	Router.route('/post/:_id', function() {
 		render(<App />, document.getElementById('render-target'));
+		this.next();
 	});
 
 	Router.route('/login', function() {

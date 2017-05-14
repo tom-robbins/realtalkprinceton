@@ -14,34 +14,87 @@ function Answer(text, name) {
 if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish posts that are public or belong to the current user
-  Meteor.publish('posts', function postsPublication(limit, tag) {
+  Meteor.publish('posts', function postsPublication(limit, tag, query, id, admin) {
     console.log('tag: ' + tag);
     console.log('limit (server): ' + limit);
     var dl = limit;
+    var re = new RegExp(query, 'i');
+    console.log('QUERY IS: \"' + re + "\"");
+
+    if (id != "") {
+      console.log("ID: " + id)
+      console.log(Posts.find("_id" : id).count());
+      return Posts.find({"_id" : id});
+    }
+    if (admin != "") {
+      return Posts.find({"answer.name" : {$in : [admin]}});
+    }
     if (Roles.userIsInRole(this.userId, 'admin')) {
       if (tag == 'all') {
-        return Posts.find({}, { sort: { createdAt: -1 }, limit: dl });
-        console.log('all');
+        return Posts.find(
+          {$or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$in : [re]}},
+            {"answer.text" : {$in : [re]}},
+            ]},
+          { sort: { createdAt: -1 },
+          "limit": dl });
       }
-      else
-        return Posts.find(/*{"tags" : {$in : [tag]}}, */{ sort: { createdAt: -1 }, limit: dl });
+      else if (tag == 'unanswered') {
+        return Posts.find(
+          {$or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$regex: re}},
+            {"answer.text" : {$in : [re]}},
+            ]},
+            {"answer" : []},
+          { sort: { createdAt: -1 },
+          "limit": dl });
+      } else {
+        return Posts.find({
+          "tags" : {$in : [tag]}},
+          {$or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$regex: re}},
+            {"answer.text" : {$in : [re]}},
+            ]},
+          { sort: { createdAt: -1 },
+          "limit": dl });
+      }
     }
     else {
       if (tag == 'all') {
-        return Posts.find({
-          $or: [
-            { hidden: { $ne: true } },
-            { owner: this.userId },
-          ],
-        },{ sort: { createdAt: -1 }, limit: dl });
-      }
-      else {
-        return Posts.find(/*{"tags" : {$in : [tag]},*/
+        return Posts.find(
+        {$or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$regex: re}},
+            {"answer.text" : {$in : [re]}},
+            ]},
           {$or: [
             { hidden: { $ne: true } },
             { owner: this.userId },
-          ],
-        },{ sort: { createdAt: -1 }, limit: dl });
+          ]},
+          { sort: { createdAt: -1 },
+          "limit": dl });
+      }
+      else {
+        return Posts.find({"tags" : {$in : [tag]}},
+          {$or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$regex: re}},
+            {"answer.text" : {$in : [re]}},
+            ]},
+          {$or: [
+            { hidden: { $ne: true } },
+            { owner: this.userId },
+          ]},
+        { sort: { createdAt: -1 },
+          "limit": dl });
       }
     }
   });
@@ -97,20 +150,6 @@ Meteor.methods({
     newArray.splice(index, 1);
     Posts.update({_id: postId}, {$set: {tags: newArray}});
   },
-  /*
-  'posts.setChecked'(postId, setChecked) {
-    check(postId, String);
-    check(setChecked, Boolean);
-
-    const post = Posts.findOne(postId);
-    if (post.public && post.owner !== Meteor.userId()) {
-      // If the post is hidden, make sure only the owner can check it off
-      throw new Meteor.Error('not-authorized');
-    }
-
-    Posts.update(postId, { $set: { checked: setChecked } });
-  },
-  */
 
   'posts.setHidden'(postId, setToHidden) {
     check(postId, String);
