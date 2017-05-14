@@ -85,6 +85,7 @@ class App extends Component {
     event.preventDefault();
 
     var snd = new Audio("audio.mp3");
+    snd.volume = 0.25;
     snd.play();
     snd.currentTime=0;
     // Find the text field via the React ref
