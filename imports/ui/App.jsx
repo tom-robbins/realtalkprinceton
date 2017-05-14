@@ -138,13 +138,13 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    /*
+
     if (Router.current().originalUrl.split('/').includes("post")) {
       var delayMillis = 300;
       setTimeout(location.reload.bind(location), delayMillis);
       Router.go("/");
     }
-    */
+
 
     this.toggleBold();
     document.getElementById("current-academic").style.fontWeight = "normal";
@@ -162,13 +162,13 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    /*
+
     if (Router.current().originalUrl.split('/').includes("post")) {
       var delayMillis = 300;
       setTimeout(location.reload.bind(location), delayMillis);
       Router.go("/");
     }
-    */
+
 
     this.toggleBold();
     document.getElementById("current-social").style.fontWeight = "normal";
@@ -186,14 +186,14 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    /*
+
     if (Router.current().originalUrl.split('/').includes("post")) {
       var delayMillis = 300;
       setTimeout(location.reload.bind(location), delayMillis);
       Router.go("/");
       searchExtra(event);
     }
-    */
+
 
     this.toggleBold();
     document.getElementById("current-extracurricular").style.fontWeight = "normal";
@@ -209,13 +209,13 @@ class App extends Component {
   searchOther(event) {
     event.preventDefault();
 
-    /*
+
     if (Router.current().originalUrl.split('/').includes("post")) {
       var delayMillis = 300;
       setTimeout(location.reload.bind(location), delayMillis);
       Router.go("/");
     }
-    */
+
 
     this.toggleBold();
     document.getElementById("current-other").style.fontWeight = "normal";
@@ -233,13 +233,13 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    /*
+
     if (Router.current().originalUrl.split('/').includes("post")) {
       var delayMillis = 300;
       setTimeout(location.reload.bind(location), delayMillis);
       Router.go("/");
     }
-    */
+
 
     this.toggleBold();
     document.getElementById("current-unanswered").style.fontWeight = "normal";
@@ -547,7 +547,7 @@ class App extends Component {
         else {
           // Search through all
           if ((post.question.match(re) != null || this.matchAnswers(post, re) != null || this.query == undefined) ) {
-      */
+      */    console.log(post.question)
             this.rendered++;
             return (
               <Post
@@ -585,7 +585,7 @@ class App extends Component {
   }
 
   render() {
-
+    console.log('RENDERING???');
     return (
       <div className="container-fluid back-white stretch">
       <div>
@@ -641,9 +641,7 @@ class App extends Component {
           <div className="col-md-9 col-sm-9 white back-white">
             <ul>
               { this.isAbout ? (
-                  this.props.isReady ? (
                 this.renderFound()
-                  ) : ''
                 ) : (this.renderContributors())}
             </ul>
           </div>
@@ -706,7 +704,6 @@ export default createContainer(() => {
       },
       { limit : limit.get(), sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
-    isReady: handle.ready(),
   };
   } else {
     // console.log("IN THE TAGGGGG");

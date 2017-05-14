@@ -15,11 +15,11 @@ if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish posts that are public or belong to the current user
   Meteor.publish('posts', function postsPublication(limit, tag, query, id, admin) {
-    console.log('tag: ' + tag);
-    console.log('limit (server): ' + limit);
+    // console.log('tag: ' + tag);
+    // console.log('limit (server): ' + limit);
     var dl = limit;
     var re = new RegExp(query, 'i');
-    console.log('QUERY IS: \"' + re + "\"");
+    // console.log('QUERY IS: \"' + re + "\"");
 
     if (id != "") {
       console.log("ID: " + id)
