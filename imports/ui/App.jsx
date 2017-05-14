@@ -429,7 +429,6 @@ class App extends Component {
     var pageDescription = [];
 
     const adminList = Roles.getUsersInRole(['admin']).fetch();
-    //var pageDescription = Roles.getUsersInRole(['superadmin']).fetch()[0].profile;
     const superadmin = Roles.getUsersInRole(['superadmin']).fetch();
 
     for (var i=0;i<adminList.length;i++) {
@@ -444,8 +443,8 @@ class App extends Component {
 
     return (
       <div className="col-md-10 col-sm-10 margin">
-      {/*<br/>
-      <p>{pageDescription}</p>*/}
+      {<p>{pageDescription}</p>}
+
         { Object.keys(admins).map((obj, i) =>
           <div className="black">
             <button className="highlight button inline response tiny" key = {300 - obj} onClick={this.searchAdmin.bind(this, admins[obj])}><b>{admins[obj]}</b></button>
@@ -459,6 +458,14 @@ class App extends Component {
               <input type="submit" value="Submit"/>
             </form>
         ) : ''}
+
+        { Roles.userIsInRole(Meteor.userId(), 'superadmin') ? (
+            <form className="new-question" onSubmit={this.addBio.bind(this)}>
+              <textarea className="outline" placeholder="Update the page description!" ref="contributorBio"></textarea>
+              <input type="submit" value="Submit"/>
+            </form>
+        ) : ''}
+
     </div>
     );
   }
