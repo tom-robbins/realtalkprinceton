@@ -38,7 +38,6 @@ class App extends Component {
     };
   }
 
-  // from some random internet man
   handleScroll() {
     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
     const body = document.body;
