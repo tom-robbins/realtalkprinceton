@@ -8,12 +8,19 @@ import Post from './Post.jsx';
 import { Affix } from 'react-overlays'
 import { StickyContainer, Sticky } from 'react-sticky';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+import { ReactiveVar } from 'meteor/reactive-var';
 
 var pages = 1;
 var perPage = 10;
 var totalPosts;
 var pagesLimit;
-var max_chars = 500; 
+var max_chars = 500;
+var limit = new ReactiveVar(10);
+var currentTag = new ReactiveVar('all');
+var query = new ReactiveVar("");
+var unique_id = new ReactiveVar("");
+var this_admin = new ReactiveVar("");
+var morePosts = true;
 
 // App component - represents the whole app
 class App extends Component {
@@ -24,31 +31,31 @@ class App extends Component {
   this.search = "";
   this.searchOn = 0;
   this.isAbout = 0;
+  this.rendered = 0;
 
   this.state = {
     hideCompleted: false,
-    chars_left: max_chars
     };
   }
 
-  handleChange(event) {
-    var input = event.target.value;
-    console.log("handleChange"); 
-    this.setState({
-      chars_left: max_chars - input.length
-    });
-  }
-
-  //from some random internet man
+  // from some random internet man
   handleScroll() {
     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
     const body = document.body;
     const html = document.documentElement;
     const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight) - 10;
     const windowBottom = windowHeight + window.pageYOffset;
-    //console.log(pages);
-    if (windowBottom >= docHeight && pages < pagesLimit && pages>-1) {
-      pages++;
+    if (windowBottom >= docHeight) {
+      if (Posts.find().count() < limit.get()) {
+          morePosts = false;
+      } else {
+        morePosts = true;
+      }
+
+      if (morePosts) {
+        limit.set(limit.get() + 10);
+        console.log("Handle Scroll... limit=" + limit.get() +  " tag=" + currentTag.get());
+      }
       this.update();
     }
   }
@@ -70,58 +77,56 @@ class App extends Component {
     event.preventDefault();
 
     var snd = new Audio("audio.mp3");
-    snd.play();
+    //snd.play();
     snd.currentTime=0;
-
     // Find the text field via the React ref
     // console.log(ReactDOM.findDOMNode(this.refs.textInput).value.trim());
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
     const email = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
 
     if (question.length > max_chars) {
-      return; 
+      return;
     }
     else if (question != '' && email != '') {
       Meteor.call('posts.insert', question, email);
 
       // Clear form
-      ReactDOM.findDOMNode(this.refs.textInput).value = ''; 
+      ReactDOM.findDOMNode(this.refs.textInput).value = '';
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
-      this.setState({
-        chars_left: max_chars
-       });
     }
     else if (question != '') {
       Meteor.call('posts.insert', question, '');
 
       // Clear form
-      ReactDOM.findDOMNode(this.refs.textInput).value = ''; 
+      ReactDOM.findDOMNode(this.refs.textInput).value = '';
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Thank you for your question! Ask another!';
       ReactDOM.findDOMNode(this.refs.textInput2).value = '';
 
-          this.setState({
-      chars_left: max_chars
-    });
     }
     else {
       ReactDOM.findDOMNode(this.refs.textInput).placeholder = 'Enter some text here';
     }
   }
 
+/*
   searchAll(event) {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
 
     this.toggleBold();
     document.getElementById("current-all").style.fontWeight = "normal";
 
     this.tagQuery = "";
-    this.query = "";
+    // this.query = "";
+    query.set("")
     this.tagSearch = 0;
     this.isSearch = 0;
 
@@ -133,9 +138,13 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
+
 
     this.toggleBold();
     document.getElementById("current-academic").style.fontWeight = "normal";
@@ -153,9 +162,13 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
+
 
     this.toggleBold();
     document.getElementById("current-social").style.fontWeight = "normal";
@@ -173,9 +186,14 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
+      searchExtra(event);
     }
+
 
     this.toggleBold();
     document.getElementById("current-extracurricular").style.fontWeight = "normal";
@@ -191,9 +209,13 @@ class App extends Component {
   searchOther(event) {
     event.preventDefault();
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
+
 
     this.toggleBold();
     document.getElementById("current-other").style.fontWeight = "normal";
@@ -211,9 +233,13 @@ class App extends Component {
     event.preventDefault();
     pages = 1;
 
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
+
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
+
 
     this.toggleBold();
     document.getElementById("current-unanswered").style.fontWeight = "normal";
@@ -225,21 +251,31 @@ class App extends Component {
 
     this.forceUpdate();
   }
-
+*/
   searchAdmin(admin, event) {
     event.preventDefault();
     pages = 1;
 
+    /*
     if (location.pathname.split('/')[1] == "post") {
         Router.go('/');
+
+    if (Router.current().originalUrl.split('/').includes("post")) {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
+      Router.go("/");
     }
+    */
 
     this.toggleBold();
 
+    /*
     this.tagQuery = "admin";
     this.query = admin
     this.tagSearch = 1;
     this.isSearch = 0;
+    */
+    this_admin.set(admin)
 
     this.forceUpdate();
     window.scrollTo(0, 0);
@@ -264,16 +300,32 @@ class App extends Component {
   }
 
   handleSearch(event) {
-     event.preventDefault();
-     pages = 1;
+    event.preventDefault();
+    pages = 1;
+
+    morePosts = true;
+    pages = 1;
+    limit.set(10);
+    Router.go("/");
+    unique_id.set("");
+
+
+    pages = 1;
+
+    this.limit += 75;
+    Meteor.subscribe('posts', this.limit);
 
     // Find the text field via the React ref
-    this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
-    this.search = this.query;
+    // this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
+    query.set(ReactDOM.findDOMNode(this.refs.searchString).value.trim());
+    // this.search = this.query;
+    this.search = query.get()
     this.isSearch = 1;
 
     // Clear form
     ReactDOM.findDOMNode(this.refs.searchString).value = '';
+
+    //postSub = Meteor.subscribe('posts', limit.get(), currentTag.get(), query.get());
 
     this.forceUpdate();
     window.scrollTo(0, 0);
@@ -353,7 +405,7 @@ class App extends Component {
     var placeholder;
 
     const adminList = Roles.getUsersInRole(['admin']).fetch();
-    var pageDescription = Roles.getUsersInRole(['superadmin']).fetch()[0].profile;
+    //var pageDescription = Roles.getUsersInRole(['superadmin']).fetch()[0].profile;
 
     for (var i=0;i<adminList.length;i++) {
       placeholder = (adminList[i].profile==undefined) ? '' : adminList[i].profile;
@@ -363,8 +415,8 @@ class App extends Component {
 
     return (
       <div className="col-md-10 col-sm-10 margin">
-      <br/>
-      <p>{pageDescription}</p>
+      {/*<br/>
+      <p>{pageDescription}</p>*/}
         { Object.keys(admins).map((obj, i) =>
           <div className="black">
             <button className="highlight button inline response tiny" key = {300 - obj} onClick={this.searchAdmin.bind(this, admins[obj])}><b>{admins[obj]}</b></button>
@@ -401,7 +453,7 @@ class App extends Component {
   adminAnswered(admin, post) {
     for (i = 0; i < post.answer.length; i++) {
       if (post.answer[i].name == admin) {
-        console.log('success');
+        // console.log('success');
         return true;
       }
     }
@@ -410,23 +462,30 @@ class App extends Component {
 
   // Shows posts that were searched for
   renderFound() {
+    // console.log("limit: " + limit.get());
+    // console.log("downloaded: " + this.props.posts.length);
+    console.log("RENDERING NOW..." + Posts.find().count() + " POSTS");
+
     let filteredPosts = this.props.posts;
     if (this.state.hideCompleted) {
       filteredPosts = filteredPosts.filter(post => !post.checked);
     }
     totalPosts = 0;
-    var rendered = 0;
-    var lastPost = pages*perPage;
+    this.rendered = 0;
+    //var lastPost = pages*perPage;
+
+    const currentUserId = this.props.currentUser && this.props.currentUser._id;
+    const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
 
     return filteredPosts.map((post) => {
-      const currentUserId = this.props.currentUser && this.props.currentUser._id;
-      const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
       const answered = post.answer != "";
 
       var re = new RegExp(this.query, 'i');
-
       // Show a specific post if the url is for it
       if (location.pathname.split('/')[1] == "post") {
+        console.log("rendering single post!");
+        unique_id.set(location.pathname.split('/')[2]);
+        //Router.go("/");
         if (post._id == location.pathname.split('/')[2]) {
           return (
             <Post
@@ -435,15 +494,18 @@ class App extends Component {
               isAdmin={isAdmin}
               answered = {answered}
             />
+
             );
         }
       }
+
       else {
+        /*
         totalPosts++;
         pagesLimit = Math.ceil(totalPosts/perPage);
         // Search through a specific tag
         if (this.tagSearch == 1) {
-          if (this.tagQuery == "unanswered") {
+          if (currentTag.get() == "unanswered") {
             if (!answered) {
               return (
               <Post
@@ -468,8 +530,8 @@ class App extends Component {
             }
           }
           if (post.tags.includes(this.tagQuery)) {
-            if ((post.question.match(re) != null || this.query == undefined) && rendered<lastPost) {
-              rendered++;
+            if ((post.question.match(re) != null || this.query == undefined)  ) {
+              this.rendered++;
               return (
               <Post
                 key={post._id}
@@ -483,8 +545,9 @@ class App extends Component {
         }
         else {
           // Search through all
-          if ((post.question.match(re) != null || this.matchAnswers(post, re) != null || this.query == undefined) && rendered<lastPost) {
-            rendered++;
+          if ((post.question.match(re) != null || this.matchAnswers(post, re) != null || this.query == undefined) ) {
+      */    // console.log(post.question)
+            this.rendered++;
             return (
               <Post
                 key={post._id}
@@ -494,13 +557,33 @@ class App extends Component {
               />
             );
           }
-        }
-      }
+        /*}
+      } */
     });
   }
 
-  render() {
+  setTag(string) {
+    unique_id.set("");
+    this_admin.set("");
+    window.scrollTo(0, 0);
+    morePosts = true;
+    pages = 1;
+    limit.set(10);
+    //postSub.stop();
+    currentTag.set(string);
+    this.toggleBold();
 
+    // console.log('length: ' + this.props.posts.length);
+    // postSub = Meteor.subscribe('posts', limit.get(), currentTag.get(), query.get());
+    // console.log("post count: " + Posts.find().count());
+    if (location.pathname.split('/')[1] == "post") {
+      Router.go("/");
+    }
+
+    this.update();
+  }
+
+  render() {
     return (
       <div className="container-fluid back-white stretch">
       <div>
@@ -512,7 +595,7 @@ class App extends Component {
             <div className="sidebar">
               <div className="row">
                 <div className="col-md-12">
-                <button className="white large title" onClick={this.searchAll.bind(this)}>Real Talk Princeton</button><br/><br/>
+                <button className="white large title" onClick={()=>this.setTag('all')}>Real Talk Princeton</button><br/><br/>
                 </div>
               </div>
               <div className="row">
@@ -520,12 +603,12 @@ class App extends Component {
                   <p className="white">Now Viewing:</p>
                 </div>
                 <div className="col-md-6 col-xs-6">
-                  <div><button className="button white pseudo-link" id="current-all" onClick={this.searchAll.bind(this)}>all</button> </div>
-                  <div><button className="button white pseudo-link" id="current-academic" onClick={this.searchAcademic.bind(this)}>academic</button> </div>
-                  <div><button className="button white pseudo-link" id="current-social" onClick={this.searchSocial.bind(this)}>social life</button> </div>
-                  <div><button className="button white pseudo-link" id="current-extracurricular" onClick={this.searchExtra.bind(this)}>extracurricular</button> </div>
-                  <div><button className="button white pseudo-link" id="current-other" onClick={this.searchOther.bind(this)}>other</button> </div>
-                  { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={this.searchUnanswered.bind(this)}>unanswered</button> </div> ) : ''}
+                  <div><button className="button white pseudo-link" id="current-all" onClick={()=>this.setTag('all')}>all</button> </div>
+                  <div><button className="button white pseudo-link" id="current-academic" onClick={()=>this.setTag('academic')}>academic</button> </div>
+                  <div><button className="button white pseudo-link" id="current-social" onClick={()=>this.setTag('social life')}>social life</button> </div>
+                  <div><button className="button white pseudo-link" id="current-extracurricular" onClick={()=>this.setTag('extracurricular')}>extracurricular</button> </div>
+                  <div><button className="button white pseudo-link" id="current-other" onClick={()=>this.setTag('other')}>other</button> </div>
+                  { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="current-unanswered" onClick={()=>this.setTag('unanswered')}>unanswered</button> </div> ) : ''}
                 </div>
               </div>
               <div className="row">
@@ -543,8 +626,7 @@ class App extends Component {
                         Current search: <input type="reset" value={this.search}/>
                       </p> ) : ''}
                       <form className="new-question search" onSubmit={this.handleSubmit.bind(this)}>
-                        <textarea onChange={this.handleChange.bind(this)} placeholder="Ask a question!" ref="textInput"></textarea>
-                        <p className = "tiny white">Characters left: {this.state.chars_left}</p>
+                        <textarea placeholder="Ask a question!" ref="textInput"></textarea>
                         <input type="text" placeholder="(Optional) Email for notification" ref="textInput2"/>
                         <input type="submit" value="Submit"/>
                       </form> <br/>
@@ -554,9 +636,11 @@ class App extends Component {
               </div>
             </div>
           </div>
-          <div className="col-md-9 col-sm-9 white">
+          <div className="col-md-9 col-sm-9 white back-white">
             <ul>
-              { this.isAbout ? (this.renderFound()) : (this.renderContributors())}
+              { this.isAbout ? (
+                this.renderFound()
+                ) : (this.renderContributors())}
             </ul>
           </div>
         </div>
@@ -573,11 +657,67 @@ App.propTypes = {
 
 //CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
-  Meteor.subscribe('userList');
-  Meteor.subscribe('posts');
+  //morePosts = true;
+  //pages = 1;
 
-  return {
-    posts: Posts.find({}, { sort: { createdAt: -1 }}).fetch(),
+  console.log('container code');
+
+  Meteor.subscribe('userList');
+  console.log('LIMIT: ' + limit.get())
+  postSub = Meteor.subscribe('posts', limit.get(), currentTag.get(), query.get(), unique_id.get(), this_admin.get());
+
+  re = new RegExp(query.get(), 'i');
+  dl = limit.get();
+  tag = currentTag.get();
+
+
+  if (currentTag.get() == "all") {
+    // console.log("IN THE ALL TAG");
+    return {
+    posts: Posts.find(
+      {
+        $or:[
+          {"question": {$regex: re}},
+          {"date": {$regex: re}},
+          {"answer.name": {$regex: re}},
+          {"answer.text" : {$in : [re]}}
+        ]
+      },
+      { limit : limit.get(), sort: { createdAt: -1 }}).fetch(),
     currentUser: Meteor.user(),
   };
+  } else if (currentTag.get() == "unanswered") {
+    // console.log("IN THE ALL TAG");
+    return {
+    posts: Posts.find(
+      {
+        "answer" : [],
+        $or:[
+          {"question": {$regex: re}},
+          {"date": {$regex: re}},
+          {"answer.name": {$regex: re}},
+          {"answer.text" : {$in : [re]}}
+        ]
+      },
+      { limit : limit.get(), sort: { createdAt: -1 }}).fetch(),
+    currentUser: Meteor.user(),
+  };
+  } else {
+    // console.log("IN THE TAGGGGG");
+    return {
+      posts: Posts.find(
+        {
+          "tags" : {$in : [currentTag.get()]},
+          $or:[
+            {"question": {$regex: re}},
+            {"date": {$regex: re}},
+            {"answer.name": {$regex: re}},
+            {"answer.text" : {$in : [re]}},
+          ]
+        },
+        { limit : limit.get(), sort: { createdAt: -1 }}
+      ).fetch(),
+      currentUser: Meteor.user(),
+    };
+  }
 }, App);
