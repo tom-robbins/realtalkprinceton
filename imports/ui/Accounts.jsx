@@ -16,7 +16,7 @@ class Accounts extends Component {
 
   this.state = {
     hideCompleted: false,
-    addAdminInput: false, 
+    addAdminInput: false,
     removeAdminInput: false
     };
   }
@@ -69,6 +69,7 @@ class Accounts extends Component {
             </form>
           </div>
         </div>
+      </div>
       );
     }
   }
@@ -76,7 +77,6 @@ class Accounts extends Component {
 
 Accounts.propTypes = {
   posts: PropTypes.array.isRequired,
-  /* incompleteCount: PropTypes.number.isRequired, */
   currentUser: PropTypes.object,
 };
 
