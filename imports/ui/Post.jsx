@@ -157,7 +157,6 @@ export default class Post extends Component {
               <br/>
 
               <p className="orange tiny no-margin"><b> {String(this.props.post.createdAt).split(" ")[1] +" " + String(this.props.post.createdAt).split(" ")[2] + ": "}</b></p>
-              {/* <p className="black qa no-margin"><a href={"/post/" + this.props.post._id}>{this.props.post.question}</a></p> */}
               <button className = "button questionButton black qa" onClick={()=>this.my_update()}> {this.props.post.question} </button>
 
               <br/>
@@ -264,7 +263,6 @@ export default class Post extends Component {
     }
   }
 }
-                // <p className="response tiny black no-margin" key = {obj}>Response from <b>{this.props.post.answer[obj].name}</b></p>
 
 Post.propTypes = {
   // This component gets the post to display through a React prop.

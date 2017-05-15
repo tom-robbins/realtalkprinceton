@@ -15,30 +15,6 @@ Meteor.startup(function () {
   
   var id = Meteor.users.findOne({username: "admin"});
   Roles.addUsersToRoles(id._id, ['superadmin']);
-  /*
-  var id = Meteor.users.findOne({username: "lanchang"})
-  console.log(id)
-  Roles.addUsersToRoles(id._id, ['admin']);
-  var id = Meteor.users.findOne({username: "thomasrr"})
-  console.log(id)
-  Roles.addUsersToRoles(id._id, ['admin']);
-
-  Roles.addUsersToRoles(id._id, ['admin']);
-  var id = Meteor.users.findOne({username: "vmo"})
-  console.log(id)
-
-  Roles.addUsersToRoles(id._id, ['admin']);
-  var admins = ['thomasrr', 'vmo', 'savannah', 'jmerali', 'lanchang']
-
-  console.log('Adding admin user privileges...');
-  for (i = 0; i < admins.length; i++) {
-    var id = Meteor.users.findOne({username: admins[i]})
-    console.log(id)
-    if (id) {
-      Roles.addUsersToRoles(id._id, ['admin']);
-    }
-  }
-  */
 
 });
 
