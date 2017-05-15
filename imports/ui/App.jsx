@@ -84,11 +84,16 @@ class App extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    var snd = new Audio("audio.mp3");
-    snd.currentTime=0;
     // Find the text field via the React ref
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
     const email = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
+
+    if (question.match(/oink/i)) {
+      var snd = new Audio("audio.mp3");
+      snd.volume = 0.05;
+      snd.play();
+      snd.currentTime=0;
+    }
 
     if (question.match(/\S/)) {
       console.log('MATCH ' + question);
@@ -211,10 +216,12 @@ class App extends Component {
 
   unbold() {
     document.getElementById("all").style.fontWeight = "100";
-    document.getElementById("academic").style.fontWeight = "100";
-    document.getElementById("social life").style.fontWeight = "100";
-    document.getElementById("extracurricular").style.fontWeight = "100";
-    document.getElementById("other").style.fontWeight = "100";
+    if (location.pathname.split('/')[1] != "post") {
+      document.getElementById("academic").style.fontWeight = "100";
+      document.getElementById("social life").style.fontWeight = "100";
+      document.getElementById("extracurricular").style.fontWeight = "100";
+      document.getElementById("other").style.fontWeight = "100";
+    }
     Roles.userIsInRole(Meteor.userId(), 'admin') ?
       document.getElementById("unanswered").style.fontWeight = "100" : '';
     document.getElementById("contributors").style.fontWeight = "100";
@@ -391,6 +398,8 @@ class App extends Component {
     document.getElementById(string).style.fontWeight = "normal";
 
     if (location.pathname.split('/')[1] == "post") {
+      var delayMillis = 300;
+      setTimeout(location.reload.bind(location), delayMillis);
       Router.go("/");
     }
 
@@ -418,10 +427,18 @@ class App extends Component {
                 </div>
                 <div className="col-md-6 col-xs-6">
                   <div><button className="button white pseudo-link" id="all" onClick={()=>this.setTag('all')}>all</button> </div>
-                  <div><button className="button white pseudo-link" id="academic" onClick={()=>this.setTag('academic')}>academic</button> </div>
+                  { location.pathname.split('/')[1] != "post" ? (
+                    <div><button className="button white pseudo-link" id="academic" onClick={()=>this.setTag('academic')}>academic</button> </div>
+                  ) : ''}
+                  { location.pathname.split('/')[1] != "post" ? (
                   <div><button className="button white pseudo-link" id="social life" onClick={()=>this.setTag('social life')}>social life</button> </div>
-                  <div><button className="button white pseudo-link" id="extracurricular" onClick={()=>this.setTag('extracurricular')}>extracurricular</button> </div>
-                  <div><button className="button white pseudo-link" id="other" onClick={()=>this.setTag('other')}>other</button> </div>
+                  ) : ''}
+                  { location.pathname.split('/')[1] != "post" ? (
+                    <div><button className="button white pseudo-link" id="extracurricular" onClick={()=>this.setTag('extracurricular')}>extracurricular</button> </div>
+                  ) : ''}
+                  { location.pathname.split('/')[1] != "post" ? (
+                    <div><button className="button white pseudo-link" id="other" onClick={()=>this.setTag('other')}>other</button> </div>
+                  ) : ''}
                   { Roles.userIsInRole(Meteor.userId(), 'admin') ? ( <div><button className="button white pseudo-link" id="unanswered" onClick={()=>this.setTag('unanswered')}>unanswered</button> </div> ) : ''}
                 </div>
               </div>

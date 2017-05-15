@@ -16,6 +16,8 @@ class Accounts extends Component {
 
   this.state = {
     hideCompleted: false,
+    addAdminInput: false, 
+    removeAdminInput: false
     };
   }
 
@@ -26,26 +28,45 @@ class Accounts extends Component {
 
   addAdmin(event) {
     event.preventDefault();
-    var val = prompt("Username to be admin", "");
-    Meteor.call('posts.addAdmin', val)
+
+    const admin = ReactDOM.findDOMNode(this.refs.addInput).value.trim();
+    // Clear form
+    ReactDOM.findDOMNode(this.refs.addInput).value = '';
+    ReactDOM.findDOMNode(this.refs.addInput).placeholder = 'Admin has been added. Add another';
+
+    this.forceUpdate();
+    Meteor.call('posts.addAdmin', admin)
   }
 
   removeAdmin(event) {
     event.preventDefault();
-    var val = prompt("Username to be lose admin", "");
-    Meteor.call('posts.removeAdmin', val)
+
+    const admin = ReactDOM.findDOMNode(this.refs.removeInput).value.trim();
+    // Clear form
+    ReactDOM.findDOMNode(this.refs.removeInput).value = '';
+    ReactDOM.findDOMNode(this.refs.removeInput).placeholder = 'Admin has been removed. Remove another';
+
+    this.forceUpdate();
+    Meteor.call('posts.removeAdmin', admin)
   }
 
   render() {
     if (Roles.userIsInRole( Meteor.userId(), 'superadmin' )) {
-      return (
-        <div className="container">
-          <header>
-            <h1 className="link" onClick={this.goHome.bind(this)}>Real Talk Princeton</h1>
-          </header>
-          <div>
-            <button className="addAdmin" onClick={this.addAdmin.bind(this)}>Add Admin</button>
-            <button className="removeAdmin" onClick={this.removeAdmin.bind(this)}>Remove Admin</button>
+    return (
+      <div className="container">
+        <header>
+          <h1 className="link" onClick={this.goHome.bind(this)}>Real Talk Princeton</h1>
+        </header>
+        <div className="row">
+          <div className="col-md-6 col-sm-6">
+            <form className="new-question admin_edit" onSubmit={this.addAdmin.bind(this)}>
+              <input className="back-very-light-orange" type="text" placeholder="Add an Admin" ref="addInput"/>
+              <input type="submit" value="Add this Admin"/>
+            </form>
+            <form className="new-question admin_edit" onSubmit={this.removeAdmin.bind(this)}>
+              <input className="back-very-light-orange" type="text" placeholder="Remove an Admin" ref="removeInput"/>
+              <input type="submit" value="Delete this Admin"/>
+            </form>
           </div>
         </div>
       );

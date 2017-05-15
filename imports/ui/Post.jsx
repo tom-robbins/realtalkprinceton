@@ -195,7 +195,6 @@ export default class Post extends Component {
                 { !this.hasTag("other") ? (
                   <button className="tag-button response back-light-orange" onClick={()=>this.tagPost(this, "other")}>Other</button>
                 ) : ''}
-                <button className="admin-button response back-light-orange float-left" onClick={this.tagPost.bind(this)}>Tag</button>
                 </div>
 
                 <div className="col-md-6 col-sm-6">
@@ -235,10 +234,7 @@ export default class Post extends Component {
 
 
                 <p className="response tiny black no-margin inline">Response from </p>
-
-                <button className="response tiny no-margin highlight button black_link" key={obj}>{this.props.post.answer[obj].name}</button>
-
-
+                <p className="response tiny orange no-margin inline" key={obj}>{this.props.post.answer[obj].name}</p>
 
                 { Meteor.user().username == this.props.post.answer[obj].name ? (
                  <button className="delete" onClick={()=>this.deleteThisAnswer(this, parseInt(obj))}>

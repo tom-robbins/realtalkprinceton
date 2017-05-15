@@ -7,11 +7,18 @@ import App from '../imports/ui/App.jsx';
 import Accounts from '../imports/ui/Accounts.jsx';
 import Login from '../imports/ui/Login.jsx';
 
+if (Meteor.isClient) {
+    Router.plugin('reywood:iron-router-ga');
+}
+
 Meteor.startup(() => {
+	Router.configure({		
+     	trackPageView: true		
+ 	});
 
 	Router.route('/', function () {
   		render(<App />, document.getElementById('render-target'));
-  		this.next();
+  		//this.next();
 	});
 
 	Router.route('/accounts', function () {
@@ -20,7 +27,7 @@ Meteor.startup(() => {
 
 	Router.route('/post/:_id', function() {
 		render(<App />, document.getElementById('render-target'));
-		this.next();
+		//this.next();
 	});
 
 	Router.route('/login', function() {
