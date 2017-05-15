@@ -10,7 +10,6 @@ import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
 // App component - represents the whole app
 class Login extends Component {
-  //const query;
   constructor(props) {
   super(props);
 
@@ -41,7 +40,6 @@ class Login extends Component {
 
 Login.propTypes = {
   posts: PropTypes.array.isRequired,
-  /* incompleteCount: PropTypes.number.isRequired, */
   currentUser: PropTypes.object,
 };
 
@@ -50,7 +48,6 @@ export default createContainer(() => {
 
   return {
     posts: Posts.find({}, { sort: { createdAt: -1 } }).fetch(),
-    /* incompleteCount: Posts.find({ checked: { $ne: true } }).count(), */
     currentUser: Meteor.user(),
   };
 }, Login);

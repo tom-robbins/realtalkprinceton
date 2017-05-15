@@ -85,7 +85,6 @@ class App extends Component {
     event.preventDefault();
 
     // Find the text field via the React ref
-    // console.log(ReactDOM.findDOMNode(this.refs.textInput).value.trim());
     const question = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
     const email = ReactDOM.findDOMNode(this.refs.textInput2).value.trim();
 
@@ -136,172 +135,12 @@ class App extends Component {
     }
   }
 
-/*
-  searchAll(event) {
-    event.preventDefault();
-    pages = 1;
-
-
-    if (Router.current().originalUrl.split('/').includes("post")) {
-      var delayMillis = 300;
-      setTimeout(location.reload.bind(location), delayMillis);
-      Router.go("/");
-    }
-
-    this.unbold();
-    document.getElementById("current-all").style.fontWeight = "normal";
-
-    this.tagQuery = "";
-    // this.query = "";
-    query.set("")
-    this.tagSearch = 0;
-    this.isSearch = 0;
-
-    this.forceUpdate();
-    window.scrollTo(0, 0);
-  }
-
-  searchAcademic(event) {
-    event.preventDefault();
-    pages = 1;
-
-
-    if (Router.current().originalUrl.split('/').includes("post")) {
-      var delayMillis = 300;
-      setTimeout(location.reload.bind(location), delayMillis);
-      Router.go("/");
-    }
-
-
-    this.unbold();
-    document.getElementById("current-academic").style.fontWeight = "normal";
-
-    this.tagQuery = "academic";
-    this.query = "";
-    this.tagSearch = 1;
-    this.isSearch = 0;
-
-    this.forceUpdate();
-    window.scrollTo(0, 0);
-  }
-
-  searchSocial(event) {
-    event.preventDefault();
-    pages = 1;
-
-
-    if (Router.current().originalUrl.split('/').includes("post")) {
-      var delayMillis = 300;
-      setTimeout(location.reload.bind(location), delayMillis);
-      Router.go("/");
-    }
-
-
-    this.unbold();
-    document.getElementById("current-social").style.fontWeight = "normal";
-
-    this.tagQuery = "social life";
-    this.query = "";
-    this.tagSearch = 1;
-    this.isSearch = 0;
-
-    this.forceUpdate();
-    window.scrollTo(0, 0);
-  }
-
-  searchExtra(event) {
-    event.preventDefault();
-    pages = 1;
-
-
-    if (Router.current().originalUrl.split('/').includes("post")) {
-      var delayMillis = 300;
-      setTimeout(location.reload.bind(location), delayMillis);
-      Router.go("/");
-      searchExtra(event);
-    }
-
-
-    this.unbold();
-    document.getElementById("current-extracurricular").style.fontWeight = "normal";
-
-    this.tagQuery = "extracurricular";
-    this.query = "";
-    this.tagSearch = 1;
-    this.isSearch = 0;
-
-    this.forceUpdate();
-  }
-
-  searchOther(event) {
-    event.preventDefault();
-
-
-    if (Router.current().originalUrl.split('/').includes("post")) {
-      var delayMillis = 300;
-      setTimeout(location.reload.bind(location), delayMillis);
-      Router.go("/");
-    }
-
-
-    this.unbold();
-    document.getElementById("current-other").style.fontWeight = "normal";
-
-    this.tagQuery = "other";
-    this.query = "";
-    this.tagSearch = 1;
-    this.isSearch = 0;
-
-    this.forceUpdate();
-    window.scrollTo(0, 0);
-  }
-
-  searchUnanswered(event) {
-    event.preventDefault();
-    pages = 1;
-
-
-    if (Router.current().originalUrl.split('/').includes("post")) {
-      var delayMillis = 300;
-      setTimeout(location.reload.bind(location), delayMillis);
-      Router.go("/");
-    }
-
-
-    this.unbold();
-    document.getElementById("current-unanswered").style.fontWeight = "normal";
-
-    this.tagQuery = "unanswered";
-    this.query = "";
-    this.tagSearch = 1;
-    this.isSearch = 0;
-
-    this.forceUpdate();
-  }
-*/
   searchAdmin(admin, event) {
     event.preventDefault();
     pages = 1;
 
-    /*
-    if (location.pathname.split('/')[1] == "post") {
-        Router.go('/');
-
-    if (Router.current().originalUrl.split('/').includes("post")) {
-      var delayMillis = 300;
-      setTimeout(location.reload.bind(location), delayMillis);
-      Router.go("/");
-    }
-    */
-
     this.unbold();
 
-    /*
-    this.tagQuery = "admin";
-    this.query = admin
-    this.tagSearch = 1;
-    this.isSearch = 0;
-    */
     this_admin.set(admin)
 
     this.forceUpdate();
@@ -343,7 +182,6 @@ class App extends Component {
     Meteor.subscribe('posts', this.limit);
 
     // Find the text field via the React ref
-    // this.query = ReactDOM.findDOMNode(this.refs.searchString).value.trim();
     query.set(ReactDOM.findDOMNode(this.refs.searchString).value.trim());
     // this.search = this.query;
     this.search = query.get()
@@ -351,8 +189,6 @@ class App extends Component {
 
     // Clear form
     ReactDOM.findDOMNode(this.refs.searchString).value = '';
-
-    //postSub = Meteor.subscribe('posts', limit.get(), currentTag.get(), query.get());
 
     this.forceUpdate();
     window.scrollTo(0, 0);
@@ -495,7 +331,6 @@ class App extends Component {
   adminAnswered(admin, post) {
     for (i = 0; i < post.answer.length; i++) {
       if (post.answer[i].name == admin) {
-        // console.log('success');
         return true;
       }
     }
@@ -504,8 +339,6 @@ class App extends Component {
 
   // Shows posts that were searched for
   renderFound() {
-    // console.log("limit: " + limit.get());
-    // console.log("downloaded: " + this.props.posts.length);
     console.log("RENDERING NOW..." + Posts.find().count() + " POSTS");
 
     let filteredPosts = this.props.posts;
@@ -514,7 +347,6 @@ class App extends Component {
     }
     totalPosts = 0;
     this.rendered = 0;
-    //var lastPost = pages*perPage;
 
     const currentUserId = this.props.currentUser && this.props.currentUser._id;
     const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
@@ -527,7 +359,6 @@ class App extends Component {
       if (location.pathname.split('/')[1] == "post") {
         console.log("rendering single post!");
         unique_id.set(location.pathname.split('/')[2]);
-        //Router.go("/");
         if (post._id == location.pathname.split('/')[2]) {
           return (
             <Post
@@ -542,65 +373,16 @@ class App extends Component {
       }
 
       else {
-        /*
-        totalPosts++;
-        pagesLimit = Math.ceil(totalPosts/perPage);
-        // Search through a specific tag
-        if (this.tagSearch == 1) {
-          if (currentTag.get() == "unanswered") {
-            if (!answered) {
-              return (
-              <Post
-              key={post._id}
-              post={post}
-              isAdmin={isAdmin}
-              answered = {answered}
-              />
-              );
-            }
-          }
-          else if (answered && this.tagQuery == "admin") {
-            if (this.adminAnswered(this.query, post)) {
-              return (
-              <Post
-              key={post._id}
-              post={post}
-              isAdmin={isAdmin}
-              answered = {answered}
-              />
-              );
-            }
-          }
-          if (post.tags.includes(this.tagQuery)) {
-            if ((post.question.match(re) != null || this.query == undefined)  ) {
-              this.rendered++;
-              return (
-              <Post
-                key={post._id}
-                post={post}
-                isAdmin={isAdmin}
-                answered = {answered}
-              />
-              );
-            }
-          }
-        }
-        else {
-          // Search through all
-          if ((post.question.match(re) != null || this.matchAnswers(post, re) != null || this.query == undefined) ) {
-      */    // console.log(post.question)
-            this.rendered++;
-            return (
-              <Post
-                key={post._id}
-                post={post}
-                isAdmin={isAdmin}
-                answered = {answered}
-              />
-            );
-          }
-        /*}
-      } */
+        this.rendered++;
+        return (
+          <Post
+          key={post._id}
+          post={post}
+          isAdmin={isAdmin}
+          answered = {answered}
+          />
+        );
+      }
     });
   }
 
@@ -611,15 +393,10 @@ class App extends Component {
     morePosts = true;
     pages = 1;
     limit.set(10);
-    //postSub.stop();
     currentTag.set(string);
     this.unbold();
     document.getElementById(string).style.fontWeight = "normal";
 
-
-    // console.log('length: ' + this.props.posts.length);
-    // postSub = Meteor.subscribe('posts', limit.get(), currentTag.get(), query.get());
-    // console.log("post count: " + Posts.find().count());
     if (location.pathname.split('/')[1] == "post") {
       var delayMillis = 300;
       setTimeout(location.reload.bind(location), delayMillis);
@@ -709,11 +486,7 @@ App.propTypes = {
   currentUser: PropTypes.object,
 };
 
-
-//CHANGE THIS FOR PAGINATION
 export default createContainer(() => {
-  //morePosts = true;
-  //pages = 1;
 
   console.log('container code');
 
@@ -727,7 +500,6 @@ export default createContainer(() => {
 
 
   if (currentTag.get() == "all") {
-    // console.log("IN THE ALL TAG");
     return {
     posts: Posts.find(
       {
@@ -742,7 +514,6 @@ export default createContainer(() => {
     currentUser: Meteor.user(),
   };
   } else if (currentTag.get() == "unanswered") {
-    // console.log("IN THE ALL TAG");
     return {
     posts: Posts.find(
       {
@@ -758,7 +529,6 @@ export default createContainer(() => {
     currentUser: Meteor.user(),
   };
   } else {
-    // console.log("IN THE TAGGGGG");
     return {
       posts: Posts.find(
         {

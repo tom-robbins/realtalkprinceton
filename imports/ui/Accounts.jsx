@@ -50,24 +50,6 @@ class Accounts extends Component {
     Meteor.call('posts.removeAdmin', admin)
   }
 
-  /*updatePageBio(event) {
-    event.preventDefault();
-
-    // Find the text field via the React ref
-    const newBio = ReactDOM.findDOMNode(this.refs.contributorBio).value.trim();
-
-    Meteor.users.update(Meteor.userId(), {
-      $set: {
-        profile: newBio
-      }
-    });
-
-    // Clear form
-    ReactDOM.findDOMNode(this.refs.contributorBio).value = '';
-
-    this.forceUpdate();
-  }*/
-
   render() {
     if (Roles.userIsInRole( Meteor.userId(), 'superadmin' )) {
     return (
@@ -87,16 +69,8 @@ class Accounts extends Component {
             </form>
           </div>
         </div>
-      </div>
-    );
-  }
-  else {
-    return (
-    {/*<div className="center"><br/>
-      <h3>Access Denied :(</h3>
-    </div>*/}
-    )
-  }
+      );
+    }
   }
 }
 

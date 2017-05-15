@@ -15,11 +15,8 @@ if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish posts that are public or belong to the current user
   Meteor.publish('posts', function postsPublication(limit, tag, query, id, admin) {
-    // console.log('tag: ' + tag);
-    // console.log('limit (server): ' + limit);
     var dl = limit;
     var re = new RegExp(query, 'i');
-    // console.log('QUERY IS: \"' + re + "\"");
 
     if (id != "") {
       console.log("ID: " + id)
@@ -123,12 +120,6 @@ Meteor.methods({
     check(postId, String);
 
     const post = Posts.findOne(postId);
-    /*
-    if (post.public && post.owner !== Meteor.userId()) {
-      // If the post is public, make sure only the owner can delete it
-      throw new Meteor.Error('not-authorized');
-    }
-    */
     Posts.remove(postId);
 
   },
@@ -155,14 +146,6 @@ Meteor.methods({
     check(setToHidden, Boolean);
 
     const post = Posts.findOne(postId);
-
-    /*
-    // Make sure only the post owner can make a post hidden
-    if (post.owner !== Meteor.userId()) {
-      throw new Meteor.Error('not-authorized');
-    }
-    */
-
     Posts.update(postId, { $set: { hidden: setToHidden } });
   },
 
